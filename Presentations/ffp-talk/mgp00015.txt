@@ -1,0 +1,12 @@
+
+Qualitätsberechnung
+
+Gewichtung der Positionen 
+Wichtige Positionen (Anfang, Ende) erhalten hohe Gewichte
+Unwichtige Positionen (Mitte) erhalten niedrige Gewichte
+
+Summe der gewichteten Über- einstimmungen ist Qualität
+
+Stetige Funktionen für Gewichtung
+Inverse Gaussverteilung, ...
+

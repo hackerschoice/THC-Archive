@@ -1,0 +1,111 @@
+/*
+ * IrcProlet - A proletarian script for BitchX 1.0
+ * (c) Copyright 2001 by Plasmoid <plasmoid@thc.org>
+ * The Hacker's Choice - http://www.thc.org
+ */
+
+^assign ipII.ver 0.1
+^assign ipII.name IrcProlet
+
+@ version[0] = [mIRC32 v5.82 K.Mardam-Bey]
+@ version[1] = [mIRC16 v5.3 K.Mardam-Bey]
+@ version[2] = [ShadowIRC 1.1b2 PPC © John Bafford 1996-2000 (Nov 25 2000 21:03:31)]
+@ version[3] = [ircII EPIC4-2000 Linux 2.2.19 - LiCe v4.1.9]
+@ version[4] = [·TRiGGER· v5.3 by Lery & SkyHorse · Get iT @ http://triggerv5.cjb.net]
+@ version[5] = [P&P 4.00 BETA 13 Build 900 (in development) + X / W, Sound, Extras]
+@ version[6] = [VaporIRC 0.1beta on SUX 3.0]
+@ version[7] = [ircN 7.25 + 7.0 - p|-|34r |\/|y p4<|<37z]
+@ version[8] = [eggdrop v1.6.1]
+@ version[9] = [mIRC32 v5.7 K.Mardam-Bey]
+
+@ version_num = 10
+
+alias info {
+  echo
+  echo $ipII.name $ipII.ver - A proletarian script for BitchX 1.0
+  echo | (c) Copyright 2001 by Plasmoid <plasmoid@thc.org>
+  echo | The Hacker's Choice - http://www.thc.org
+  echo | Run /iphelp for more information...
+  echo
+}
+
+alias iphelp {
+  echo
+  echo $ipII.name $ipII.ver - Help
+  echo | /fakeinv <nick> <channel>  - invites <nick> to fake <channel> 
+  echo | /fakelm <nick> <msg>       - pastes fake <msg> of <nick> to channel
+  echo | /fakedcc <nick> <file>     - fakes a dcc get of <file> to <nick>
+  echo | /fakechat <nick>           - fakes a dcc chat to <nick>
+  echo | ---
+  echo | $ipII.name selects a random version on each ctcp version request
+  echo
+}
+
+alias ip.error {
+  echo $ipII.name, ip.error: $0-
+}
+
+alias ip.msg {
+  echo $ipII.name, $0-
+}
+
+alias fakedcc { 
+   if ([$1]) {
+      quote PRIVMSG $0 :DCC SEND $1 ${rand(999999999)+999999999} ${rand(30000)+30000}
+      ip.msg fake dcc get of $1 has been sent to $0.
+   } else {
+      ip.error usage: /fakedcc <nick> <filename>
+   }
+}
+
+alias fakechat { 
+   if ([$0]) {
+      quote PRIVMSG $0 :DCC CHAT chat ${rand(999999999)+999999999} ${rand(30000)+30000}
+      ip.msg fake dcc chat has been sent to $0.
+   } else {
+      ip.error usage: /fakechat <nick>
+   }
+}
+
+
+alias fakelm {
+   ^assign what $1-
+   
+   if (![$1]) {
+      ip.error usage: /fakelm <nick> <msg>
+   } else {
+      Userhost $0 -CMD if ([$3]) { 
+         if ([$4]!=[<UNKNOWN>]) {
+            /say [$0/$3@$4] $what
+         } else {
+            ip.error usage: <nick> doesn't exist
+         }
+      }
+   }
+}
+
+alias fakeinv {
+   if ([$1]) {
+      ^assign INVITESTR $strip(# $1)
+      ^assign INVITESTR \#${INVITESTR}
+      quote INVITE $0 $INVITESTR
+      ^assign -INVITESTR
+
+      ip.msg fake invited $0 to $1
+   } else {
+      ip.error usage: /fakeinv <nick> <chan>
+   }
+}
+
+  
+^on -ctcp "% % VERSION *" {
+   quote NOTICE $0 :VERSION $version[$rand($version_num)]
+}
+
+if(![$BitchX()]) {
+  ip.error No support for this irc client
+  quit
+}
+
+info 
+fset format_version $version[$rand($version_num)]

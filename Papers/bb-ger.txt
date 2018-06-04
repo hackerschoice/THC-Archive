@@ -1,0 +1,352 @@
+                                                               January 1996
+
+       BB in Germany
+       written by Dr. Fraud
+
+
+Hi Phreaks !
+
+In this article, I wanna write a little bit about BB in Germany. This phile 
+is NOT a `how 2 do it' essay....   It`s 4 phreaks to show what has done and 
+what is still possible. I also  won`t describe any signalling  systems like 
+C5/R2/C7, cause everyone  who reads this phile should know how they work. I 
+have put the TXT into several groups like the following:
+
+  - Overview: breakable countries
+  - Why are other countrys not breakable ?
+  - The story `bout C4
+  - You don`t get a busy flash....ahahaha!
+  - How the TELECOM filters work
+  - About Hardware
+  - Problems with Transit/Routings
+  - How 2 get Routing Codes 
+  
+
+
+  1.) Overview: the breakable countries
+
+  At the 1st point, I wanna give you a short list of the easy breakable 
+  countrys. As u can see, there are many ones u can break, but most of them 
+  are not very interesting (seen in the aspect of getting out of those 
+  fucking desert-countries....). The only exception are the C5/R2 countries. 
+  but at the moment, there are only very few people who can phreak them... 
+  congratulations !
+  Okay, here are the breakable ones (alphabetical order)
+
+   > Argentinia (+54)
+   > Brasilia (+55)
+   > Chile (+56)
+   > China (+86)
+   > Columbia (+57)
+   > Emmirates of Arabia (+971)
+   > Guatemala (+502)
+   > Hawaii (+1-808)
+   > Indonesia (+62) [not available from everywhere]
+   > Iceland (+354)
+   > Japan (+81)  !! hard 2 seize !! 
+   > Jordania (+962) !! still offline !!
+   > Macau (+853)
+   > Malaysia (+60) [not any more !]
+   > Nicaragua (+505)
+   > Paraguay (+595)
+   > Phillipines (+63)
+   > Singapore (+65)
+   > South Africa (+27)
+   > Uruguay (+589)
+   > Venezuela (+58)
+
+  At 1st, I wanted to add the frequs for each country....no, not exactly, but
+  at least a description like: Cl.Fwd/EOf/Seize. But I decided that its not
+  very useful because you should be able to find them out by yourself. Besi-
+  des, all these ones are C5 and quite simple 2 break (more or less.... arghh 
+  I hate the Phillipines !!!!!!). U can reach them via HCD (standard) with 
+  the exception of HawaII.
+  NOTE: These are not all the existing countrys you can reach by a toll free
+        number... but these ones are the easiest to call. If you wan`t to
+        call other countries by direct (=local) breaking, start scanning !
+                     
+ * Concerning the Thailand HCD (+66), I`m not sure what is is, but I think it
+   should be C7. If not and if you can break it, please contact me ! 
+
+ * At MCI and AT&T, I already had sume argues with other phreaks, but I know
+   that at least AT&T _IS_ breakable ! [note: or WAS breakable until 12/95]
+
+The problem with R2 is that it`s mostly PCM (in Germany). This means that
+there`s used a multiplex system to mix information and signalling signals.
+So you use 1 channel each, but it seems as if you are just on one channel.
+At the moment, I still don`t cope with those systems... Sumetimes, I get a
+Hgup, but I don`t know whether it`s caused from my BB or from that fuCkiNg
+switch.
+Another problem is: theres no absolute standard on R2. It depends on the area
+you live in and the country u wanna break 2 get a success. Just start scan-
+ning... Some hints: Of course, u should only scan the effective signalling 
+band....it would be quite senseless to scan from 500 up to 1500 Hz. And al-
+ways remember: R2 is not an international system. It`s always combined with 
+at least one signalling frequency of another system (like C5) !
+
+
+
+
+
+
+
+
+2.) Why are other countries not breakable ?
+
+    aaaahahahhah!!! stupid question. Cause they changed to C7.
+
+    Anyway, there is a possible exception: The "Fiiieep" linez. If you are not
+    from Germany, you can`t imagine what this means to the phreaker: You know,
+    some switches (e.g. the Siemens-Alcatel) require an exact timing. The Cl.
+    Fwd. must be sent on exact the time when you can hear the 2nd "click" (or 
+    some milliseconds after). There is one problem now: The Telco has changed 
+    that click to a noisy "fiiieek" now on some nuMbAs. That noise is inter-
+    modulating the break you send. The result is: No result. 
+    The only thing you can do: (except when you live in area 03....ggrrr...I 
+    hate everyone in there...) increase the volume of your break to a maximum
+    and try to find a guard tone that fixes that interference...this should be
+    not too easy.... after some minutes of experimenting, you may be able to
+    achieve a HgUp, but seizing will be quite complicated !
+
+
+
+
+
+
+
+
+3.) Phunny story bout C4
+
+Just a few words 2 the phreaks who wanna start scanning C4 lines,
+inspired by the Scavenger dialer: Yes, u can call via C4 lines, if u
+a) break an oversea line (e.g. Germany => Paraguay...aaeh..no...Paraguay uses
+   R2 at the country itself...)
+b) call a C4 based numba in that country, break it and have phun...
+But there are 2 major problems:
+a) linez are shit
+b) there are nearly (I said nearly, in fact, I don`t know _ANY_) no C4 linez
+   left... perhaps, u will find someones in South America or Africa.
+
+So, forget the C4 shit and concentrate to the future... and future is defini-
+tively NOT C4 !
+
+
+
+
+
+
+
+3.) U don`t get a Busy Flash.... ahahhahahahaha!!
+
+If you are unable to recieve a Busy Flash, then you`ve got a problem: the
+TELEKOM filters. These phunny devices are sitting in the toll-free oversea
+trunk groups just for one purpose: Killing the Clear Forward and the Seize
+signal to avoid line manipulation. In my area, there were 2 different kinds
+of filters:
+The first ones were just inverters, which lowered or highered the specific
+signals sent in the line. This means, that a 2400/2600 tone will be recogni-
+zed from the switch as, e.g., a 2350/2650 signal... This means that you can
+easily pass those filters when sending e.g. a 2450/2550 tone. This is, of 
+course, not a very effective protection !
+At the next step, a more complicated system was installed: a Schmitt-Trigger
+system, combined with a selective switch. I will explain later how it works
+exactly.
+At this time, just remember: It`s IMPOSSIBLE 2 install any protection that
+will avoid inband line manipulation 100% . There`s always a way to pass it !
+
+
+
+
+
+
+
+4.) How the telecom filters work:
+
+The function of those devices is quite simple: the filters are put in the 
+line subscriber ----> german switch. This (should) avoid a line manipulation
+from the side of the subscriber`s line.
+The filter consists of a simple notch filter that blocks the 2400 signal if
+the installed frequency counter counts the critical frequs.
+The bandwidth is all over the tolerance of the frequency used for inter-
+national trunks. This is achived by a strong damping of the circuit. Just
+find an international exchange and let it give you a nice echo. Then, start
+scanning and draw a function of the filtered tones. U should draw that func-
+tion in dependence of the frequency and the volume.
+The tricky thing is the following: the filters are "normally" not enabled.
+They are only activated when recieving a signal that is in tolerance of their
+setting. The control of "enabled"-"not enabled" is taken by a simple Schmitt-
+Trigger circuit. Just watch sume electronic-book for further information.
+To activate the Trigger, a tone of a certain frequency _and_ a certain length
+must be recieved (Trigger-Level).
+So: when u add a third tone to your Cl.Fwd., there is obtained an inter-
+modulation: the volume increases and decreases in the same frequency as the
+guard tone. So, u just need to find the correct guard tone(s), and u will be
+able to pass the filter.
+Sometimes, its a little bit more tricky: If this method doesnt work, just use
+some fuzzy tones (mix the tones with colored noise). This changes the wave-
+form from sinus to something un-definable. That sort of signal is much harder
+to trigger (if you`ve got an oscillograph, u can see it quite good). So, the
+chances of "confusing" the trigger are much better....
+Finally, there`s a third method: Just create a trunk that you play _before_
+the "real" trunk....the more tones, the better ! I use the nice TLO444 and
+wrote a tiny script that will do this job quite good...it has `bout 20 tones,
+played with 3 or 4 frequencys each. If you set the right frequs (TIP: use the
+frequs near the signalling area, add a DHLS sumetimes, play a 2000 Hz and so
+on). If you have done it right, that filter will be "confused" (you can com-
+pare it with drinking 10 beers and going to bed immediately) and it can get 
+passed much easier.
+
+
+
+
+
+
+
+5.) About Hardware
+
+It`s always useful to have some hardware that can support you while whistling
+around....the good old walkman-headphones are fine for checking out a line
+you can break not yet, but it`s not possible to get a 100% great result. Just 
+call your favourite HPA board and leech the schematic of a standard BlueBox.
+I use a more comfortable method. This has two reasons:
+1.) When using a transformator that is connected to the phone line directly, 
+    your ears will be bloody after a hole night of scanning
+2.) Connecting the soundcard in another way will offer you much more comfort.
+
+If you`ve got some idea about electronics, connect the output of your computer 
+to the microphone in the telefone. The ECM-Micros work best. Normally, it`s 
+necessary to limit the signal with a resistor of about 50K. And if you want to 
+record the line, connect the mic. input to the speaker of your phone. Depen-
+ding on your circuit, it may be useful to add a small capacitator (.1uF). This 
+offers a much better quality and the tones sent out of the speaker while brea-
+king are much more calm. This allows you to listen better to any reaction of 
+the line. And if you`ve already done that piece of work, then you can make a
+device that allows you to hang up the line and release it again automatically.
+I built a switch that is controlled by the tones sent out of my dialer. I just
+reserved a frequency (ca. 3900 Hz) and adjusted that phunny device to exactly 
+that value. So, if I send a 3900 Hz tone, my line hangs up automatically and 
+releases again after a free-definable time. If you are interested in that
+device, just contact me !
+Also phunny is a circuit that can decode the special-info sequence (you know,
+that tuuu-tuuuu-tuuuuu you recieve when calling a not-existing number). I 
+don`t know whether this is also possible by a powerful realtime-software; but
+when connecting that circuit to the parallel port, you may increase the rate
+of success while scanning to the maximum. When using that device, you needn`t
+sitting in front of your screen anymore... you just wait for a "success-beep"
+from the computer when getting a number that does not result in the special-
+info-tone. The only condition for this is a well-programmed software.
+
+Another phunny toy is an oscilloscope, because:
+- You look so cool when sitting in front of it, dialing, phreaking, pushing
+  all the buttons at the scope (and only you know what they are good for) and
+  watching the great waves appearing on the screen when getting a connect ...
+- Hmmm..and, besides, an oscilloscope is EXTREMLY useful to find out every-
+  thing that has to do with waveform, amplitude and delay of the signal sent
+  in the line, and, more important, coming out of it. E.g., you can search a
+  number, kill the exchange, sending a signal which will give you an echo and
+  start analysing the behavior of the switch.
+
+The last point about hardware: A device that can send a variable (coloured)
+noise into the line. A very simple noise generator is an old radio. Just put 
+it on AM and search an area with a good, strong noise. By turning the knob in
+any direction, the sound of the noise should change a little bit. To find the
+best position, set your dialer to a 60s Cl.Fwd. and mix it with the noise ob-
+tained by the reciever. Believe it or not, it works !
+BTW : Yes, I know, the Scavenger dialer has this feature, too. But the noise  
+      routine seems to be a little buggy...besides, it`s much easier to use
+      a little hardware, because you can find out the correct setting very
+      fast just by turning a knob is any direction. The only thing you`ve got
+      to do is to connect the speaker of the radio (or, in other words, the 
+      two wires leading to the speaker) with the phone line using direct 
+      connection or transformator. A 50K resistor prevents the noise from get-
+      ting too loud. Just play a little bit for optimal results.
+
+
+
+
+
+
+
+6.) Problems with Transit/Routings
+
+some years ago, finding out a routing or using transit was no problem (I say
+this not out of my own experience; I`m not doing BB as long that I can con-
+firm this....but I was told so).
+Now, things have changed a little bit. The old standard of using <KP2>-CC-DD
+is working only to some boring countries with boring lines. The "good" coun-
+tries (like HK/USA etc.) are extremely well protected now. But in spite of
+that, you can still get a success if you have a free afternoon and some luck.
+For exemple, the toll free lines of some countries can sometimes be called
+from an international exchange. To give you an exemple:
+
+ a) you call the HCD of a country that has <KP2> disabled
+ b) you break it
+ c) after breaking, you call the Op. of another country (e.g.: A02-800-XXX)
+ d) you wait for the "chick" and break the line country --> next country
+ e) perhaps this country you are in now has <KP2> open ....
+
+The disadvantage of this is that you MUST set your trunk very exactly. If your
+break for the 2nd country is in tolerance of the switch of the 1st country, 
+your line kicks off...hahaha....try it again.
+Perhaps, you find a country that is breakable with 2400 and 2600 Hz, sent
+seperately. On HawaII, you will remark that you can send the tones seperately.
+If you`ve found a Transit or a Route, you can try to find a gate in the
+following way [just for exemple !!!]:
+  a) You can do transit via XXXXXX to russia
+  b) You want to call YYYYYY
+  c) Just dial <KP2>7-00-YYY-nuMbA<ST>
+
+The success of this method depends on the "transit power" of the country you
+can do transit to. Perhaps you can try it out by calling directly.
+
+Another way of calling is to change the exchange you are in by sending a 
+loooong signalling tone....the more experienced phreaks will know what I mean
+when talking about this..... This method only works on quite old switches.
+
+
+
+
+
+
+7.) How 2 get Routing Codes
+
+At the beginnig of this article, I wanted to tell you how to find out which
+country offers which routes to kall out. With this method it`s not often 
+possible to get the routes directly, but you will know whether it`s senseful
+to start scanning around.
+But now I decided not to tell you that possibility, because it wont work any-
+more if too many people use it. BTW, forget the old trick with <KP2>-2F-<ST>
+The operators are still incredibly stupid, but they won`t give out their
+Operator routes to someone who says: "....Hi, lines are busy,...please gimme
+your routing for calling Canada...".
+
+
+
+
+
+
+
+Okay, thats it....I think that you knowed most of the things I told, but per-
+haps you found a little hint that may be useful for you. Have a nice life !
+
+
+
+                                                      Greetz,
+                                                              Dr. Fraud
+
+
+
+
+
+
+
+
+
+
+
+
+
+P.S.: This article didn`t grow out of my free volunteer....
+      I was forced to write it....hahaa...    ...and remember: J.F.K. is dead !
+<yeah and i'll do it again for the next mag hehehehe! [vH]>
+

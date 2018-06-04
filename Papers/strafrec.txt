@@ -1,0 +1,302 @@
+
+
+                             Strafrecht im Netz
+
+                               by Judge Dread
+
+
+
+
+
+Dieser Artikel moechte mit einigen gelaeufigen Irrtuemern aufraeumen, und ueber
+die tatsaechliche Auslegung von Strafgesetzen informieren, um zu vermeiden,
+dass ihr durch eklatanten Mangel an Rechtskenntnis in die Netze der
+Strafverfolgung geratet.
+Der Autor weist ausdruecklich darauf hin, dass auch er als Mensch anfaellig
+fuer Fehler ist und in diesem Fall keinerlei Verantwortung fuer sein
+Geschreibsel uebernimmt, jedoch hat er versucht alles nach seinem besten
+Wissen und im Einklang der aktuellen Rechtssprechung darzulegen.
+
+
+
+   Gliederung :   1. Internationales Strafrecht
+                  2. Deutsche Strafvorschriften
+                  2.1 Das Strafgesetzbuch
+                  2.1.1 Die Datenveraenderung
+                  2.1.2 Computersabotage
+                  2.1.3 Computerbetrug
+                  2.1.4 Ausspaehen von Daten
+                  2.1.5 Erschleichen von Leistungen
+                  2.1.6 Faelschung technischer Aufzeichnungen und
+                        beweiserheblicher Daten
+                  2.2 Vorschriften des Nebenstrafrechts
+                  2.2.1 Verrat von Betriebsgeheimnissen
+                  2.2.2 Unerlaubte Verwertung urheberrechtlich
+                        geschuetzter Werke
+                  3. Tabellenuebersicht ueber die behandelten Paragraphen
+
+
+
+1. Internationales Strafrecht
+
+Entgegen landlaeufigen Vorstellungen der Art "Wenn ich in Daten auslaendischer
+Firmen hacke, kann mir keiner" kennt die internationale Strafrechtspraxis
+nicht nur keine derart groben Luecken, sondern auch viel feinere nicht.
+Zunaechst gilt das Territorialitaetsprinzip, d.h. das deutsche Strafrecht
+(3 StGB) und die deutsche Strafjustiz (7 Abs. 1 StPO) sind fuer Taten
+zustaendig, die in Deutschland begangen wurden. Dabei wird auf den Ort
+der Tat abgestellt.
+Der Ort der Tat ist jeder Ort, an dem der Taeter gehandelt hat und jeder
+Ort, an dem der tatbestandliche Erfolg eingetreten ist (9 Abs. 1 StGB).
+Das bedeutet fuer die Rechtsprechung, dass der blosse Aufenthalt bei der
+Tathandlung in Deutschland fuer die Anwendbarkeit deutschen Rechts genuegt und
+auch das Vorliegen nur einer der Tatbestandsvoraussetzungen (das ist z.B. beim
+263a eine Datenveraenderung) im jeweiligen Inland das Eingreifen der
+Kriminaljustiz erlaubt.
+Es wird wohl auch unschwer zu erraten sein, dass die meisten Staaten dieses
+oder ein aehnliches Territorialitaetsprinzip auch auf sich anwenden. Wo immer
+noch Strafverfolgungsluecken entstehen sollten, greift dann z.B. das passive
+Personalitaetsprinzip (7 Abs. 1 StGB) oder das aktive Personalitaetsprinzip
+(7 Abs. 2 Satz 1 StGB) ein, nach denen fuer die Strafbarkeit in Deutschland
+genuegt, dass entweder einE DeutscheR geschaedigt wurde, oder einE DeutscheR
+die Strafbare Handlung begangen hat.
+
+
+2. Deutsche Strafvorschriften
+
+Was gibt es ueberhaupt fuer "strafbare Handlungen", also Straftatbestaende?
+
+Seit dem "2. Gesetz zur Bekaempfung der Wirtschaftskriminalitaet" von 1986
+einige mehr.
+Nach einschlaegigen Untersuchungen gehen ca. 80% der Computerkriminalitaet auf
+sogenannte "Innentaeter" zurueck, d.h. solche, die fuer die betroffenen Betriebe
+arbeiten und Zugang zu den meisten Daten haben. Dieser Personenkreis verschafft
+sich den Zugriff auf die Daten also nicht durch ueberragende Hackerkenntnisse,
+sondern durch ihre von vornherein bevorzugte Position - und selbst sie werden
+durch unglueckliche Zufaelle oft erwischt!
+Allerdings ist die Aufklaerungsquote vergleichsweise niedrig; deshalb sah
+sich der Gesetzgeber veranlasst, der Computerkriminalitaet mit z.T. sehr
+unbestimmten Straftatbestaenden entgegenzutreten, die in der juristischen
+Literatur zwar scharf kritisiert, in der Rechtsprechungspraxis aber in ihrer
+ganzen Weite angewendet werden.
+Die entscheidenden Strafgesetze, die eure Computeraktivitaeten betreffen
+koennen, und ihre tatsaechliche aktuelle Auslegung durch die Rechtsprechung
+will ich hier kurz erlaeutern.
+Vorweg will ich nur kurz eine Information schicken : Wegen Hacking und/oder
+Phreaking, Kreditkartenmissbrauch etc. darf in Deutschland *nicht* das
+Telefon abgehoert werden (StPO 100a-i).
+
+
+2.1 Das Strafgesetzbuch
+
+Diese Ergaenzungen zum Sachbeschaedigungstatbestand wollen das Eigentum an
+Daten und Datensystemen und deren Integritaet schuetzen. Folgende Gesetze
+des Strafgesetzbuchs versuchen das zu gewaehrleisten :
+
+2.1.1 Die Datenveraenderung (303a StGB)
+
+umfasst jedes rechtswidrige Loeschen, Unterdruecken, Unbrauchbarmachen oder
+Veraendern von Daten.
+"Rechtswidrig" ist alles, was euch nicht der Eigentuemer erlaubt hat.
+"Veraendern" meint auch ein Beeintraechtigen des eigentlichen Zwecks oder
+Informationsgehalts.
+Das Einbringen von Viren ist typischer Anwendungsbereich des 303a.
+Fuer die Erfuellung des Tatbestands ist es nicht erforderlich, dass die Daten
+irgendwelche wirtschaftliche Bedeutung haben.
+Zivilrechtliche Ansprueche auf Schadensersatz aus dem Deliktsrecht der 823ff.
+BGB bleiben davon - wie uebrigens in allen anderen computerstrafrechtlichen
+Fallkonstellationen auch - unberuehrt. Solche Schadensersatzansprueche koennen
+nach einer rechtskraeftigen strafrechtlichen Verurteilung ohne weiteres, quasi
+automatisch, geltend gemacht werden und erstrecken sich auf die volle Hoehe
+der verursachten Schaeden und Folgeschaeden (z.B. Betriebsausfall etc.).
+Als GeschaedigteR wird auch einE bloss ZugriffsbefugteR betrachtet.
+
+2.1.2 Computersabotage (303b StGB)
+
+Hier geht es um die Stoerung wesentlicher Datenverarbeitungen in einem fremdem
+Betrieb, einem fremden Unternehmen oder Behoerde durch Taten nach 303a StGB
+oder dadurch, dass die ordnungsgemaesse Verwendung der Daten unmoeglich gemacht
+wird.
+Ob die Tat Software oder Hardware beschaedigt, ist egal.
+"Fremd" ist ein Betrieb oder Unternehmen, das sich nicht im Alleineigentum
+des Saboteurs befindet.
+Eine "Stoerung" ist jede nicht unerhebliche Beeintraechtigung des reibungslosen
+Ablaufs.
+Ob eine Datenverarbeitung "wesentliche" Bedeutung hat, haengt davon ab, wie
+wichtig sie fuer den Betrieb ist.
+Den Begriff der "Datenverarbeitung" legt die Rechtsprechung so weit aus, dass
+er sich auf jeden Umgang mit Daten erstreckt (auch Daten auf Papier z.B.).
+
+2.1.3 Computerbetrug (263a StGB)
+
+Dieser Tatbestand setzt die Absicht voraus, "sich oder einem Dritten einen
+rechtswidrigen Vermoegensvorteil zu verschaffen".
+Der Gesetzgeber wollte damit die Luecke schliessen, die der Betrugstatbestand
+(263 StGB) dadurch liess, dass er eine Taeuschung mit den Mitteln der
+Datenverarbeitung nicht erfasste.
+Desweiteren wird der 263 StGB als Auffangtatbestand verwendet, besonders
+die 3. und 4. Variante (die Datenverarbeitung "durch unbefugte Verwendung von
+Daten oder sonst durch unbefugte Einwirkung auf den Ablauf" beeinflussen).
+In Verbindung mit dem sehr weit ausgelegten Datenbegriff des 263a StGB, der
+auch "noch nicht eingegebene Daten" umfasst, ergibt sich nach der heftigen
+Kritik in der Strafrechtswissenschaft eine Verletzung des Bestimmtheitsgebots
+in Artikel 103 Absatz 2 des Grundgesetzes (d.h. die weite und ungenaue
+Tatbestandsbeschreibung erlaubt es dem/der BuergerIn nicht, sein/ihr Verhalten
+vorab auf die gesetzliche Regelung hin abzustimmen, so dass er/sie es vermeiden
+kann, sich strafbar zu machen und verstoesst damit gegen ein rechtsstaatliches
+Prinzip von Verfassungsrang). In seiner unbestimmten Weite umfasst dieser
+Paragraph nahezu alles, was der/die jeweilige RichterIn gerne kriminalisieren
+moechte bzw. kriminalisieren zu muessen glaubt.
+Allerdings: Wenn niemandes Vermoegen dabei geschaedigt wird, kann der Paragraph
+263a StGB nicht angewendet werden.
+Momentan sind einige Strafprozesse wegen sg. "Blueboxings" anhaengig.
+Entgegen der naheliegenden Vermutung, dass in diesen Strafprozessen mit dem
+265a StGB (Erschleichen von Leistungen) angeklagt wurde, greifen die
+Staatsanwaltschaften wegen des hoeheren Strafrahmens auf den 263a StGB
+(Computerbetrug) zurueck. Der Alltagsverstand liegt hier grundsaetzlich
+durchaus richtig: das speziellere Gesetz (also hier Leistungserschleichung von
+"oeffentlichen Zwecken dienenden Fernmeldenetzen") geht grundsaetzlich vor
+dem allgemeiner gefassten Auffangtatbestand (in diesem Fall Computerbetrug).
+Aufgrund vermeintlicher praeventiver Notwendigkeit werden hier die Gesetzes-
+konkurrenzen jedoch dahingehend umgestellt, dass mit der eigentlich nicht
+einschlaegigen Strafnorm das spezielle Gesetz ausgehebelt wird, um einen
+moeglichst hohen Strafrahmen zu erreichen (mit bis zu 5 Jahren Haft statt 1
+Jahr).
+
+2.1.4 Ausspaehen von Daten (202a StGB)
+
+Okay, kommen wir also zum Thema ;-)
+"Wer unbefugt Daten, die nicht fuer ihn bestimmt und die gegen unberechtigten
+Zugang besonders gesichert sind, sich oder einem anderen verschafft, wird
+mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft."
+Soweit 202a Absatz 1 des StGB.
+"Daten" im Sinne des 202a sind gemaess 202a Abs. 2 nur solche, die "nicht
+unmittelbar wahrnehmbar" sind, also z.B. auf Diskette oder CD, aber keine auf
+Papier geschriebenen.
+Das geschuetzte Rechtsgut des 202a ist die Verfuegungsbefugnis; ausschlaggebend
+ist der Wille des/der Berechtigten.
+Eine technische Zugangssicherung muss vorliegen und ueberwunden werden; ein
+blosses Verbot und seine Missachtung reichen zur Erfuellung des Tatbestands
+nicht aus!
+Als "Verschaffen" wird bereits die Wahrnehmung der Daten betrachtet, nicht
+aber das blosse Hacking, das sich in dem knacken des Computersystems erschoepft.
+Wenn verschluesselte Daten gehackt werden, greift dieser Paragraph nur, falls
+die Daten abgespeichert werden, es sei denn die Ueberwindung der
+Zugangssicherung setzt die Kenntnis der Daten des Zugangscodes voraus.
+Zwei Beispiele: 1. Wenn sich jemand in ein System reinhackt, es nach dem
+erfolgreichen Versuch jedoch SOFORT verlaesst, dann laesst sich der Paragraph
+nicht auf ihn anwenden. Der blosse Versuch des hackens in ein System ist
+nicht strafbar - allerdings leider der einzige der erwaehnten Paragraphen bei
+dem das so ist. 2. Wer sich mit seinem legalen Account auf einem Unix System
+die Passwortdatei kopiert (nicht ge-shadowed) der macht sich ebensowenig
+strafbar, da diese Datei fuer jeden Benutzer zugaenglich ist (keine Sicherung).
+Das Entschluesseln der Passwortdatei (z.B. mit Crack oder John) erfuellt auch
+noch nicht diesen Tatbestand - erst die Nutzung.
+
+2.1.5 Erschleichen von Leistungen (265a StGB)
+
+Das "Erschleichen" der Leistung eines Automaten, des Fernmeldenetzes, der
+Befoerderung durch ein Verkehrsmittel oder des Zugangs einer Veranstaltung "in
+der Absicht, das Entgelt nicht zu entrichten", werden durch diese Vorschrift
+kriminalisiert.
+Auch hier muss eine technische Sicherung gegen "unentgeltliche Inanspruchnahme"
+vorhanden sein und "in ordnungswidriger Weise" "durch taeuschungsaehnliche
+Manipulation" ueberlistet werden. Ein Verbot reicht nicht aus!
+Bzgl. Blueboxing siehe 2.1.3 Computerbetrug
+
+2.1.6 Faelschung technischer Aufzeichnungen und beweiserheblicher Daten
+      (268ff StGB)
+
+Dieses Gesetz verbietet die verfaelschende Beeinflussung und den Gebrauch
+verfaelschend beeinflusster beweiserheblicher Daten "zur Taeuschung im
+Rechtsverkehr". In besonders schweren Faellen droht 269 in Verbindung mit
+267 Absatz 3 "Freiheitsstrafe nicht unter einem Jahr" an.
+Gemaess der "Geistigkeitstheorie" ist der "Aussteller" der "Urkunde", sprich
+der Verfasser des beweiserheblichen Dokuments derjenige, dem "der geistige
+Inhalt zugerechnet wird", also nicht jemand, der die Daten bloss uebermittelt.
+D.h. Manipulierung an Logdateien kann unter diesen Paragraphen fallen.
+
+
+2.2 Vorschriften des Nebenstrafrechts
+
+2.2.1 Verrat von Betriebsgeheimnissen (17 UWG)
+
+Das "Gesetz gegen den unlauteren Wettbewerb" bedroht in diesem Paragraphen
+denjenigen/diejenige mit Strafe, der/die in einem Betrieb beschaeftigt ist/sind
+und ihm anvertraute oder zugaenglich gewordene Betriebsgeheimnisse unbefugt
+jemanden mitteilt, und zwar zu Zweckendes Wettbewerbs, aus Eigennutz, zugunsten
+eines Dritten oder um den Betriebsinhaber zu schaden.
+Im 17 Abs. 2 Nr.1 wird desweiteren das unbefugte Sichverschaffen oder Sichern
+von Geschaefts- oder Betriebsgeheimnissen zu den oben genannten Zwecken mit
+Strafe bedroht, sofern das durch "Anwendung technischer Mittel, Herstellung
+einer Verkoerperten Wiedergabe des Geheimnisses oder Wegnahme einer Sache, in
+der das Geheimnis verkoerpert ist", geschieht.
+17 Abs. 2 Nr.2 schliesslich verbietet die unbefugte Verwertung oder Weitergabe
+von Geheimnissen, die auf die genannten Weisen in Erfahrung gebracht wurden.
+Als Wirtschaftsgeheimnis wird jede nicht offenkundige Tatsache betrachtet, an
+der ein objektives Geheimhaltungsinteresse besteht (gemeint ist ein rationales
+Eigeninteresse).
+Eine Verwertung im Ausland wird als "besonders schwerer Fall" mit Freiheits-
+strafe bis zu 5 Jahren Haft oder Geldstrafe bedroht.
+Obwohl der Wortlaut von "Angestellten, Arbeitern oder Lehrlingen" spricht,
+wird 17 Abs.1 UWG auf jeden irgendwie in einem Betrieb BeschaeftigteN
+angewendet.
+
+2.2.2 Unerlaubte Verwertung urheberrechtlich geschuetzter Werke
+      (106, 108, 108a UrhG)
+
+Das Gesetz ueber Urheberrecht und verwandte Schutzrechte verbietet in dieser
+Vorschrift die Vervielfaeltigung, Verbreitung oder oeffentliche Wiedergabe eines
+Werkes oder einer Bearbeitung oder Umgestaltung eines Werkes.
+Ausnahmen sind die "gesetzlich zugelassenen Faelle" (z.B. private Sicherheits-
+kopien - keine Raubkopien!) und die Einwilligung des Berechtigten.
+Als "Werk" - im weitesten Sinne als "Sprachwerk" - gelten auch
+Computerprogramme. Sie muessen allerdings "die Leistung eines Durchschnitts-
+programmierers deutlich uebertreffen".
+Was ist denn ein "Durchschnittsprogrammierer"? Richtig, was denn der/die
+RichterIn gerade meint, und der/die mag wahrscheinlich keine Software-Piraten.
+Aus technischen Gruenden findet dieser Paragraph z.T. schon auf blosse
+unbefugte Nutzung Anwendung. Im uebrigen kriminalisiert der 1995 wieder
+aktualisierte 108 UrhG denselben Umgang bzw. die Verwertung auch noch in Bezug
+auf wissenschaftliche Ausgaben, Lichtbilder und Tontraeger.
+Im Fall Gewerbsmaessiger unerlaubter Verwertung im Sinne der 106 bis 108 UrhG,
+setzt 108a UrhG den hoeheren Strafrahmen von bis zu 5 Jahren Freiheitsstrafe
+oder Geldstrafe fest.
+"Gewerbsmaessig" ist jede Nutzung der unerlaubten Verwertung als fortdauernde
+Einnahmequelle.
+Im Umkehrschluss folgt daraus u.a. auch, dass im 106 bis 108 entgegen
+anderslautenden Geruechten nicht notwendig ein kommerzielles Interesse
+voraussetzen.
+
+
+
+3. Tabellenuebersicht ueber die behandelten Paragraphen
+
+
+Tatbestand                  ³Paragraph³  Strafdrohung   ³  Verfolgung  ³Versuch
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ
+Ausspaehen von Daten        ³202a StGB³bis zu 3 Jahren  ³Offizialdelikt³  ---
+                            ³         ³oder Geldstrafe  ³              ³
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ
+Computerbetrug              ³263a StGB³bis zu 5 Jahren  ³Offizialdelikt³strafbar
+                            ³         ³oder Geldstrafe  ³              ³
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ
+Erschleichen von Leistungen ³265a StGB³bis zu 1 Jahren  ³Offizialdelikt³strafbar
+                            ³         ³oder Geldstrafe  ³              ³
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ
+Faelschung beweiserheblicher³269  StGB³bis zu 5 Jahren  ³Offizialdelikt³strafbar
+Daten / tech. Aufzeichnungen³270  StGB³oder Geldstrafe  ³              ³
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ
+Datenveraenderung           ³303a StGB³bis zu 2 Jahren  ³  auf Antrag  ³strafbar
+                            ³         ³oder Geldstrafe  ³              ³
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ
+Computersabotage            ³303b StGB³bis zu 5 Jahren  ³  auf Antrag  ³strafbar
+                            ³         ³oder Geldstrafe  ³              ³
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ
+Verrat von Betriebsge-      ³ 17  UWG ³bis zu 3 Jahren  ³ in der Regel ³strafbar
+heimnissen                  ³         ³oder Geldstrafe  ³  auf Antrag  ³
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄ
+Unerlaubte Verwertung       ³106  UrhG³bis zu 3 Jahren  ³ in der Regel ³strafbar
+urheberrechtl. gesch. Werke ³108  UrhG³oder Geldstrafe  ³  auf Antrag  ³
+ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄ
+

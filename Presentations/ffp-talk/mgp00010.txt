@@ -1,0 +1,12 @@
+
+Fuzzy Fingerprints
+
+Verifikation erfolgt durch Vergleich
+
+Maschineller Vergleich
+Kein möglicher Angriffspunkt ausser Bruteforce
+
+Menschlicher Vergleich
+Faulheit
+Gutgläubigkeit
+

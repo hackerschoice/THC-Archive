@@ -1,0 +1,230 @@
+
+                   TTTTTT     BBB       OO      X    X
+                     TT       B  B     O  O      X  X
+                     TT  ---  B B     O    O      XX
+                     TT       B  B     O  O      X  X
+                     TT       BBB       OO      X    X
+      _________________________________________________________________
+
+
+
+Heute wollen wir alle mehr ueber die ganz neue Erfindung der Telekom - der
+T-Box (eigentlich T-Net-Box), dem Anrufbeantworter im digitalen Netz, erfahren!
+Viel Spass mit diesem Textchen wuenscht euch euer Hitronic...
+Aber immer dran denken: Die Missbraeuchliche Nutzung der T-Box, wie sie in
+dieser Textdatei nur zu LEHRZWECKEN beschrieben wird, ist illegal.
+
+
+                        ***Was ist die T-Box?***
+                        ------------------------
+
+Die T-Box stellt eine neue Dienstleistung im digitalen Netz der Deutschen
+Telekom dar, d.h., dass mit der T-Box der klassische Anrufbeantworter in der
+urspruenglichen Form, also z.B. als kleines Maschinchen neben dem Telefon,
+ueberfluessig wird. 
+Auf Wunsch kann die T-Box gegen ein Entgeld von DM 4 pro Monat (in der
+Grundstufe) aktiviert werden, und sofort den Dienst als virtueller
+Anrufbeantworter aufnehmen. Warum "virtuell"? - Ganz einfach: Ihr bekommt fuer
+die DM 4 im Monat keinen Anrufbeantworter zum "anfassen", jedoch von der
+Telekom einen Service, der es ermoeglicht, Anrufe direkt im digitalen Netz
+entgegenzunehmen. Im Klartext sieht das dann so aus, dass, je nach gew„hlter
+Einstellung, alle Anrufe (oder Anrufe, die laenger als dreimal "Klingeln"
+abwarten mussten) auf ein netzinternes VMB-System umgeleitet und dort wie von
+einem Anrufbeantworter entgegengenommen werden. Natuerlich koennt Ihr
+problemlos einen eigenen Ansagetext aufnehmen, der dem Anrufer beim erreichen
+Eurer T-Box vorgespielt wird.
+
+
+
+             ***Warum T-Box und kein klassischer AB?***
+             ------------------------------------------
+
+Die T-Box weist im Vergleich zum Hardware-AB aufm Schreibtisch einige Vorteile
+auf:
+     - Die Anschaffungskosten fuer einen neuen AB werden gespart
+     - Die T-Box kann mehrere Anrufe gleichzeitig bearbeiten
+Die T-Box ist ausserdem mit dollen Funktionen ausgestattet, die nicht jeder
+billig-AB vorweisen kann, z.B.:
+     - Benachrichtigungsfunktion an jedem beliebigen Telefonanschluss der Welt
+       bei Neueintreffen von Nachrichten
+     - hohe Speicherkapazit„t (auf Wunsch viele, lange Nachrichten)
+     - in der Aufbaustufe (gibts spaeter mal) auch Sonderfunktionen, wie z.B.
+       Faxempfang oder Erhoehung der Speicherkapazitaet durch Mehrpreis etc.
+
+
+
+        ***Warum beschaeftigen wir uns hier mit der T-Box?***
+        -----------------------------------------------------
+
+Ja, natuerlich nicht, weil wir alle unsre tollen Ab's wegwerfen und der
+Telekom schoen viel Geld zuschustern wollen, sondern weil man z.Zt. mit der
+T-Box relativ viel Unsinn anrichten kann, woll'n wir hoffen, dass das so
+bleibt, aber mehr dazu spaeter...
+
+
+
+      ***So, hier einige konkrete Informationen zur T-Box:***
+      -------------------------------------------------------
+
+Die T-Net-Box kann an jedem digitalen Telefonanschluss (auch ISDN) manuell vom
+Anschlussinhaber freigeschaltet werden, indem die gebuehrenfreie Rufnummer
+0130-144770 gewaehlt wird und nach der Ansage die "#"-Taste gedrueckt wird
+Nach diesen beiden Schritten (1. Anwahl, 2. '#'-druecken) ist die T-Box also
+freigeschaltet und nach Wahl der "persoenlichen Identifikationsnummer"
+betriebsfaehig! Um jetzt als Besitzer die Box, also den Anrufbeantworter,
+einrichten zu koennen, um z.B. Begruessungen aufzunehmen, die
+Benachrichtigungsfunktionen einzustellen oder nachher auch die neuen
+Nachrichten abzuhoehren, muss von dem Anschluss, von dem aus die Box aktiviert
+wurde, wieder die Rufnummer 0130-144770 gewaehlt werden. Nun hoert ihr hoechst
+wahrscheinlich die Ansage "Willkommen in der T-Net Box von [eure Rufnummer]
+usw.". Jetzt koennt ihr durch druecken von "*" und durch Eingabe eurer PIN
+waerend der Ansage ins Hauptmenue der T-Box gelangen. Da das System genau wie
+ein Voicemailsystem aufgebaut ist und sich durch eine freundliche Frauenstimme
+von selbst erklaert, will ich an dieser Stelle nicht auf die genauen Funktionen
+eingehen, die gesamte Menuestruktur folgt spaeter.
+
+                         Aktivierung:
+                         ------------
+Wenn die T-Net-Box von einem normalen digitalen Anschluss eingerichtet wurde,
+kann sie wie folgst aktiviert werden: Hoerer abheben und druecken von:
+
+           "*000#" fuer "Alle Anrufe zur T-Net Box"
+           "*555#" fuer "Anrufe im Besetztfall zur Box"
+           "*888#" fuer "Anrufe nach drei Klingelzeichen zur Box"
+
+zum deaktivieren entsprechend: "#000#", "#555#" und "#888#".
+Bei ISDN-Anschluessen muss zur Aktivierung der Box die AWS
+(Anrufweiterschaltung) auf die Nummer 0130-144770 eingeschaltet werden,
+teilweise muss erst ein Komfortanschluss beantragt werden, damit die AWS
+verfuegbar ist.
+
+
+
+           ***Hier nochmal die wichtigsten Infos im Ueberblick:***
+           -------------------------------------------------------
+
+ - Freischalten der Box von jedem digitalen Telefonanschluss durch Anwahl von
+   0130-144770
+ - Aktivieren der Box durch "*888#" fuer "Umleitung auf Box bei Nichtmelden",
+   "*555#" fuer "Umleitung auf Box bei besetzt" oder "*000#" fuer "Umleitung
+   aller Anrufe auf die Box".
+ - Fernabfragen der Box durch Anwahl der eigenen Rufnummer, Druecken von "*"
+   und Eingabe der PIN (nun landet man im Hauptmenue und kann sich bequem von der Stimme fuehren lassen)
+ - Hilfe und Informationen zur T-Box sind, vorerst fuer Telekommitarbeiter,
+   unter der Rufnummer 0130-141414 vom unfreundlichen Operator erfragbar (Ihr
+   solltet, wenn gezielt gefragt wird, nicht leugnen, dass Ihr bei der Telekom
+   arbeitet)
+
+
+
+                        Die Menuestruktur
+                        -----------------
+
+        Anwahl von 0130144770 oder der eigenem Rufnummer
+                              \  /
+                               \/
+                         Eingabe der Pin 
+                              \  /
+                               \/
+                           Hauptmenue            
+                         /           \
+                        /             \
+Einagabe von "1" zum Hoeren            Eingabe von "3" zum Aendern 
+     der Nachrichten                         der Einstellungen
+            /                                      \
+           /                                        \
+Waehrend des Abhoerens:                   - 1. Ansagetexte
+1. Zurueckspulen                            1.1 Namen aendern
+2. Pause/Weiter                             1.3 Begruessungstxt
+3. Vorspulen/Uebersprigen                   1.4 Ansagetext
+7. Wiederholen                            - 2. Grundeinstellungen
+8. Speichern                                2.1 Betriebsart
+9. Loeschen                                     waehlen: AB oder
+0. Zurueck                                      nur Ansagetext
+                                            2.6 Statusabfrage
+                                            2.9 Loeschen der Box
+                                          - 3. Benachrichtigungen
+                                            3.1 Benachrichtigung
+                                                am eigenen Phone
+                                            3.2 Infofix (gibts                                  
+                                                noch ganich)
+                                            3.3 Auf Pagern
+                                            3.4 Auf Beliebigen
+                                                Anschluessen
+                                          - 4. Aendern der PIN
+                                          - 5. Hilfetext
+                                          - #5 Operatorruf (free!)
+                                          - 0 Ins Hauptmenue
+
+
+
+
+
+
+                     Technische Informationen:
+                     -------------------------
+
+ - In der Grundstufe fasst die Box 30 Nachrichten zu je 2 Minuten
+ - In der spaeter folgenden (gegen Jahresende) Aufbaustufe wird die Box gegen
+   Aufpreis eine hoehere Aufzeichnungskapazitaet und z.B. Funktionen wie
+   Faxempfang unterstuetzen
+ - Z.Zt befindet sich der ganze T-Net-Box-Rechner in Duesseldorf, zum
+   offiziellen Marktstart soll aber die notwendige Hardware jeweils in der
+   eigenen Vermittlungsstelle vorhanden sein
+
+
+
+
+
+                       ***T-Box zum Missbrauchen***
+                       ----------------------------
+
+Nun das wichtigste: Wie kann ich mit meiner T-Box der Deutschen Telekom
+schaden? [Lechz :-9] Na SO:
+Ja, jetzt haben wir hoffentlich verstanden, wie einfach und schnell man die
+eigene T-Box selber freischalten kann, das muss man der Telekom wirklich
+lassen, das isst ja ein ganz unkomplizierter Vorgang. Naja, aber waere doch mal
+interessant zu erfahren, was passiert, wenn man auf FREMDEN Anschluessen
+T-Boxen freischaltet... Muessen die Anschlussinhaber dann nicht DM 4 im Monat
+zahlen? Oder noch besser: Was ist, wenn die Anschluesse der Telekom gehoeren,
+da sie sich in TELEFONZELLEN befinden? Ja, sehr interessant...
+In der Tat sieht es so aus: Digital vermittelte Telefonzellen bieten (zur Zeit)
+prinzipiell die Moeglichkeit, T-Boxen auf sich selber freizuschalten. 
+Theoretisch muessten dann auch die DM 4 pro Monat auf deren Kosten "abgebucht"
+werden, was natuerlich nicht moeglich ist. Im Moment (Mai 1997) werden jedoch
+sowieso noch keine Gebuehren fuer die Box erhoben, aber spaetestens ab dem
+offiziellen Marktstart wird wohl auch das der Fall werden. Im Zusammenhang mit
+Telefonzellen oder fremden Anschluessen bietet die T-Box grundsaetzlich fuenf
+(Ab-)Nutzungsmoeglichkeiten:
+
+1.) Nach der Freischaltung einer T-Net-Box wird zunaechst default-maessig eine
+Standardansage benutzt, die die RUFNUMMER des ANSCHLUSSES beinhaltet.
+Prinzipiell ist das die EINZIGE Moeglichkeit fuer den normal-T-Net-Benutzer,
+die Rufnummer eines Anschlusses herauszubekommen, die keine (ISDN)-Kennung
+uebertraegt. Also koennt Ihr in Zukunft auch in Telefonzellen (oder im
+Hotelzimmer) zurueckgerufen werden, selbst wenn dort die Rufnummer des
+Anschlusses NICHT bekanntgegeben wird, oder findet sie einfach selber heraus!
+
+2.) Die bloedste Nutzungsmoeglichkeit: Wenn ihr bei einem "Freund" oder
+Bekannten zu Besuch seid, koennt ihr durch wenige Handgriffe seine
+Telefonrechnung um DM 4 im Monat ansteigen lassen, oder seinen Anschluss sogar
+ganz von der Aussenwelt abkapseln: Aktiviert bei jemandem die T-Net-Box, und
+schalten "*000#" ein, somit werden alle Anrufer auf seine Box umgeleitet,
+wovon das Opfer ja nicht weiss. (Bei der Aktivierung der "*000#"-Funktion ist
+fuer den Anschlussinhaber nur ein Sonderwahlton zu hoeren, er merkt also, dass
+irgendetwas mit seiner Line nicht in Ordning ist...
+
+3.) Eine andere Methode, die Box zu missbrauchen, ist, einfach in der
+Benachrichtigungsfunktion die Nummer eines geliebten Todfeindes einzusetzen,
+und sobald wir in der Box durch Anwahl der 0130-144770 eine Nachricht, oder
+auch zwei oder auch 2 Millionen hinterlassen, klingelt bei ihm das Telefon
+sturm (Und zwar wird die Zielperson dann direkt von der Deutschen Telekom
+terrorisiert, hehe). Oder man gibt in der Benachrichtigungsfunktion einfach die
+Nummer eines beliebten Boards an, und kann so, vollkommen kostenfrei, fuer
+staendige Nichterreichbarkeit sorgen, das bringt Freude! (und Feinde...)
+
+
+
+
+To contact the author, write e-mail to HITRONIC@USA.NET
+

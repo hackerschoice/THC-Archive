@@ -1,0 +1,12 @@
+
+Erweiterte Qualitätsberechnung
+
+Ziffernähnlichkeits-Tabelle
+3 -> 3        1
+3 -> 5        0.5
+8 -> 9        0.4
+9 -> 8        0.2
+0 -> 1        0
+
+Die Summe der gewichteten Ziffernähnlichkeiten ist nun die Qualität eines Fingerabdrucks zu einem Zielfingerabdruck
+

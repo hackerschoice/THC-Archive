@@ -1,0 +1,13 @@
+
+Beispiel eines Bruteforce-Angriffes
+
+MD5 mit 128 Bit               ~
+Erfolg nach 10% Suche    ~
+
+Geschwindigkeit
+Seti@Home mit 100 TFLOPS
+Ein Fingerabdruck 1 FLOP
+Fingerabdrücke/Sekunde
+
+Benötigte Zeit (in sec)      ~
+Ende der Sonne (in sec)   ~

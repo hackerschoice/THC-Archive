@@ -1,0 +1,11 @@
+
+Idee der Fuzzy Fingerprints
+
+Kollision nicht möglich, aber Suche
+nach ähnlichen, unscharfen Finger- 
+abdrücken, den Fuzzy Fingerprints 
+
+Wann sind zwei kryptographische Fingerabdrücke ähnlich?
+
+Kann man solche Ähnlichkeit bewerten und einstufen?
+

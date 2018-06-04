@@ -1,0 +1,8 @@
+
+Suche von Fuzzy Fingerprints
+
+Suche erfolgt wie beim Bruteforce-Angriff
+
+Fingerabdrücke mit der besten Qualität werden abgespeichert
+
+Werteraum kann beliebig kurz durchsucht werden

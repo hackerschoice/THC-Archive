@@ -1,0 +1,12 @@
+
+Menschlicher Vergleich
+
+Gutgläubigkeit
+Vergleich einiger Zahlen reicht aus
+Fehler werden ignoriert
+
+Beispiel
+Ein SSH2 Fingerabdruck auf Papier
+ea:b5:43:80:63:c0:
+
+

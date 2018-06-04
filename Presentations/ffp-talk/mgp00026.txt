@@ -1,0 +1,14 @@
+
+DSA Schlüsselgenerierung
+
+DSA Schlüssel Komponenten
+p        Primzahl
+q        160 bit Primfaktor (p-1)
+x        privater Schlüssel, x < q
+g        (kompliziert)
+y        öffentlicher Schlüssel
+
+Primzahlen werden einmalig bestimmt
+Suche erfolgt über x
+Effiziente Berechnung von y schwierig
+

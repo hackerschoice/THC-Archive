@@ -1,0 +1,150 @@
+
+
+
+
+                          CCiTT #7 Monitoring
+
+
+
+
+
+   The information presented here is based on Data of :
+
+        þ Bellcore (Bell Communication Research) - USA
+        þ Mercury Communications - United Kingdom
+        þ Telekom - Germany
+        þ AcceSS 7 - Hewlett Packard Research CCiTT #7 Monitoring System
+
+
+Note that some of the data presented in this article might be
+classified material by some of those companies. 
+
+
+
+
+
+ What is CCiTT #7
+ ----------------
+CCiTT #7 is the newest signalling system also called SS7 (or also Common
+Channel Signalling No.7). It uses two channels for communication. 
+The first is the voice channel (or what ever you are transmitting over it) 
+and the second is the data channel. This data channels is completly seperated
+from the voice channel and holds all calling information in it plus has got
+the advanced features of caller ID, call forwarding, conference calling, 
+credit card calls, collect calls etc.
+This extra data channel was put in since ccitt #6 because first it disables
+now the "famous" blueboxing possiblity, second enhances line quality and
+third expands possiblities for new features like caller ID etc.
+
+It is used in nearly all west european countries, but now more and more
+other countries change to this system as well like israel for example.
+
+
+
+
+
+
+
+ Monitoring Systems for CCiTT #7
+ -------------------------------
+As far as i know the following Monitoring Systems are in existance and 
+available for telecommunication companies :
+
+   þ Bellcore : Davin and NetMavin
+   þ Hewlett Packard : HP E4250A, also known as AcceSS 7
+   þ Unisys : NIRIS Information Platform
+   þ Algen : Probe
+
+þ Bellcore's monitoring system is based on unix and is programmed in C using
+  the X11 Unix Window System but can also be run on vt100 terminals and soon
+  on Macintoshs too. It can run on any workstation which is Unix compactible.
+  It has got also the possbility to work with data from other 
+  Monitoring Systems like AcceSS 7 from HP and also use the C libraries from
+  HP's system. 
+  It's easy to use with mouse support, Window graphic displays in realtime,
+  Zooming etc.
+
+  Interesting Options are for example : 
+     Monitoring calls from a specific telephone number
+     Automatic Fraud Detection
+     Multiple simultaneos call traced (up to 100)
+  Bellcore's Davin and NetMavin is used by Bell and Mercury Telecommunication.
+
+
+þ Hewlett Packards monitoring system is more general than Bellcore's. 
+  It's based on HP unix machines (Apollos I think) running HPUX Unix.
+  It is very flexible and can link in any CCiTT #7 system. 
+  Everything is written in C and the customer can program, enhance and tune
+  the monitoring tools as they like. Basic Tools are implemented so is the
+  monitoring data collection tools, but everything else must be programmed
+  by the customer or by an HP service team - but be sure they know what they
+  can do and will program everything to get you.
+  HP's AcceSS 7 System is used by the german Telecom.
+  (Installed in Frankfurt, Duesseldorf, Stuttgart and Nuernberg with
+   Controll Centers in Frankfurt and Bamberg)
+
+
+þ Sorry, on the two others i haven't got any information, and i don't know
+  if other monitoring systems exist.
+
+
+Of course Fraud Detection is not the main point of CCiTT #7 Monitoring.
+It's more gathering traffic statistics for network planning, optimizing,
+error controlling & detecting, and market decicions - but fraud detection
+is an important part.
+
+
+
+
+ How does CCiTT #7 Fraud Detection work
+ --------------------------------------
+Automatic Fraud Detection is based on pattern matching.
+Patterns must first be measured for each every communication network/area.
+Everything which is out of this pattern triggers an alarm.
+Out-of-Pattern are :
+   identify calls of long duration
+   repeated calls to a particular dialed number from the same area of origin
+   repeated calls from the same area of origin to different numbers
+   long/many calls from an unbillable number
+   dialing special numbers
+   dialing many toll free numbers
+
+A triggered alarm can result in anything, also depending on type of alarm :
+   saving data to log
+   continued electronical oberservation to detect more out-of-pattern behavior
+   autotrace
+   alarm operator
+
+
+ XXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXX \
+ XXXXXXXXXXXXXXXX  \                          
+ XXXXXXXXXXXXXXXX   \  Out-of-   -->  XXXXXXXX \   Continues        -->   XX
+ XXXXXXXXXXXXXXXX    - Pattern   -->  XXXXXXXX  -  Out-of-Pattern   -->   XX
+ XXXXXXXXXXXXXXXX   /                 XXXXXXXX /       or
+ XXXXXXXXXXXXXXXX  /                                Manual 
+ XXXXXXXXXXXXXXXX /                                Inverstigation
+ XXXXXXXXXXXXXXXX
+
+    Calls going      Monitoring       Alarms of     Continued           FRAUD
+ though Monitoring     system         Monitoring   Out-of-Pattern       CASES
+       system         Analyzing        system           or 
+                                                  Manual Investigation
+ 
+
+
+
+Yes thats all ... there aren't much information available and even those
+mentioned here are only known to a small group, although someone could
+logically think it would be this way, but now you know it for sure ;-)
+
+
+Please note that some data might be wrong or outdated (also it should not).
+If so please tell me and in the next issue I'll present the new/corrected data.
+If you got additional data, do something for the phreaker community and
+send it me to release it in the next magazine or release it on your own!
+
+
+Ciao...
+                         van Hauser
+

@@ -1,0 +1,11 @@
+
+Kryptographische Fingerabdrücke
+
+Analog zu echten Fingerabdrücken
+Einfache Gewinnung
+Möglichst eindeutige Relation  
+Schwer zu fälschen
+
+Weitere Forderungen
+Wesentlich kürzer als Daten
+

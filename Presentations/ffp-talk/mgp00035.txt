@@ -1,0 +1,14 @@
+
+Referenzen
+
+Fuzzy Fingerprinting Artikel
+http://www.thc.org/papers/ffp.pdf
+http://www.thc.org/papers/ffp.html
+
+FFP Homepage und Competition
+http://www.thc.org/thc-fpp
+
+RSA, MD5 & DSA, SHA1
+http://theory.lcs.mit.edu/~rivest
+http://csrc.nist.gov/publications/fips/fips186-2
+

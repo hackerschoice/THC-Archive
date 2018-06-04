@@ -1,0 +1,15 @@
+
+Menschlicher Vergleich
+
+Faulheit
+Fingerabdruck "unmenschlich" lang
+Vergleich nur am Anfang und Ende
+
+Beispiel 
+SSL SHA1 Fingerabdruck
+
+34:1B:4D:A4:BC:61:01:5D:9A:A3
+6A:D1:DC:9B:E1:25:6B:83:A4:1C
+34:1B:4D:A4:BC:61:01:5D:9A:A3
+6A:D1:DC:9B:E1:25:6B:83:A4:1C
+

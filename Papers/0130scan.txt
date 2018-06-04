@@ -1,0 +1,573 @@
+
+
+
+
+
+
+                              ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»   
+                              º 0130 Scanning º    
+                              ÈÍÍÍÍÍÍ» ÉÍÍÍÍÍÍ¼   
+                       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ½ ÓÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+                       ³ (c) 1997 by van Hauser / THC ³
+                       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+
+
+
+
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Einleitung ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Eigentlich wollte ich ueber unix hacking schreiben, aber nachdem der
+   urspruengliche Schreiber den Artikel ueber 0130 Scanning nicht
+   rechtzeitig fertigstellen konnte, musst ich leider in die Tasten greifen :(
+   Es ist mir ein grosses Anliegen, weil die Szene in Deutschland immer kleiner
+   und elitaerer wird, und neue Leute kaum mehr nachruecken.
+   Daher ist dieser Text vor allem etwas fuer Anfaenger und Leute die sich
+   noch nie ausgiebig mit 0130 Scanning beschaeftigt haben - fuer Experten
+   wird es nur wenig neues zu lesen geben.
+   Es wird wohl schnell auffallen, dass ich Beispiele und Bezug meistens zum
+   THC-Scan Programm machen werden - weniger aus Prestige weil ich es selbst
+   programmiert habe, sondern weil es ohne Uebertreibung das momentan beste
+   Scanner Programm ist, das zu haben ist. Es wurde vor ueber 1 1/2 Jahren
+   begonnen und mit enger Zusammenarbeit von aktiven Scannern, Blueboxern,
+   Carrier Hackern etc. weiterentwickelt und optimiert, um jedem, der sich
+   irgendwie mit Scanning beschaeftigt (beschaeftigen muss) eine optimale
+   Arbeitsplatform zu schaffen - doch dadurch wurde es sehr komplex.
+   Aktuelle Version ist uebrigens die v1.4
+   Doch genug der Schwafelei, kommen wir zum Inhalt :
+
+
+                ş Einleitung
+                ş Was ist "0130 Scanning" ?
+                ş Warum ist es fuer jeden interessant ?
+                ş Vor-/Nachteile des Hand-/Computer-Scannings
+                ş Wie identifiziert man Rufnummern und was tut man danach ?
+                ş Die Wahl des Modem und dessen Konfiguration
+                ş Wie arbeiten Scanner-Programme, welche gibt es?
+                ş Tips & Tricks zum Scannen
+                ş Tips zum Benutzen erweiterer Funktionen von THC-Scan
+                ş Die Gefahren des Scannens
+                ş Schlusswort
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Was ist "0130 Scanning" ? ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   "Wardialing", "Tollfree Scanning", "0130 Scanning", "0-800 Scanning" :
+   Alles beschreibt das gleiche, das Absuchen und Identifizieren von 
+   Telefonrufnummern, zumeist gebuehrenfreie.
+   In Deutschland sind z.B. alle Rufnummern mit der Vorwahl 0130 kostenlos
+   anzuwaehlen. Man ruft dann ein paar oder alle Nummern mit dieser Vorwahl
+   an und notiert sich was man da gefunden hat.
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Warum ist es fuer jeden interessant ? ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Wer Novize ist und sich fuer Hacking/Phreaking interessiert weiss meistens
+   nicht wie und wo er ueberhaupt anfangen soll. Texte gibt es viele,
+   gescheite wo man was draus lernt aber nur sehr wenige. Besonders fuer
+   Anfaenger ist es meistens fast unmoeglich irgendeinen Einstieg zu finden,
+   wenn man niemanden kennt, der einen was zeigt und erklaert.
+   Besonders Praeferenzen zu finden was man gerne machen moechte ist schwer.
+   Man will ja nur ein toller "Hacker" werden - ja aber was fuer einer?
+   BBS Hacker, VMB Hacker, Unix Hacker, PBX Hacker, Modem Hacker, Scanner,
+   Blueboxer, ..., ... ??
+   Es gibt soviel womit man sich beschaeftigen *koennte* aber soviel Zeit hat
+   man in seinem Leben gar nicht, man muss sich also spezialisieren.
+   Da man aber ja gar nicht wissen kann was einem liegt bevor man es nicht
+   ausprobiert hat ist 0130 Scanning DAS ideale Mittel um einen Einstieg zu
+   finden und zu schauen was einem Spass macht.
+   Und das beste daran : es ist legal. Man kann sich also vergnuegen, lernen,
+   einen Einblick ins Hacking/Phreaking bekommen und trotzdem keine Straftat
+   begehen. Trotzdem gibt es ein paar Gefahren, doch dazu mehr in dem Abschnitt
+   "Die Gefahren des Scannings".
+   Doch auch fuer andere ist es Interessant. z.B. fuer Unix Hacker, denn
+   auf 0130 gibt es einige Moeglichkeiten in Systeme einzudringen die man
+   vom Internet aus nicht hat, oder auch nur um kostenlos ins Internet zu
+   kommen.
+   Was findet man nun beim Scanning, und was ist eigentlich eine VMB/PBX etc.?
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Wie identifiziert man Rufnummern und was tut man danach ? ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Die 0130 Nummern sind bislang in folgende Nummerngruppen eingeteilt :
+
+   0130-8xxxxx
+   0130-1xxxxx
+   0130-xxxx (von 2xxx bis 7xxx, 0xxx und 9xxx)
+
+   also insgesamt 208000 moegliche Nummern. Wenn man also sehr fix ist, und
+   250 Anrufe/Stunde schafft braucht man nur ca. 832 Stunden = also ueber einen
+   Monat ohne Schlaf/Essen etc. ;-)
+   Wer sowas also mit System alles abscannen will sollte sich am besten mit
+   anderen zusammentun. Man muss aber dazu sagen, dass viele Bereiche nur zu
+   ca. 1-3% vergeben sind, so z.B. 0130-87xxxx bis 0130-89xxxx
+
+   Folgendes kann man beim Scannen finden :
+
+     SPRACHNUMMER - das haeufigste. Eine Bestellhotline fuer Firmen,
+                    Servicedienste fuer alles moegliche. (ADAC z.B.)
+                    Kann interessant sein, weil man sich manchmal
+                    kostenlose Sachen und Informationsmaterial
+                    zuschicken lassen kann. (Zeitungen wie die FAZ z.B.)
+                    Erkennungsmerkmal: wie sich die Personen melden ;-)
+
+     KREDITKARTENNUMMERN - Sind eher selten. Man kann ueber solche Nummern
+                           Telefongespraeche zu Lasten von Kreditkarten 
+                           (z.B. VISA -> VISA-Phone) fuehren, oder aber
+                           sogenannte Calling Cards benutzen (z.B. AT&T, MCI).
+                           Bei manchen Nummern ist ein Operator dran, bei
+                           anderen ein Computer, andere beides.
+                           Man kann z.B. mit Operatorn reden was das genau
+                           fuer Calling Cards sind, sich vielleicht Test-
+                           karten geben lassen oder einfach versuchen mit
+                           Glueck oder System Calling Cards zu hacken.
+                           Erkennungsmerkmal: Die Stimme (Operator oder
+                           Computer) fragt nach einer Kartennummer oder PIN
+
+     VOICE MAIL BOX - oder kurz VMB genannt ist so etwas wie das
+                      Anrufbeantworter-System einer grossen Firmen 
+                      Telefonanlage. Es gibt verschiedene Endnummern, an
+                      denen man fuer die jeweiligen Leute eine Nachricht
+                      hinterlassen kann. Fuer Hacker & Phreaker ist so ein
+                      System ideal, da man so sehr einfach und komfortabel
+                      Austauschen kann.
+                      Mehr Informationen hierfuer gibt es im THC-MAG #2.
+                      Erkennungsmerkmal: Eine Stimme vom Band fragt nach einer
+                      "Extension of the person you are calling" und melden sich
+                      meist am Anfang mit "Welcome to XYZ ..."
+
+     ANRUFBEANTWORTER - Jeder weiss was ein Anrufbeantworter ist und was man
+                        damit macht. Findet man halt auch, das einzige was
+                        sich darueber sagen laesst ist, dass man sie meistens
+                        von ausserhalb mit einem Code abhoeren kann und bei
+                        manchen sogar neu besprechen. Kann man zu netten Sachen
+                        verwenden.
+                        Erkennungsmerkmal: Wird wohl jeder wissen
+
+     PRIVATE BRANCH EXTENSION - oder kurz PBX genannt. Solche Systeme verlangen
+                        die Eingabe eines Codes, wonach man z.B. eine VMB, ein
+                        Modem oder sogar einen Waehlton zum weitertelefonieren
+                        bekommt. Es ist sehr beliebt unter Warez-Tradern solche
+                        mit einem Wahlton zu finden um sie solange fuer ihre
+                        Softwareschiebereien zu benutzen bis die Firma pleite
+                        oder sie geschnappt wurden.
+                        Mehr Informationen in DIESEM MAGAZIN (pbx.thc)
+                        Erkennungsmerkmal: Langer Ton oder Stille, nach einiger
+                        Zeit oder Eingabe einiger Ziffern etwas was sich wie
+                        ein Alarmton anhoert oder das Beenden der Verbindung.
+
+     MODEM DIALUP - An manchen Nummern haengt auch ein Modem dran - was man
+                    dann einfach versuchen kann zu Hacken. z.T. sind da
+                    Mailboxen dran, Unix Dialups etc. etc.
+                    Mehr Informationen in DIESEM MAGAZIN (carriers.thc)
+                    Erkennungsmerkmal: Schrille Toene, rufst du mit deinem
+                    Modem da an, siehst du "CONNECT" und danach noch mehr.
+
+     FAX EMPFANG / FAX POLLING - An einigen Nummern haengt dann auch mal ein
+                                 Fax. Bei Fax-Polling kann man sich dort
+                                 Faxe abholen, aber das ist auch alles was
+                                 man da so sinnvolles machen kann.
+                                 Erkennungsmerkmal: Schrille Toene, rufst du
+                                 mit deinem Modem an bekommst du "NO CARRIER"
+                                 und wenn du dein Modem auf FAX umstellst ein
+                                 "CONNECT FAX"
+
+   KEIN ANSCHLUSS UNTER DIESER NUMMER - sehr haeufig. *seufz*
+                                        Es lohnt sich trotzdem solche Nummern
+                                        zu speichern, denn wenn Firmen sich
+                                        sich eine 0130 Nummer schalten lassen
+                                        bekommen sie von der Telekom eine, bei
+                                        der vorher diese Meldung gab - also
+                                        einfach solche Nummern immer wieder
+                                        anwaehlen um zu schauen ob da was
+                                        neues ist.
+
+   BESETZT (TUT-TUT-TUT etc.) - es ist halt besetzt. Spaeter nochmal anrufen,
+                                aber manche Nummern sind einfach immer besetzt.
+                                Solche Nummern nennt man "dauer-busy".
+                                Erkennungsmerkmal: Besetzton
+
+   Das sind alle Typen die man beim Scannen so findet.
+   Jetzt ist natuerlich noch interessant, wie sie so prozentual verteilt sind:
+
+     59% Unbenutzt ("Kein Anschluss" etc.)
+     29% Sprachnummern
+      3% Modems
+      3% Faxe
+      2% VMBs
+      2% dauer-busy
+      1% PBXs
+      1% Kreditkartennnummern
+
+   Das ist aber sehr unterschiedlich von dem genauen Bereich den man abscannt.
+
+   Uebrigens haben wir alle Modem Nummern abgescanned : es sind insgesamt
+   ueber 1000 die man finden kann ;-)
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Vor-/Nachteile des Hand-/Computer-Scannings ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Scannen von Hand oder scannen mit/vom Computer?
+   Das war immer eine sehr umstrittene Diskussion.
+
+                  HAND                MIT COMPUTER        NUR COMPUTER
+Geschindigkeit    langsam             sehr schnell        schnell
+Identifizierung   detailliert         sehr detailliert    grob (*)
+Modem Scanning    schlecht            sehr gut            gut
+PBX Scanning      sehr gut            gut (*)             mittel
+VMB Scanning      sehr gut            gut (*)             nicht moeglich (*)
+Sprachidentifiz.  sehr gut            gut                 mittel
+Selbst Sprechen   sehr gut            schlecht (*)        ---
+Weitere Nachteile Zettel+Stift immer  Das Modem gibt gel- wie "MIT COMPUTER" u.
+                  noetig, schlechte   egentlich ein BUSY  zusaetzlich: Nur sehr
+                  Handschrift,        aus bei einer Stim- grobe Identifikation
+                  waehlen ist langsam me. Es ist nicht    moeglich und manchmal
+                                      moeglich bei PBX/   eine falsche.
+                                      VMB nachzuwaehlen (*)
+Weitere Vorteile  Erweiterte Informa- leichte und schnel- Alles geht automa-
+                  tionen moeglich,    le Identifikation.  tisch, man muss nicht
+                  z.B. mit dem Oper-  Ausgabe im Modem-   zu Hause sein.
+                  ator sprechen, VMB  Speaker manchmal
+                  bedienen, C5 Toene  nicht gut vestaend-
+                  hoeren etc.         lich.
+
+   (*) -> Das sind Nachteile, fuer die im THC-Scan eine Abhilfe geschaffen
+          wurde, und sind bisher nur in diesem Programm implementiert.
+          Siehe weiter unten.
+
+   Fuer wen ist nun welche Technik interessant?
+
+     ş Von Hand - eigentlich nur fuer Leute die a) immer mit den Operatoren
+                  reden wollen und b) gerne mit VMB und PBX spielen aber das
+                  mit dem Computer zu muehsam finden
+     ş nur Computer - nur interessant fuer Leute die nur an PBXs oder
+                      Modems interessiert sind.
+     ş mit Computer - Fuer alle anderen, also nicht auf sowas spezialisierte.
+
+   Als Anfaenger sollte man immer "mit Computer" oder "von Hand" scannen.
+                      
+   Weshalb immer weniger fuer das umstaendliche Scannen von Hand spricht :
+   THC-Scan wurde im laufe der Jahre (hehe) immer weiter optimiert und auch
+   an die Beduerfnisse von Phreakern angepasst, die die "von Hand" Methode
+   bisher vorgezogen hatten.
+   Folgende Funktionen wurden Implementiert, um ein besseres Arbeiten zu
+   ermoeglichen, und welche Nachteile sind geblieben:
+
+     ş Das groesste Problem war immer, dass man nach dem Waehlen des Modems
+       nicht mehr weiterwaehlen kann wenn man z.B. auf eine PBX oder VMB
+       stoesst. Hierfuer wurde der "Manual Mode" eingebaut, mit dem man einfach
+       die Nummer identifiziert. Danach kommt ein Pop-Up Fenster, bei dem man
+       nun 0-9, * und # und sogar abcd waehlen kann - und man ist trotzdem
+       weiter online und verbunden wie als wuerde man von Hand waehlen.
+       Kleiner Nachteil: Das waehlen ist etwas langsamer als mit der Hand.
+
+     ş Manchmal moechte man sich mit den Operatoren unterhalten, dazu drueckt
+       man nun einfach P fuer Pause, und das Modem haengt auf. Vorher muss man
+       allerdings schnell den Telefonhoerer abnehmen. Es bleibt leider etwas
+       umstaendlich, aber weiter kann man es nicht von der Software her loesen.
+       Wer sich nicht sooo oft sich mit Operatoren unterhalten will, fuer den
+       ist das eine brauchbare Loesung
+
+     ş Was bisher nicht automatisch, also nicht mit "nur Computer" zu
+       identifizieren war, waren z.B. VMBs, oder "Kein Anschluss ...".
+       Beim THC-Scan kann man z.B. festlegen, dass jede VOICE Response
+       bei der es vorher nicht gelaeutet hat, als VMB zuzuordnen.
+       Spaeter scanned man einfach die Nummern online ab, und schaut einfach
+       welche wirklich VMBs sind.
+       Seit der Version 1.4 gibt es fuer VMBs und "Kein Anschluss ..." eine
+       weitere Moeglichkeit der Identifikation: Die Zeit. Wenn z.B. eine
+       VOICE Antwort beim Modem innerhalb von 4 Sekunden nach Waehlbeginn
+       kommt ist es "Kein Anschluss ...", und zwischen 4-10 Sekunden und
+       keinem RINGING meist eine VMB.
+
+     ş Ein Nachteil der immer bleiben wird: Ueber den Modemspeaker versteht man
+       nicht immer alles :( ... aber bei guten Modems ist es ausreichend.
+       Ausserdem wird manchmal eine Stimme vom Modem als BUSY identifiziert,
+       was sich leider nicht vermeiden laesst, aber ein gutes Modem macht
+       auch das seltener. Man kann zudem ganz bei den meisten Modem die BUSY
+       Identifizierung auschalten (AT Xx), der Nachteil ist dann halt, dass
+       man immer selbst im Scanner-Programm B fuer Busy druecken muss.
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Die Wahl des Modems und dessen Konfiguration ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Ja welches Modem soll man nun nehmen?
+   Es sollte auf jedenfall eines mit guter Qualitaet sein, denn manche
+   Modems auf 0130 liegen irgendwo weit weg und es ist viel Rauschen dabei,
+   oder sind alt und wollen einen 1200 Baud Connect was nicht jedes Modem
+   mehr unterstuetzt. Auch reagieren qualitative Modems besser und schneller.
+   Wenn man hauptsaechlich autmatisch scanned, also ohne davor zu sitzen,
+   dann sollte das Modem unbedingt eine VOICE Antwort unterstuetzen.
+   Alte Zyxels oder USR Sportster untersteutzen keine VOICE Antwort.
+   Sehr zu empfehlen sind USR Couriers oder Zyxels, wobei man bei Zyxels,
+   wenn es sich um die 1496er Reihe handelt auf ein aktuelles ROM handeln
+   sollte - ansonsten halt updaten.
+   Ich benutze die Kombination von USR Courier und Zyxel seit langem und finde
+   sie unschlagbar. Oft gibt es Probleme mit z.B. Creatix oder billigen
+   28.8 Modems. Lasst davon lieber die Finger.
+   Wichtig ist es auch, dass ihr ein Modem OHNE Postzulassung kauft, denn sonst
+   ist eine Wahlsperre integriert!
+
+   Zur Konfiguration des Modems : Der Modem-Lautsprecher sollte an sein,
+   wenn ihr davor sitzen wollt beim scannen, ansonsten abgeschaltet.
+   Das S10 Register sollte hoeher gestellt werden, damit man den Carrier
+   nicht verliert wenn das Zielmodem weit entfernt ist.
+   Das S11 Register sollte auf zwischen 60-70 gestellt werden, damit schneller
+   gewaehlt wird.
+   Folgendes sollte bei jedem Modem funktionieren und setzt es in den
+   wahrscheinlich optimalen (generischen) Zustand :    AT &F M3 S10=69 S11=64
+
+   Wer ein Modem mit Wahlsperre hat soll sich aus dem FIDO das Wahlsperren FAQ
+   holen wo fuer viele Modems drinnen steht wie man sie abschaltet.
+   Wenn das Modem eine VOICE Antwort besitzt sollte diese Modus nur einschalten
+   wenn der Computer alleine scannen soll. (AT X? - schaut ins Handbuch)
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Wie arbeiten Scanner-Programme, welche gibt es? ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Mit wenigen Ausnahmen machen alle Programme folgendes :
+   Man traegt seine COM Adresse des Modems ein, sagt von welcher Nummer
+   bis welcher Nummer man scannen will und dann legt das Programm los,
+   und spuckt am Ende eine Liste mit den gefundenen Modems aus.
+   Nur wenige Programme speichern zumindest das, was das andere Modem ausgibt,
+   was im vorfeld sehr hilfreich ist, da man schon sieht womit man es zu tun
+   hat, und dadurch viel Zeit spart, z.B. der Autoscan von POI (poi-as01.zip)
+   und der PHU (phu.zip).
+   Somit stellen diese beiden das absolute Minimum dar, was man, wenn man nur
+   an Modems interessiert ist, benutzen sollte.
+   Moechte man nach PBX scannen, oder online davorsitzen und sich mehr darueber
+   notieren ueber die Nummer, dann muss man schon zum Toneloc v1.1 greifen
+   (tl-110.zip), allerdings sind die Funktionen recht beschraenkt, nur wenige
+   IDs die Nummern zugeordnet werden koennen, ausserdem laeuft es nicht mit
+   allen Computers/Modems. Aber wem solche einfachen Identifizierungen wie
+   Carrier/Fax/Noted/Girl-Voice/Asshole-Voice/Busy reicht, und bei dem es
+   funktioniert, der wird damit zufrieden sein.
+   Wer gerne nochmehr machen moechte, erweiterte ID Moeglichkeiten, besondere
+   Settings braucht, nach speziellen Sachen scanned, etc. etc. der muss zum
+   THC-Scan greifen, ein Konkurrenzprodukt mit auch nur annaehernd gleichem
+   Funktionsumfang gibt es leider nicht. (thc-ts14.zip)
+
+   Wie arbeiten nun solche Programme eigentlich?
+   Nun, das Modem wird zuerst initalisiert, und dann der Nummernbereich, der
+   gescanned werden soll angerufen. Manche machen das Schritt fuer Schritt,
+   andere mit einem Zufallsgenerator. Es wird dann einfach ein "ATDT0130800000"
+   an das Modem gesendet, was dann die Nummer anwaehlt.
+   Wenn nach 30/50/60 Sekunden, je nach Einstellung, keine Antwort vom Modem
+   kommt, ist es ein Timeout, ansonsten wird die Antwort des Modems einer ID
+   zugeordnet wie z.B. BUSY -> Besetzt, VOICE -> Stimme, CONNECT -> Modem, etc.
+   Allerdings speichern die meisten Programme nur CONNECT -> Modem.
+   Toneloc und THC-Scan unterstuetzen ausserdem auch PBX-Scanning.
+   Da sich haeufig die PBXen am Anfang mit einem waehltonaehnlichen Ton melden
+   wird das ausgenutzt, indem man dem Modem den Befehl "ATDT0130800000W;"
+   sendet zum anrufen. Wenn nun ein OK als Antwort kommt hat man eine PBX
+   gefunden, wenn ein NO CARRIER kommt, oder die Zeit ueberschritten wurde
+   war es irgendetwas anderes. Allerdings findet man damit nicht nur PBXen
+   sondern auch Modems, die sich versuchen zu initialsieren und dann auch einen
+   Ton angeben der einem Waehlton aehnelt. So kann man also den Computer
+   alleine nach Modems und PBXs scannen lassen.
+   Angemerkt werden soll noch, dass manche PBXen sich auch nur so aeussern,
+   das sie still sind, um solche zu finden muss man "ATDT0130800000@;" senden,
+   allerdings fuehrt es haeufig zu einer falschen Identifikation.
+   Wie ihr seht, arbeiten solche Programme recht simpel und erst
+   Sonderfunktionen machen etwas Programmieraufwand. Wer also was ganz
+   spezielles braucht, kann es sich leicht selber programmieren.
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Tips & Trick zum Scannen ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   ş Manche Firmen haben Nachts statt ihrer Beratungshotline eine VMB
+     laufen, also lohnt es sich sehr wenn man nachts scanned.
+   ş Die Bereiche zum scannen sind riesig, ihr habt also nicht nur mehr
+     davon wenn ihr euch zu ScanTeams zusammentut, sondern lernt ausserdem
+     noch voneinander und seid nicht alleine.
+   ş Wenn man Probleme mit einem Modem/Programm hat, dass es nicht laeuft,
+     einfach vorher einen Fossil Treiber (z.B. x00-202.zip) laden. Wenn
+     das Programm einen solchen ausserdem noch direkt unterstuetzt, dass im
+     Programm anwaehlen.
+   ş Random/Zufaellig oder Sequentiell waehlen : Random ist unauffaelliger,
+     Sequentiell lohnt es sich zu scannen wenn man davor sitzt, weil man
+     dann z.B. ein Gefuehl ueber die Verteilung von Nummern bekommt und
+     ausserdem bemerkt wenn eine Firma mehrere Nummern hintereinander belegt
+     hat.
+   ş Wenn das Modem eine VOICE Antwort zurueckgibt, bevor auch nur die
+     Zielnummer was hineingesprochen haben koennte, dann reagiert das Modem
+     sehr anfaellig auf Rauschen und Stoergeraeusche. Du solltest also bei
+     der Dialmask des Nummernbereiches den du scannst ein ",," anhaengen,
+     also z.B. "0130-80xxxx,,"
+   ş selbiges wenn man Tone-Scanning macht, und zu frueh ein OK zurueckgegeben
+     wird.
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Tips zum Benutzen erweiterter Funktionen von THC-Scan ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Mehr zu den jeweiligen Punkten in der Dokumentation von THC-Scan
+   (thc-scan.doc)
+
+   ş Man kann aus interessanten Textfiles, Word-Dokumenten etc. etc.
+     die Telefonnummern extrahieren (mit extr-no.exe) und sie dann mit
+     der Funktion "Scannen von einer Liste" von THC-Scan inspizieren.
+   ş Wer 2+ Telefonleitungen und Modems hat, kann mit Hilfe der Batchdatei
+     netscan.bat einfach ueber einen Multitasker, oder im Netz verbundenen
+     Rechnern.
+   ş Man man sich einen Modemoutdial gehackt hat (z.B. im Internet), kann man
+     mit dem Kommandozeilenparameter -o diesen zum Scannen benutzen.
+     Verwischt gut die Spuren, ausserdem kann man so leicht und kostenguenstig
+     Bereiche abscannen die einen sonst etwas kosten wuerden.
+   ş Wer noch Blueboxen kann und will und auch erfolgreich ist, kann den
+     besten BB Dialer fuer PCs, den SCAVENGER DIALER (aktuelle Version v0.91)
+     mit dem THC-Scan koppeln, den Scavenger Dialer waehlen lassen und THC-Scan
+     zum Identifizieren benutzen.
+     Aber auch jedes andere Programm kann man das waehlen ueberlassen, z.B.
+     einer Blackbox.
+   ş Bei dem "Autonomen Modus" kann man Ziffern etc. nachwaehlen, was sehr
+     interessant ist, um eine VMB oder PBX schonmal schnell abzuscannen
+   ş Der beste NUDGE String ist 
+     ^~^~^!^~^M^~^M^~^guest^M^~^~guest^M^~^~info^M^~help^M^~^~^~^]^~^M^~^D^~
+     .^M^~@^M^~^A^A^A^~^B^C^E^F^G^H^I^J^K^L^~^N^O^P^Q^R^S^T^U^V^W^X^Y^Z^[^\^~
+   ş Eine Nummer die schon etwas zurueck liegt nochmal anwaehlen? Einfach
+     <BACKSPACE> druecken
+   ş Mit S kann man zu einer Nummer eine Notiz schreiben, was sehr nuetzlich
+     ist. Wenn man *jede* Nummer die man anwaehlt kommentieren will, einfach
+     Alt-S druecken.
+   ş Wenn man eine ganze zeitlang gescanned hat, und viele Nummern Busy waren,
+     und man diese nun nicht mehr scannen will um fertig zu werden, einfach
+     Alt-N druecken.
+   ş Wenn man einen Carrier gefunden hat, und sieht wie der Nudge eingegeben
+     wird plus die Ausgabe des Modems, und dann eingreifen will, einfach Alt-T
+     druecken und selbst Hand anlegen.
+   ş Wer ein gutes Modem besitzt kann im TS-CFG die Modem Controlling Option
+     FAST statt SECURE einstellen, was das scannen beschleunigt.
+   ş Dessen Herz eher an Linux oder FreeBSD/OpenBSD haengt: Man kann THC-Scan
+     wunderbar im Dosemu laufen lassen. Auch mit MsDos Multitaskern gibt es
+     keine Probleme, nur bei Win95 sollte man erst das MsDos aufrufen.
+   ş ... Es gibt noch soviele Funktionen und Optionen, man sollte sich
+     unbedingt die komplette Dokumentation durchlesen und Notizen machen.
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Die Gefahren des Scannens ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Kommen wir nun zu einen sehr interessanten Punkt : Was kann mir beim
+   0130 Scanning eigentlich passieren ?
+   Solange ihr nicht anfangt Nummern zu hacken von der rechtlichen Seite
+   her gesehen nichts.
+   Obwohl die Telekom am Scanning ja selbst verdient scheint es ihr jedoch
+   nicht recht zu sein : Seit jeher hat die Telekom versucht, Leute die viel
+   scannen zu stoeren.
+   Ich kenne 2 Leute, die sehr viel gescanned haben, und bei denen es irgend-
+   wann anfing, dass sie nach Anwahl jeder 2. Telefonnnummer nach den ersten
+   Ziffern sofort ein Besetztzeichen bekamen, sobald sie mit dem Scanning
+   anfingen.
+   Die Telekom tut ausserdem sofort bei Verdacht die Leitungen ueberwachen;
+   im Fall "Luzifer" in Muenchen hatte dieser eine grosse Anzahl von Telefon-
+   leitungen bei der Telekom geordert was diese verdaechtig fanden. Also
+   hoerten sie seine Leitungen ab und protokollierten alles.
+
+   Inzwischen muss die Telekom aber nicht mehr soviel Handarbeit machen,
+   durch ihr Ueberwachungssystem und modernen Vermittlungsstellen kann
+   sie Scanning identifizieren und Massnahmen einleiten.
+   Mehr ueber dieses System in DIESEM MAGAZIN (c7-ueber.thc).
+   Das es eingesetzt wird und auch wirkt laesst sich schoen an einem Fall
+   zeigen, der gerade einmal 3 Wochen zurueck liegt :
+   Ein Freund hatte wieder exzessives 0130 Scanning betrieben, so ca.
+   6 Stunden von 3:00 bis 9:00 morgens. Um 10:00 klingelte das Telefon
+   und eine Telekom-Operator war am Apparat und sagte, dass von dem Anschluss
+   sehr viele Telefonnummern angerufen wurden, dass die Leitung sofort
+   gesperrt wird und erst nach dem Besuch von einem Techniker wieder frei-
+   gegeben wird. Der kam 2 Tage spaeter, hatte Leitungsmessungen durchgefuehrt
+   ob irgendwo eine Unterbrechung ist und ist dann wieder verschwunden.
+
+   Was kann ich machen, um das Risiko der Entdeckung meines Scannings zu
+   minimieren?
+          ş Scanne tagsueber, damit deine Anrufe in dem normalen Telefonver-
+            kehr nicht so auffallen.
+          ş Scanne nicht viele Nummern, ca. 100-300 sollten kein Problem sein.
+          ş Wer kann, sollte das Scanning von dem Anschluss einer Firma aus
+            machen und sich dabei nicht erwischen lassen.
+          ş Die Nummern nach dem Zufallsprinzip anrufen, nicht der Reihe nach.
+          ş Man sollte moeglichst nicht ueber eine ISDN Leitung Scannen,
+            denn wenn man entdeckt wird ist es unwahrscheinlich, dass man der
+            Telekom glauben machen kann jemand haette an der Leitung
+            manipuliert (Durch das ISDN Protokoll kommt sofort ein Alarm,
+            wenn die Leitung unterbrochen wird, und das wird geloggt.)
+          ş THC-Scan : 
+            Benutze die DIAL_SPEED_DELAY und SEND_SPEED_DELAY Funktion im
+            THC-Scan um so zu tun, als wuerde kein Computer waehlen sondern
+            ein Mensch. Setze ausserdem den Wert fuer WAIT_BETWEEN_CALL
+            auf ca. 50000. (Die 3 Sachen sind im TS-CFG zu aendern.)
+            Das alles wird den Scanvorgang sehr stark verlangsamen, aber wenn
+            man eh nur 100-300 Nummern waehlen will und nur den Computer allein
+            scannen lassen will, laesst sich das leicht machen waehrend man
+            bei der Arbeit/Schule ist, der THC-Scan unterstuetzt alle
+            Funktionen fuer automatischen Start/Ende/Anzahl von Anrufen.
+            Folgende Kommandozeile wuerde um 10:00 morgens anfangen, 300
+            Nummern waehlen und sich dann beenden :
+                thc-scan.exe 80-xxxx.dat -m:0130-80xxxx -s:10:00 -#:300
+            Ausserdem hat der THC-Scan seit Version v1.4 ein Jamming Detection,
+            also wenn die Telekom versucht die Leitung zu stoeren. Mehr 
+            dazu in der Dokumentation.
+
+   Was soll ich tun wenn ich entdeckt wurde, und ein Telekom Techniker kommt?
+          ş Behalt die Nerven - du weisst von nix.
+          ş Bevor der Techniker kommt, versuche den Weg Verteilerkasten unten
+            bei dir im Keller so vozubereiten, dass der Techniker den Eindruck
+            bekommt, dass jeder ohne Probleme an den Kasten gehen koennte.
+            Also sich jemand anderes wahrscheinlich in deine Leitung geklinkt
+            hat ... z.B. die Kellertuer offenlassen, das Siegel falls eines
+            am Verteilerkasten ist beschaedigen, etc. etc.
+          ş Vielleicht will er sich die Anschluesse in der Wohnung ansehen,
+            also am besten den Computer vorher zu den Nachbarn stellen,
+            ("Ich will bei mir was streichen und alles ist schon vollgestellt")
+            die Luecken auffuellen so dass nicht auffaellt, dass etwas fehlt.
+          ş Das Scanning danach fuer einige Zeit sein lassen, ggf. die Leitung
+            abmelden und sofort eine neue beantragen.
+
+
+
+     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+     ³ Schlusswort ³
+     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+   Wir sind am Ende angelangt, jeder wird nun genug wissen, um sich daran
+   einmal ausprobieren zu koennen.
+   Noch einen letzten Tip: Es lohnt sich auch nicht nur 0130 Nummern zu
+   scannen, sondern auch den Firmenbereich im Ort ... ;-)
+   Ich hoffe dass es den vielen Anfaengern hilft Fuss zu fassen und sie sich
+   entwickeln koennen, damit die deutsche Szene nicht stirbt.
+
+     Ciao...
+                         van Hauser / THC
+
+

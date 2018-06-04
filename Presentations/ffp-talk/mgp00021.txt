@@ -1,0 +1,10 @@
+
+Einordnung von Fuzzy Fingerprints
+
+Ein Angriff mit Fuzzy Fingerprints ist
+
+kein kryptographischer Angriff
+
+ein Angriff gegen ein kryptographisches Protokoll
+
+ein Angriff gegen menschliche Schwächen

@@ -1,0 +1,13 @@
+
+Ausblick
+
+Massnahmen gegen Fuzzy Fingerprints
+Symbole anstatt Buchstaben verwenden
+
+Beispiel
+50 Tiersymbole (Tiger, Hai, ...)
+7 Farben (rot, grün, blau, ...)
+MD5 Fingerabdruck
+= 32 Ziffern 
+= 15 Symbole
+

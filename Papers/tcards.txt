@@ -1,0 +1,99 @@
+
+T-CARD, GERMAN TELEKOM'S CALLING CARD
+
+by GemFire/THC
+
+I think, it was a year ago, when I first heard about a new calling card,
+this time by German Telekom. The history of calling card fraud is very long,
+because AT&T, MCi, Sprint and other phone companies made it possible for many
+hackers and phreakers all over the world to make free phone calls very easy.
+Now German Telekom offers the same service?! I think many guys tried to hack
+those new cards, but I've never heard of a big success. There are several
+different types of T-Cards, one is called T-CARD25 which is a pre-paid card
+with an amount of 25 DM (18 $) - the other one is a charge card.
+The cardholder will get a bill every month. On this bill all called phone
+numbers are listed, but with XXX instead of the last three digits.
+There are three possibilities to pay for your card: Together with your normal
+phone bill, with a credit card or you give the permission, that Telekom will
+take it from your bank account. In my new school, we must work in a local
+company for a few weeks, to get the feeling of the real live. I looked up the
+list and found out, that I must work for German Telekom. With an evil grin
+I went home... There were a lot of things to do at Telekom, one fine thing
+was, that I was able to make free calls, without having problems. There's
+a big room there filled with ISDN phones from where you can make private calls.
+One day, I called the Telekom Business Service and asked some questions.
+The operator there noticed my Telekom internal Caller ID and she started 
+talking with me about many things. I got the answers to some difficult
+questions, and she gave me an internal number for detailed technical
+informations. "Don't give out this number to customers!" she warned me and
+again I left the room with an evil grin on my face. One other day, an old
+guy asked if there's is somebody who knows about T-Cards. He quickly noticed
+that I'm more intelligent than the average Telko pig and an hour later I found
+myself in a small room with a phone and a list full of Telekom internal calling
+card numbers. I became an official T-Card System Tester. We tried a lot of
+things and in one test, Telekom wanted to find out how many callers can call
+the computer at the same time, before it will shut down. I made calls to the
+whole world, and more and more testers all over the country invaded the system.
+The automated voice talked slower, simple options took over one minute to
+complete. Again, I made some calls and checked the account information.
+I noticed that the last calls weren't billed. Interesting...
+The internal cards were interesting, too. They acted like charge cards, but
+they had a 50 DM (36 $) limit per month. The card computer itself is very
+intelligent, it is able to learn the habits of a customer, e.g. which countries
+he calls normally and how long he's talking. A further security measure is,
+that after three wrong pin entries, the card will be locked for further calls
+until the owner of the card calls the operator. Every customer can choose
+a password/passphrase for such actions, because the operator must be sure
+that the caller is really the cardholder. Sometimes they even make a callback
+verification. You can use T-Cards in over 50 countries. I just tell you the
+numbers of the most important countries.
+
+           Germany                 0130-0222
+           Australia (Telstra)     1800-881-490
+           Australia (Optus)       008-5511-49
+           France                  19-(wait for second dialtone)-0049
+           Great Britain (BT)      0-800-89-0049
+           Great Britain (Mercury) 0-500-89-0049
+           Hawaii                  1-800-865-0049
+           Hongkong                800-0049
+           Irland                  1-800-55-0049
+           Israel                  177-490-2727
+           Italia                  172-0049
+           Japan (KDD)             0039-491
+           Japan (IDC)             0066-55-449
+           Canada                  1-800-465-0049
+           Netherlands             06-022-0049
+           Austria                 022-903-049
+           Sweden                  020-799-049
+           Spain                   900-99-0049
+           South Africa            0800-99-0049
+           USA (AT&T)              1-800-292-0049
+           USA (MCi)               1-800-766-0049
+           USA (US-Sprint)         1-800-927-0049
+
+How to use a hacked card?
+
+1. Dial the access number
+2. Press 1 for T-Card Service (if you're not calling from Germany)
+3. Choose language: Press 1 for German, 2 for English and 3 for French
+4. Enter Cardnumber and PIN then press #
+5. Enter the number you wish to call dial 00+country code+number and press #
+   Instead of dialing a number you can access a submenu with *1#
+   Listen to the voice what you can do there.
+
+Charge cards have the following format 8XXX XXXX XXXX + PIN (4 digits)
+Pre-paid card have no PIN number, which makes them easy to hack, as if you
+know a valid pre-paid card number you can easily guess new numbers.
+They're not in sequence, but if 8214 1234 1234 is a valid card you can guess
+some valid cards easy. But 18 $ is not very much, so concentrate hacking
+the real ones. They came in two envelopes and the second letter arrives
+about one or two days later. One letter contains the card, and the other the
+PIN number. This should make stealing difficult, but wait... My card arrived
+in July 95 and the temporary pin was 9507. Got the point?
+I know it's difficult to hack one of these card, but if you have one, you'll
+have much phun. I'm abusing one of the test cards for 6 month now. Customer
+cards will often work a whole month. I think that's worth it.
+
+Have phun!
+
+GemFire/THC

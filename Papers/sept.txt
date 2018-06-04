@@ -1,0 +1,295 @@
+
+
+
+
+
+
+
+                              Spass mit SEPT 
+
+
+                        written in 1997 by Hitronic 
+ 
+ 
+
+
+
+
+
+                         1. Einleitung 
+                         2. Was ist das SEPT? 
+                         3. Wie kommt man ins SEPT? 
+                         4. Was faengt man mit SEPT an? 
+ 
+ 
+
+1. EINLEITUNG 
+ 
+Dieser Text dient nur zur Information und Aufklaerung. Jede Benutzung und
+insbesondere Abnutzung des SEPT surch Unbefugte ist widerrechtlich und somit
+auch strafbar. SEPT ist ein eingetragenes Warenzeichen der Deutschen Telekom
+AG. Der Autor erklaert sich fuer Handlungen, die im Zusammenhang mit der
+Nutzung von SEPT auf illegale Weise entstehen, nicht verantwortlich und
+uebernimmt keine Garantie fuer die Einhaltung der hier genannten Punkte. 
+ 
+ 
+
+2. WAS IST DAS SEPT? 
+ 
+Das Sept ist eines der zahlreichen Telekom-Leitungspruefsysteme und bietet im
+Gegensatz zu den nur Terminal-gesteuerten Pruefanlagen (z.B. "X10") den
+Vorteil, dass es von aussen mit jedem normalen Telefon erreichbar ist und sich
+ganz normal per MFV steuern laesst. Normalerweise wird es ausschliesslich von
+Telekom-Technikern zu Pruef- oder Entstoerzwecken benutzt, die sich unterwegs,
+z.B. am "Einsatzort" befinden und von dort aus Pruefungen durchfuehren muessen.
+(Das Sept-System bietet zwar auch eine Terminal-Steuerung, jedoch moechte ich
+nicht weiter darauf eingehen, denn diese ist fuer uns nicht-Telekommitarbeiter
+schon von daher weitestgehend uninteressant, da wir wohl kaum die Gelegenheit
+haben werden, zum lokalen Pruef- bzw. Entstoerplatz zu kommen, um uns dort vor
+den Bildschirm zu setzen.) Das Sept kann dem Techniker per Sprachmenue z.B.
+mitteilen, ob bei einem bestimmten Anschluss die Widerstands- und
+Spannungswerte in Ordnung sind, ob der Telefonhoerer staendig danebenliegt oder
+auch ob die Endgeraete mit den normalen Werten arbeiten oder eine selbstgebaute
+Fremdkonstruktion vorliegt. (Das Sept bietet zusaetzlich einige
+Sonderfunktionen, z.B. Messen der Kabellaenge bis zum Teilnehmer oder 
+Aufschalten auf aktive Verbindungen etc.) Leider hat jedes Sept eine begrenzte
+Reichweite, d.h. dass mit einem Sept nur Anschluesse in der Entfernung von 
+40-70km geprueft werden koennen, so dass man um weiter weg liegende Anschluesse
+pruefen zu koennen sich Zugang zu mehreren Septs verscahffen muss. Ausserdem
+gilt zu beachten, dass nur normale analoge bzw. T-Net-Anschluesse getestet
+werden koennen, bei ISDN-Leitungen werden andere Systeme benutzt, die fuer uns
+zu kompliziert zu erreichen sind. 
+ 
+
+ 
+3. WIE KOMMT MAN INS SEPT? 
+ 
+Das Sept-System ist wie gesagt auf zwei Wegen zu erreichen, zum einen ueber das
+uns unzugaengliche Terminal beim Telekom-Pruefplatz zum anderen von jedem
+Telefon aus per MFV. Der letztgenannte ist der fuer uns interessantere, da wir
+wohl alle ein MVF-faehiges Telefon bzw. ein normales Telefon und einen MFV-
+Signalgeber zur Verfuegung haben. Nun sollte man noch wissen, hinter welcher
+Telefonnummer sich das Sept verbirgt und wie man es erkennt. Die Nummern
+bestehen immer aus 0117 und einer weiteren Zahlenfolge, meistens 7X52 
+(wobei das X manchmal auch weggelassen werden kann). Um nicht alle
+Moeglichkeiten aufzaehlen zu muessen, gebe ich Euch hier schnell einige
+Zugaenge mit auf den Weg, an denen ihr erstens die Zusammensetzung der
+Telefonnummern und zweitens den Sept-Meldeton ueberpruefen koennt. Zugang in
+Hamburg: 01175352, Kiel: 01177522, Luebeck: 0117752, Berlin 01177552 und
+letztendlich Muenchen: 01177352. Bei Anwahl der aufgelisteten Nummern aus dem
+jeweiligen Ort entstehen keine Telefongebuehren, wenn die Nummern von
+ausserhalb angewaehlt werden, entstehen die normalen Telefongebuehren, wobei
+die Rufnummern auf die jeweilige Stadt bezogen abgeaendert werden muessen; um
+z.B. den Hamburger Zugang zu erreichen, muss folgendes gewaehlt werden:
+040-1175352. Das Sept meldet sich mit einem Dreiklang, auf den ich nicht
+weiter eingehe, da er ueber die oben aufgelisteten Zugangsnummern von jedem
+selber angehoert werden kann. Nach dem Dreiklang muss man zunaechst das meist
+vierstellige Login und # per MFV eingeben, wonach man von der unfreundlichen
+Sept-Stimme zur Eingabe des Passwortes aufgefordert wird. Auch hier benden wir
+die Eingabe mit der # , wonach entweder erneut der anfaengliche Dreiklang
+ertoent, wenn naemlich Login und Passwort falsch waren, oder uns die Stimme
+mit "Hauptmenue" begruesst. Insgesamt hat man bei der Login und Passwortabfrage
+drei Versuche, ansonsten verabschiedet sich das System mit "Auf Wiederhoeren".
+Der langweiligste und komplizierteste Teil des Sept-Hackings, naemlich die
+Logins und Pwds herauszubekommen, laesst sich auf zwei Arten ueberwinden: 
+1) Man versucht, den Zugang ins Sept durch blosses Herumprobieren zu bekommen
+  (Vorsicht: Darauf achten, unauffaellig zu bleiben!), wobei zu beachten gilt,
+  dass sowohl Login als auch Pwd meist vierstellig und zudem dem IQ der
+  Techniker angepasst sind (Ausnahmen bestaetigen die Regel, frueher haben sich
+  Login und Pwd aus bestimmten Nummern zusammengesetzt, die fuer die Regions
+  bzw. Gebietseinteilungen in numerischer Form standen, in der sich die Septs
+  befanden, teilweise werden auch heute noch diese Nummern verwendet, die sich
+  oft nicht so einfach erraten lassen) So sollte man, wenn man sich fuer die
+  erste Methode entscheiden sollte, Nummernfolgen wie "1700/1700", "2244/2244"
+  oder "2244/4422" etc. durchtesten. 
+2.) Die zweite Methode erfordert etwas mehr Selbstvertrauen, sie fuehrt
+  naemlich nicht an einem persoenlichen Gespraech mit einem Telekom-Mitarbeiter
+  vorbei bzw. sie lenkt genau darauf zu: Sicher kennen wir alle die 
+  Telekom-Stoerungsstellennummern 01171 bzw. abends 01170. Sie dienen dazu,
+  Fehler melden zu koennen, 
+  Hilfe bei technischen Fragen zu bekommen (nicht offiziell) oder Sept-Zugaenge
+  zu erhalten ;-). Unter dieser Nummer erreichen wir naemlich die 
+  Telekom-"Auftragsannahme", wo man unsere Auftraege, meist in Form von 
+  Stoerungsmeldungen, entgegennimmt. Generell gilt zu beachten, dass unsere
+  Handlungszeit sich auf die Stunden von 11 bis 16 Uhr beschraenken sollte, 
+  da erstens ab 18 Uhr alle Anrufe zentral entgegengenommen werden (man kann
+  uns nicht aushelfen) und zweitens die Zeit, in der am meisten los ist, immer
+  dazu ausgenutzt werden sollte, nicht-oeffentliche Informationen zu erfragen,
+  zu denen auch die Sept-Accounts zaehlen. In der Praxis sieht das also so aus,
+  dass man sich zu geeigneter Zeit in eine Telefonzelle oder an irgendein 
+  anderes oeffentliches Telefon begibt, und bei der 01171 anruft, bzw. um in
+  einem anderen Ort zu gelangen, bei [Vorwahl]+1171. Beide Versionen sind
+  positiverweise kostenlos, so dass man das Gespraech auch von einem ruhigeren
+  Ort, also auch aus z.B. einem Hotel fuehren kann, wo ja die Tarifeinheiten
+  meistens teurer sind. Nach Wahl der Rufnummer landet man dann in der
+  Auftragsannahme, hier beginnt unser Gepraech: Z.B. 
+  [Depp] "Auftragsannahme, Guten Tag!" 
+  [Wir] "Moin Moin, Heinz hier von der Ortsvermittlungsstelle Sowieso,
+         verbind' mich doch bitte grad mal zum Pruefplatz!"
+  [Depp] "Klar doch, Moment bitte!" 
+  [andrer Depp] "Mueller, Hallo?"
+  [Wir] "Aeh, spreche ich mit dem zustaendigen SEPT-Techniker?" 
+  [Depp] "Nein, Moment bitte" - oder "Nein, worum gehts denn?" - 
+         oder "Ja, worum gehts denn?"
+  [Wir] "Hier ist Heinz aus Sowieso, ich bin hier vor Ort und habe ein Problem,
+         es muessen hier zwei Leitungen geprueft werden, und wir haben hier die
+         Sept-Zugangsdaten vergessen, vielleicht kannst Du uns helfen?" - 
+  [Depp] "Natuerlich, wie sind denn die Rufnummern?" 
+  [Wir] "Ja sowieso..." [...] 
+  Das Ende dieses Beispielgespraeches sollte dann so aussehen, dass wir von 
+  dem Techniker mehrere Rufnummern pruefen lassen und uns z.B. jedes mal nach
+  dem Schleifenwiderstand erkundigen. Entweder wird der Techniker irgendwann
+  von selber sagen, dass mit der Leitung irgendwas nicht stimmt, oder wir
+  sagen zu einem der Schleifenwiderstaende, dass da was nicht stimmen kann.
+  (In 70% der Faelle sagt der Techniker, dass da was nicht in Ordnung ist,
+  und unbedingt geprueft werden sollte). Jedenfalls kommen wir letztendlich
+  nicht an einem Satz wie "Oh, Mann, so ein Scheiss, da muessen wir vor Ort
+  mal gucken, das bringt ja vom Pruefplatz aus nix... Du sitzt doch am
+  Pruefplatz! Kannst Du nicht mal kurz gucken, ob Du nen allgemeinen
+  Sept-Zugang findest..." vorbei. Oftmals sprechen wir auch zuerst mit einem
+  Techniker, der fuer uns die Leitungen vom Terminal aus prueft, der aber
+  selber keine Sept-Accounts hat oder geben will und uns dann zu einem
+  Sept-Fachmann durchstellt, den wir dann auf irgendeine Weise nach den
+  Zugangsdaten fragen muessen. 
+  Natuerlich wird ein Gespraech nachher niemals so aussehen, wie in dem
+  Beispiel, jedoch wird es schon so aehnlich verlaufen. Vom Prinzip her gilt
+  einfach, sich als Techniker auszugeben und sich nach "erfolglosen" 
+  Leitungspruefungen einen Account aushaendigen zu lassen. In der Theorie mag
+  das sehr weit hergeholt klingen, aber ich hatte bis jetzt bei fast jedem
+  Versuch Erfolg, der Vorteil fuer uns, der der Telekom zum Verhaengnis wird,
+  ist, dass der Sept-Techniker, von dem wir unsere Daten schliesslich erhalten,
+  nicht weiss, mit wem er spricht, da er ja fuer einen Bereich mit dem Radius
+  von 30 bis 70km zustaendig ist. Und nachdem er von uns davon ueberzeugt
+  wurde, dass die Herausgabe eines Accounts zur Fortfhrung der Pruefung
+  notwendig ist, bleibt ihm keine andere Wahl, als die gewuenschten Infos
+  preiszugeben. Hinweis: Auch die Sept-Telefonnummer kann erfragt werden,
+  wenn sie vorher noch nicht gescannt wurde, fragt einfach nach "der neuen
+  Nummer in Sowieso" etc. 
+  Wenn ihr zu starke Bedenken habt, dann "uebt" erstmal ein bischen, indem ihr
+  in Staedten, in denen ihr vom Prinzip her mit dem Sept nichts anfangen
+  koennt, die Informationen erfragt. ->Uebung macht den Meister! In der 
+  Realitaet laeuft nachher alles sowieso meist so unkompliziert und schnell
+  ab, dass ihr euch eigentlich keine Gedanken zu machen braucht! 
+
+
+
+4. WAS FAENGT MAN MIT SEPT AN? 
+ 
+Jo, nun, nachdem ein Sept-Zugang hart erkaempft wurde, bleibt natuerlich die
+Frage, was man damit eigentlich machen soll. Weiter unten habe ich ein File
+von Crack mit reingepasted, dort sind alle Funktionen bzw. die gesamte
+Menuestruktur erklaert. Die interessantesten Eigenschaften sind natuerlich
+"Aufschalten" und "Trennen einer aktiven Verbindung". Da jedoch nur sehr selten
+Sept-Accounts mit dem Entstoerer-Level herausgegeben werden (Diese sind alle
+personalisiert, jeder Entstoer-Account gehoert genau einer Person), muss man
+sich mit dem zufrieden geben, was man bekommt. z.B. kann es sehr lustig sein,
+durch einfache Leitungspruefung einen Freund zu aergern, der grade einen
+Carrier hat, denn alleine bei einer normalen Leitungspruefung werden so starke
+Stoersignale erzeugt, dass z.B. ein Carrier floeten geht bzw. bei einem 
+Telefongespraech ein lautes Knacken erzeugt wird. Z.B. hoert bei der Funktion
+"Warten auf Freiwerden" der Teilnehmer auf der Leitung entweder ein
+regelmaessiges Klacken oder er bekommt fuer ziehmlich genau 5 Minuten den
+Waehlton gestohlen, was auch ziehmlich nervig sein kann. Lustig ist das
+Ergebnis auch, wenn man einfach waehrend einer Leitungspruefung den Hoerer
+auflegt, d.h. die Leitungspruefung unvollstaendig abgeschlossen sich selber
+ueberlaesst. Hier kann es dem Teilnehmer schonmal passieren, dass bis zu 30
+Minuten (hehe) die Leitung tot bleibt. Die Funktionen, von denen ihr Gebrauch
+machen koennt, haengen jedoch jeweils von Euch und dem Level ab, den euer
+Account hat. Ich persoenlich bevorzuge das Trennen der Leitung bei Boards oder
+das Pruefen einer Leitung nach dem Besetzt-Status, also unbemerkt pruefen, ob
+ein Freund grade telefoniert etc. Das meiste werdet ihr sowieso selber
+herausfinden, eine kleine Hilfestellung bietet auch die nun kommende Datei.
+
+Ich wuensche noch viel Spass, 
+     Haph Phun, 
+          HItronic 
+
+
+
+Menuestruktur des Septs:
+
+
+    Hauptmenue (M1)
+    ----------
+    1 Neue Rufnummer
+    2 erweiterte Pruefung (M2)
+    3 Pruefen der gleichen Leitung (M3)
+    4 Sprachmodus waehlen
+    6 Pruefergebnis aufrufen
+    8 Abmelden
+    9 Ergebnis wiederholen
+    # Leitungspruefung
+  
+    Menue Erweiterte Leitungspruefung (M1)
+    --------------------------------------
+    1 Neue Rufnummer
+    2 Menue Waehlton ermitteln (M4)
+    3 Paar ID
+    4 Messton
+    5 Schleifenwiderstand
+    8 Abmelden
+    9 Ergebnis wiederholen
+    # Erweiterte Leitungspruefung (M3)
+    * Vorheriges Menue
+  
+    Menue Pruefen gleiche Anschlussleitung (M2)
+    -------------------------------------------
+    1 Neue Rufnummer
+    2 Endstellenpruefung (M6)
+
+    3 Gebuehrenzaehlpruefung
+    4 Messton
+    5 Schleifenwiderstand
+    8 VRS verlassen
+    9 Ergebnis wiederholen
+    # Pruefen gleiche Anschlussleitung (M3)
+    * Vorheriges Menue
+  
+    Menue Pruefergebnis (M3)
+    ------------------------
+    1 Abspeicherungszeitpunkt
+
+    2 Fehlerortzuweisung
+    3 Isolationswiderstand
+    4 Spannungsdaten
+    5 Gleichstromergebnis
+    6 Wechselstromergebnis
+    7 Kapazitaetsergebnis
+    8 Abmelden
+    * Vorheriges Menue
+  
+    Menue Waehlton ermitteln (M4)
+    -----------------------------
+    2 Schleifenbeginn
+    3 Erdungsbeginn
+    4 Gemeinschaftsanschluss (M5)
+    8 Abmelden
+    * Vorheriges Menue
+  
+    Menue Endstellenpruefung (M6)
+    -----------------------------
+    2 MFV
+    3 IWV
+    8 Abmelden
+    * Zurueck
+  
+    Menue Endstellenpruefung (M6)
+    -----------------------------
+    1 Neue Rufnummer
+    2 Waehlimpulspruefung
+    3 MFV-Pruefung
+    8 Abmelden
+    * Vorheriges Menue
+  
+    Menue Leitung besetzt
+    ---------------------
+    2 Leitungsueberwachung
+    3 Freischalten & Pruefen (M3) (*)
+    4 Warten auf Freiwerden (M3)
+    5 Aufschalten und aktive Leitungsueberwachung (*)
+    8 Abmelden
+    * Zurueck
+
+
+(*) = Nur fuer Entstoerer-Level
+

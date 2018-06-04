@@ -1,0 +1,326 @@
+0. First Words
+--------------
+
+Hi!
+This will be an article on what you can do with VMB's.
+I was not sure if I really could add anything new to this topic, but I think
+I can give you a complete list of "What they can do for you" and also I pro-
+mised this artcle to van Hauser so here it is.
+Don't blame me if you already know anything, again, it is WHY someone should
+concern about VMB's.
+There are quiete a lot of text files on VMB Systems and I will give
+you an overview of files which deal with the hacking of special systems at
+the end of this article.
+
+1. Overview of what-do-to with VMB's
+------------------------------------
+-use them as (simply) Voice-Mail
+-use them as 3rd party call possibility
+-use them to call for free
+-use them to make conferences
+-use them to find switching systems
+
+2. Voice Mail
+-------------
+The originating thing why VMB's got invented. Suppose you have a company and
+50 guys working there. Let's say you got 20 calls after hours on your
+answering machine and each one is for a different guy. So why not having a
+system where anybody can leave a message to the specific guy he wants?
+So each guy has his own mailbox where he gets his calls if he is away from
+his desk or not at home. If you connect to a voicemail, you will always get
+a prompt where normally you can leave a message to the company or if you know
+the extension of the guy you want to talk to to him directly.
+So within your own VMB, you can hear messages from outside callers or from
+someone within your company. That's the basis.
+If you want to hack a VMB, you always have to find where the 3 or 4 (the
+only system with 2 digit extensions I know is Partnell Mail from AT&T?)
+digit extension are, they are mostly grouped. You always have 2 possibilities,
+you can transfer to extensions and see if they do exist (meaning you hear
+some greetings) or enter a mailbox and see if it prompts with password.
+There are different systems but I suggest you always transfer to extensions
+because you can find interesting things (see later on). If you have a clue
+where the most extensions are, you can start hacking one box with trying
+passwords like 1234 or the boxnumber. I would never concern on more passwords
+because if no easy password fits, than the system is often better protected,
+and there are enough silly systems with stupid administrators you can hack.
+If you have hacked a box belonging to someone else, you should NEVER hear
+any mails, you just find free boxes belonging to noone by using the
+distribution list command or the message received command which exists on
+all systems. Normally you notice a free box (either when transfering to a
+box from outside or when using the commands from inside) when there is no
+greeting and just a message like 'extension 123' or 'record at the tone'.
+A very good way to locate boxes is to use the name-search which exists on
+almost any systems. Hear the company's greeting and they often tell some-
+thing like "press 9 to use the directory". Enter the beginnings of common
+names and you will get the person's extension number.
+So well, why should you hack a VMB and have a extension? Simply because
+it's quiete cool & useful to keep in contact with other hacker's.
+If you hack more extensions on one system, they invite your friends and
+have a big communication tool - tollfree! (Ah btw, NEVER ever hack voice-
+mail systems in your own country, because of the bust & trace possibility,
+but if you hack american systems on toll-free numbers [of course reachable
+from within your own country], you cannot be busted. At least not in Germany)
+The THC posse uses an Aspen system for more than 6 month with more than
+20 extensions I hacked in September '95. Really, it is a big helpful tool to
+keep in touch with each other for free, and we do not only talk about hacking
+stuff, it is quiete funny to leave messages to the other's if you are drunken
+at a party or whatever!
+The most comfortable system in my eye's is Aspen from Octel ("Voice Infor-
+mation processing") which exits in different dimensions and cost up to
+$600.000. It has become -sad but true- hard to hack because most systems
+have no defaults anymore. The Aspen systems can be integrated into several
+switches and often has the bridge capacibility. (see later)
+
+3. 3rd party calling
+--------------------
+I guess you know what this is. If not, you can pay calls over certain
+companies (e.g. MCI) which accept that a 3rd party pays all costs.
+You tell the operator to place a 3rd party call and he calls the number you
+give him to verify he will accept the charges. Because operators are dumb
+(well why they are just operators) and because of the good line quality,
+you can trick them with a VMB which has a greeting like "hallo? ah .... hmm
+(pause) ... yes ... I accept the charges".
+Well you ask, how can an american operator dial a toll-free number in Germany
+and enter an extension or what? In fact, many VMB systems have a direct dial
+(Especially Meridian's) and if it is an american company, of course in the
+states. (and this number can be dialed from the operator)
+Direct dial means that your extension is not only reachable over the main
+number (where you can enter the person's extension), it is reachable over
+a normal telephone number. Let's say the company originates in AC 718, and
+the company wants their guys (of course) to be called by customers. So they
+have a whole prefix which belongs to the company, The last four digits are
+for the guys in the company. If this company owns a VMB, the extensions of
+the guys normally are the last four digits of the phonenumber. So if you
+hacked extension 3000, and the company is located in 718-123-xxxx, your
+direct dial would be 718-123-3000. So go and ask the operator (by paging
+or within business hours) for their main number in the states, and they
+will tell you the things you need (AC, prefix). If they give you an 1-800
+number ask them for their fax number or whatever, to get the missing digits.
+If anything fails go and ask them for their direct dial.
+So know you can change your greeting to the one above and tell the operator
+to bill the call to 718-123-3000.
+Again, many companies already got abused and have restricted their whole
+prefix for accepting 3rd party calls, but it is always worth a try and MCI
+has good overseas lines from Germany.
+
+4. Make free calls
+------------------
+Remember the things of a direct dial. Think of the use of a PBX and
+what a PBX does. Bingo, of course if the company has PBX and has a direct
+dial, you can reach their dialtone toll-free. So if you are scanning a VMB
+(by transfering to the extensions) you may run over a dialtone which VERY
+often has no code on it. I think the systems which have the possibility of
+being a part of the PBX are limmited. Audix (by AT&T) and Meridian (by
+Northern Telecom) are worth a try and I have run over severals dialtones
+on these systems. I guess Aspen has the possibility too, but I never found
+anything. If you have a girlfriend which speaks a good english, you can try
+to social-engineer the extension where the dialtone is located. (Use a name
+which is really in the company you got from the names directory, say you
+are struck in Europe and forgot all your paper's with the extension. Better,
+[because not too many companies have agents which travel to Europe] you let
+your call look like it originates from the US by using the 3rd party call
+way or so. Or if you have hacked a box, page the operator from within the box,
+because he cant see where your call is originating from!)
+Anyway if you are struck by scanning the system but you do think it really
+must have a dialtone (probably because the company is so big and has direct
+dial), go and do social-engineering, especially after hours, because these
+operator are unsophisticated and often have no idea of fraud. At business
+time, they could connect you to security (oops) or they even are the security
+operator (ooooops).
+There is also a way to call for free if the VMB system has the ability to for-
+ward calls. If you want that all calls after hours are forwarded to your home
+phone, you enter configure this within your box. Many bigger systems like
+Audix do have the capacibility, but it is disabled very often. Smaller
+systems like Cindy or The Message Desk have this feature not disabled and you
+can use it to divert your calls by entering the phone number you want within
+your hacked box and then transfer to your own hacked extension which will
+forward the call to your favourite BBS.
+As small bonus, I include a special section on The Message Desk systems,
+because I haven't found any text file about it and because Germans can abuse
+Message Desk Systems in UK very easy! A big Thanks & GOOD LUCK! to Krew-l-t
+who introduced me to this neat system.
+Well basically when you dial press # and then enter a box number...most
+are unpassworded...to find extensions dial in and press * then dial
+3 digits or 4 (there is also boxes 1,2 and 3). If you hear no special
+greeting then enter this box number and if it has no password, you have your
+own box. You can also use boxes belonging to someone IF he hasnot activated
+call-forwarding; he would be quiete anxious if he is awaiting calls at his
+home and all guys will get connected to LORE BBS :). So always change the
+number back after you used it. Once in a box do 7 then 7 again...then 2, then 9+ the number you wannt to reach then #, then # again,
+then * twice, then the box number you wannt to divert to.
+There is a special possibility to dial out on Meridian voicemail system. There
+are certain extensions you can transfer to and hear nothing. You may have
+found the outdial code. Try to transfer to this extension and add a number.
+Let's say at extension 1234 you hear nothing. If you dial 1234+00-cc-number
+you may be connected to your desired target. Especially systems in the UK
+often have this outdial possibility, and since you have unlimmited tries for
+scanning extensions, you can find them quiete easily. Of course, any Meridian
+in any country has this possibility, but it must not be set up on the system.
+Something you may also try is to key in certain digits at the main prompt
+(the one with the company's greeting) and I sometimes got a dialtone just by
+pressing 9 at this prompt.
+
+5. Conferences
+--------------
+Probably you have visited the DefCon Voice bridge in the USA. You can find
+something like this on Meridian, Aspen and Audix Systems. Basicly, it is the
+same thing as with the outdial code. You enter extensions and if you hear
+nothing, but it is not an outdial, it may be a conference setup. The Analyst
+for example found a conferences for 8 people on a Meridian in Germany.
+Let's say there was 2000 and then silence, but 2000+00-cc-number didnot work.
+So he tried something and when entering 200008 a voice said "Conference set
+up for 8 persons." They could connect to the conference when dialing 2000X1.
+If you ever want to be a part of our great conferences we hold from time to
+time just contact me or any of the THC crew.
+On Audix systems, you hear a special bridge-tone when you have found a
+conference extension. Check up if someone may transfer to this extension
+at the same time and you can speak to each other now, or try extensions near
+the bride extensions, or something like this.
+But be careful, you might stumble into existing conferences sometimes!
+(But it may be quiete funny to be a part of them!)
+
+6. Switching Systems
+--------------------
+In my opinion, this is the interesting part now, becuase it can give you a
+lot of power if you have managed it to hack a switching system through a
+voice mail system.
+Almost all voice mail systems are a part of a switching system, but there
+are certain systems that are ONLY for voicemail. Let's say you have a big
+switching system of the Definity Series from AT&T. You can integrate a voice
+mail (in this case Audix) into your PBX System. You have the possibility to
+set up an extension to maintain your PBX, let's say your company owns
+645-xxxx. You can setup the dial-in port on extension 645-9999, and if
+you dial 645-9999, you will be connected to a terminal where you can setup
+or maintain the WHOLE PBX system. (Well I guess nothing new for you guys.)
+If you have a voicemail system, you can setup the dial-in port also to be
+reachable through your voicemail, so let's say you transfer to extension 9999
+and bingo, you get the carrier. This is very interesting, because it
+is a great possibilty to reach a switching system from outside a country
+trough a toll-free number. Audix voicemail e.g. is often integrated into
+the Definity Series (System 75 and 85; the G1 - G3 series), so the chance
+of finding a Sys75 on an Audix extension is quiete high. BUT I suggest that
+you give this up. Why? Because AT&T changed ALL default login's and password's
+due to a massive abuse in the States. I talked to a woman from Lucent on
+the CEBIT this year (she is in the toll-fraud prevention center), and she
+said that they still ship the Definity Series with the defaults, BUT their
+technicians are told to change them. You may try the looker/browser account
+but in general, you have no chance of entering the system easiely. Of course,
+social-engeneering is a possibility. You should concentrate on the switches
+from Nortel. (Sl-1 series etc.) A Meridian Voice Mail system is sometimes
+integrated into this PBX system, and the hacking is quiete easy.
+A SL-1 switch answers like this:
+OVL111 IDLE and has different signs on the screen like TTY and such.
+(Check the reference article; read the end of this file)
+To logon, you type LOGI and it responds with PASS?.
+The older SL-1 switch ONLY allows a 4 digit numeric code and you have
+UNLIMMITED tries, so fuck, write a script and you are in FAST!
+The newer one (sigh) allows 16? signs so give it up.
+Once in, you can setup DISA's and more ... remember, if you have access
+to a switching system, you can do ALL with their telephone system.
+(Even shut-down if you are malicious).
+You sould be abled to access a ROLM CBX system through Phonemail, but
+I never found this myself.
+
+7. End / Contact the author
+---------------------------
+I hope you found this article enjoyable to read and know, why to concern
+with VMB's now. Something I wanted to add: DON'T think you cannot hack
+those systems and their PBX systems, because most technicians are not
+half that intelligent as you are. The often chose simple passwords and
+left a backdoor open. I know it myself, because I'm a low-level technician
+of a German PBX system and the technician who installed the whole system
+was really stupid without any knowledge that got behind his manual.
+To maintain the system for me was really hard because of the bad setup.
+I'll write a file about German PBX systems later this year.
+(Octopus from Telekom, HiCOM from Siemens and 4000 series from Alcatel)
+BTW, use the WWW to gain good informations about anything! Use
+Lycos and you will get a lot of interesting pages with stuff for you,
+concerning VMB's and PBX systems.
+To contact me from within Germany, dial 0130-817698 and leave mail to
+extension 2389. From outside Germany, please call +1-510-624-7120 and
+leave me a voicemail. Or call LORE BBS in Germany to leave me a mail,
+or you can also ask any THC member how to reach me. And yes, I am
+on IRC sometimes, try to catch me in #bluebox.
+
+                                                    -WiLKiNS!
+
+8. Appendix
+-----------
+
+NOTE: These are ONLY the *best* textfiles I found about these VMB systems.
+      I didn't put a description of hacking tools for boxes in too, because
+      hacking boxes with tools is senseless once you have one valid box on
+      the system.
+
+General
+-------
+tao90-04.zip
+
+This file describes a lot of VMB systems and their features. Short-cut,
+but the best you can get! Written by (?) accidential tourist.
+
+Aspen
+-----
+aspen1.zip
+aspen2.zip
+
+Both files were written by CaveMan and are also distributed under caveasp.zip
+They give you a good overview about the commands and on how-to-hack.
+NOTE: The 3-digit-error is STILL found very often!
+
+Audix
+-----
+cotno01.zip
+audexvp.zip
+
+The article from DeadKat in the Cotno Mag #1 is about the hacking of Audix;
+the second one is from Crazybyte. It contains some mistakes but reading it
+is still worthwhile.
+
+Cindy
+-----
+cinditut.zip
+
+The Cindy system is not very common, but quiete nice.
+Article from Slycath.
+
+Meridian Voice Mail
+-------------------
+cotno04.zip
+mmail.zip
+
+Again, DeadKat brings us an excellent article in Cotno Mag #4. (He, please
+contact me if you read this!) The other one is from ColdFire and concerns
+about the setup of the voicemail system through the computer extension.
+
+ROLM CBX / Phonemail
+--------------------
+rolm-01.zip
+9x_rlmpn.zip
+
+The first article from OleBuzzard deals with the PBX system; the second
+one from Substance is on how to setup Phonemail through the dial-in port.
+
+SL-1
+----
+phrack44.zip
+
+The article from IceMan in Phrack #44 is a good article for beginners.
+It introduces the features of the SL-1 series and gives a command overview,
+but it doesnot explain enough on the programming. Where is the promised
+part 2? Nortel "secures" its systems with a variety of abbreviations, so
+you must have a manual or simply have to guess. Special Info: If you
+try something, and you want to cancel the commands, press **** and you
+will be back at the main screen.
+
+System 75
+---------
+cotno01.zip
+
+You see, Cotno is really a great mag. The article from Panther Modern is
+one of the best one's about System 75, and there are a lot of them.
+
+
+Greets,
+          WiLKiNS
+

@@ -1,0 +1,13 @@
+
+Einsatzgebiete von Fingerabdrücke
+
+Verifikation von
+Nachrichten (PGP)
+Programmen (Tripwire)
+Öffentlichen Schlüsseln (SSL)
+Passwörtern (Unix)
+
+Gängige Algorithmen
+MD5 (128 Bit) von Ron Rivest
+SHA1 (160 Bit) von der NSA
+

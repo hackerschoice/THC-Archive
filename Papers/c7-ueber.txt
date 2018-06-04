@@ -1,0 +1,267 @@
+
+
+                            CCiTT #7 Ueberwachung
+
+                                by van Hauser
+
+
+
+ Wer sich wundert : Ja, dieser Text ist schon im THC-MAG #1 erschienen.
+ Er wurde dann stark erweitert und erschien dann im Time-For-a-Change
+ Magazin #4. Aus aktuellem Anlass, darunter, dass dieses Magazin #4 in
+ Deutsch erscheint, wurde der Artikel uebersetzt und noch etwas erweitert,
+ dafuer alle nicht-deutsch-spezifischen Informationen entfernt.
+
+
+
+                               Was ist CCiTT #7
+                              ------------------
+
+ CCiTT #7 ist das neueste Signal-System, auch SS7 oder Common Channel Signaling
+ System No.7 genannt. Es ist das Protokoll, das am haeufigsten in der Welt fuer
+ Telekommunikation eingesetzt wird - wie hier in Deutschland.
+ Es benutzt 2 Kanaele fuer die Kommunikation : Der 1. ist der Sprachkanal, also
+ das, was der Kunde spricht (oder das Fax das er sendet). Der 2. Kanal ist der
+ Datenkanal. Dieser ist vollkommen separiert vom Sprachkanal und enthaelt alle
+ Gespraechsinformationen wie Rufnummer des Anrufers, Rufnummer des Angerufenen,
+ Konferenz-Option, Call-Forwarding, R-Gespraech etc. etc.
+ Dieser Datenkanal wurde seit dem CCiTT #6 separiert, da er bis #5 zum
+ sogenannten "Blueboxing" missbraucht werden konnte, ausserdem erhoehte es unter
+ anderem die Leitungsqualitaet und enthielt neue Features (Rufnummeranzeige
+ etc). Es wird mittlerweile in allen West-Europaeischen Laendern und Nord-
+ Amerika benutzt, und mehrere Laender steigen auch um, wie z.B. Israel letztes
+ Jahr.
+
+
+
+
+                Das deutsche Ueberwachungssystem fuer CCiTT #7
+               ------------------------------------------------
+
+ Seit Anfang '96 benutzt die Deutsche Telekom AG das CCiTT #7 Ueberwachungs-
+ system von Hewlett Packard, genannt AcceSS 7.
+
+
+ þ Geschichte :
+
+   Neben dem Ueberwachungssystem von Hewlett Packard gibts noch ueber 4
+   weitere System, das bekannteste ist Mavin/Davon von Bellcore, aber
+   keines ist so erfolgreich wie das AcceSS 7.
+   Am Anfang war es nur fuer Fehler- und Leistungsanalysen gedacht, aber
+   die Entwickler sahen die zukunfsweisenden Moeglichkeiten ihres flexiblen
+   Systems und erweiterten es.
+
+   HPs erster grosser Erfolg war im Oktober '95, als die Deutsche Telekom
+   (damals noch nicht AG :) bekannt gab, als erste europaeischer
+   Telekommunikationsbetreiber dieses System zu installieren.
+   Spaeter installierten z.B. auch Neuseeland, Finnland (Finnet Januar '96),
+   Israel (Bezeq Mai '96), Bell USA (Juni '96) das AcceSS 7.
+
+   Im Mai '95  10 der 30 groessten Telekommunikationsanbieter der Welt, heute
+   (Anfang '97) ueber 20 dieser 30 haben AcceSS 7 installiert.
+   Auch British Telecom, TeleWest, GTE und AT&T Wireless benutzen teile des
+   AcceSS 7 Systems.
+   Der Geschaeftsleiter von HP sagte dazu in einem Interview :
+     "Wir schaetzen, dass ueber 90% der CCiTT #7 Verbindungen die
+      ueberwacht werden, durch unser System ueberwacht werden."
+
+   Im Juni '96 kuendigte Hewlett Packard ein neues Toolkit an : das
+   "Fraud Management Toolkit" um Telekommunikationsbetrug zu entdecken..
+   Es wurde erstamls bei den Olympischen Spielen in Atlanta von BellSouth
+   getestet - mit hervorragendem Erfolg.
+   HP gruendete ausserdem die "Alliance to Outfox Phone Fraud" wo mehr
+   als 12 grosse Telekommunikationsanbieter zusammen Strategien entwickeln
+   um Telekommunikationsbetrug zu bekaempfen.
+
+   Der Erfolg von AcceSS 7 liegt in dem flexiblen und ausbaufaehigem Design,
+   das sich nicht nur leicht in jedes bestehende CCiTT #7 System integrieren
+   laesst, sondern ausserdem auch leicht an Kundenbeduerfnisse angepasst
+   werden kann. Ausserdem garantiert HP, dass die Installationszeit 3 Monate
+   nicht ueberschreitet, was fuer die grossen Anbieter sehr wichtig ist.
+
+
+ þ Die Hardware :
+
+   HP's Grundpaket sind 4  8-weg symmetrische multiprozessing (SMP)
+   HP 9000 Model T500 Corporate Business Servers fuer einen C7 Link.
+   Jede dieser Maschienen kann bis zu 800 Anrufe auf einmal analysieren.
+   Im August '96 war eine Ms-Dos basierter Client angekuendigt, ob dieser
+   inzwischen ausgeliefert wurde ist mir nicht bekannt.
+
+
+ þ Die Software :
+
+   Die Server benutzen als Betriebssystem HP-UX, das normale unix OS, das
+   HP auf seinen Rechnern benutzt; es ist basiert auf Sys V 4.0 von AT&T.
+   Die Clients laufen auch auf HP-UX unter HPs OpenView X-Window System.
+   Alles ist in C programmiert, die libraries, mit denen man eigene
+   Software programmieren kann fuer AcceSS 7 ist mit installiert.
+   Der Kunde (Telekom) kann eigene Applets und Skripts schreiben um
+   speziellen Aufgaben erfuellen zu koennen.
+
+   Die Basis der Software ist das Daten-Sammel-Kit, das sogenannte
+   "call detail record" (CDR) fuer jeden Anruf erstellt.
+   Diese Detaillierten-Anruf-Datensaetze koennen von Applets analysiert
+   und in jeder gewuenschten Art & Weise verwendet werden.
+   HP bietet fertige Applet-Toolkits fuer Abrechnung, Abrechnungskontrolle,
+   Verkehrskontrolle und Betrugsidentifikation.
+
+   Selbstverstaendlich ist das Betrugsidentifikations-Kit nicht die Hauptsache
+   von CCiTT #7 Ueberwachung. Urspruenglich standen Fehler- und Leistungs-
+   analysen im Vordergrund, aber dann bemerkten die Entwickler, das man mit den
+   Daten so ziemlich alles machen konnte.
+   In der heutigen Zeit spielt es eine grosse Rolle fuer die Planung von
+   Telekommunikationsinfrastrukturen, Optimierung, Fehlerkontrolle und
+   Marktanalysen - aber die Entdeckung von Missbrauch ist ein wichtiger Punkt.
+   Deshalb hier ein paar Informationen, wie das System arbeitet :
+
+
+ þ Das Betrugs-Identifikations-Toolkit :
+
+   Das Automatische Betrugs-Identifikations-Toolkit basiert auf "pattern
+   matching", d.h. ein Szenario/Verhaltensmuster wird aufgestellt wie ein
+   Betrugsfall normal aussieht und in das Toolkit eingespeisst. Wenn eine
+   Situation diesem Szenario entspricht ("the patterns match") dann wird
+   Alarm ausgeloest.
+
+   Jedes Szenario muss zuerst auf jeden Kommunikationsnetzwerk eingestellt
+   werden, da z.B. in einem Gewerbegebiet eine hoehere Anzahl von Anrufen
+   ins Ausland gehen als in einer Wohngegend.
+
+   D.h. solche Szenarien koennen erst erstellt werden, nachdem ein neuer
+   Typ von Betrug gefunden wurde.
+   Alles was in ein Betrugsszenario passt und was weit von dem normalen
+   Verhalten des Kommunikationslinks abweicht, loest einen Alarm aus.
+
+   Betrugs-Szenarien sind :
+      Anrufe sehr langer Dauer
+      Wiederholte Anrufe zu einer bestimmten Nummer aus einer Gegend
+      Wiederholte Anrufe von einer Gegend zu unterschiedlichen Nummern
+      Lange/viele Anrufe von einer Nummer die nicht zahlt
+      Das Anwaehlen bestimmter definierter Rufnummern
+      Das Anwaehlen vieler gebuehrenfreier Rufnummern
+
+   Sowie spezialisierte Szenarien :
+      Anrufe zu Nummern die besonders oft missbraucht werden
+      Verdaechtige Anwendung von "Anruf-Weiterschaltung"
+      viele Anrufe insbes. Auslands-, von einem Anschluss
+      viele Anrufe innerhalb kurzer Zeit von oeffentlichen Telefonen
+
+   Ein ausgeloester Alarm bekommt eine Prioritaetsstufe und wird auf dem
+   Bildschirm eines Operators angezeigt. Je laenger ein Alarm in einem
+   Szenario bleibt, desto hoeher wird mit der Zeit die Prioritaet.
+   Der Operator kann dann Aktionen einleiten wie Anschlussrueckverfolgung,
+   Unterbrechen der Verbindung, Sperren des Anschlusses und mehr.
+
+   Integriert ist auch eine sogeannte "Blacklist", d.h. eine Liste von
+   bekannten Kunden/Firmen die faelschlicherweise in ein solches Szenario
+   geraten.
+
+
+ XXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXX \
+ XXXXXXXXXXXXXXXX  \
+ XXXXXXXXXXXXXXXX   \  Out-of-   -->  XXXXXXXX \   Weitergehende    -->   XX
+ XXXXXXXXXXXXXXXX    - Pattern/  -->  XXXXXXXX  -  Out-of-Pattern/  -->   XX
+ XXXXXXXXXXXXXXXX   /  Scenario       XXXXXXXX /   Szenario
+ XXXXXXXXXXXXXXXX  /                               oder manuelle
+ XXXXXXXXXXXXXXXX /                                Pruefung (Operator)
+ XXXXXXXXXXXXXXXX
+
+    Eingehende       Ueberwachungs-   Alarm des     Weitergehende       BETRUGS-
+   Anrufe in das       system-        Ueberwach-   Out-of-Pattern/      FAELLE
+ Ueberwachungssystem   analyse        unssystems   Scenario oder
+                                                  manuelle Uberpruefung
+
+
+
+
+  þ Wo sind die deutschen HP AcceSS 7 Systeme
+
+  Deutsche Telekom AG :
+             Frankfurt, Duesseldorf, Stuttgart und Nuernberg
+             Control Centers in Frankfurt und Bamberg.
+
+  Wie es scheint, sind sie in das interne TCP/IP Netzwerk der Telekom
+  angegliedert (HITNET), die nur ueber eine Firewall an dem Internet
+  angeschlossen sind.
+
+
+
+
+
+                              LETZTE WORTE
+                             --------------
+
+ Ein kleiner Teil der Informationen in diesem Artikel war schon im
+ THC Magazine #1 (Februar '96) zu lesen. Ich aktualisierte danach die
+ Informationen, fuegte vieles ein und der Artikel erreichte die doppelte
+ Groesse :) ... Er erschien dann im Time For a Change #4, dem amerikanischen
+ Magazin von einem Kumpel, Ghost in the Machine. Fuer das 4. THC Magazine
+ habe ich ihn uebersetzt, leicht aktualisiert und gekuerzt was nicht fuer
+ Deutsche interessant ist, damit er mehr Leute ihn lesen und insbesondere
+ Phreaker auf die Gefahr aufmerksam werden und sich ueberlegen wie sie das
+ System ueberlisten koennen.
+
+ Das System *ist* aktiv, wie z.B. gerade ein Fall von vor 2 Wochen zeigt :
+ Ein Freund hatte 0130-Scanning betrieben, so ca. 6 Stunden ueber Nacht laufen
+ lassen, und als er ihn am morgen beendete bekam er nach kurzer Zeit einen
+ Anruf, dass auffaellig oft von seiner Leitung aus gewaehlt wurde, der
+ Anschluss sofort gesperrt und erst wieder freigeschaltet wird, nachdem er
+ von einem Telekomtechniker vor Ort inspiziert wird.
+
+ Wer also in einer laendlichen Region wohnt hat hiermit echt Probleme, wer
+ allerdings direkt in einer Grossstadt wohnt, idealerweise vielleicht noch
+ angeschlossen an einer VST an dem auch viele Betriebe angeschlossen sind,
+ hat da mehr Glueck.
+
+ Wer sich den Artikel aufmerksam durchgelesen hat wird merken, dass zugleich
+ viel wie wenig drinnen steht. Es ist alles, was ich aus sensitiven Daten
+ wie oeffentlichen Pressesachen herausfiltern konnte. Vieles ist zusammen-
+ gereimt manches vielleicht auch falsch, aber ungefaehr so arbeitet das System.
+ Da ich nicht weiss ob folgende 2 Dinge mit dem AcceSS 7 zu tun haben, habe
+ ich sie hier reingeschrieben :
+ Es ist technisch ohne Probleme moeglich herauszufinden, auch mit AcceSS 7,
+ ob ein Anruf automatisch gemacht wurde (Fax/Modem/Schnellwahltaste/etc.)
+ oder per Hand gewaehlt wurde. Ob das irgendwie ausgewertet wird weiss ich
+ nicht, wird aber schon seit laengerem bei guten PBXen gemacht.
+ Desweiteren benutzt die Telekom eine Software namens MOSES an ihren Vermitt-
+ lungsstellen, was auch eine Ueberwachung macht. Ob sie in irgendeinem
+ Zusammenhang mit AcceSS 7 steht oder was genau sie macht ist mir leider
+ (noch) nicht bekannt.
+
+ Wer noch irgendwelche Infos hat, einfach eine email senden an vh@campus.de
+ und mit dem PGP key unten verschluesseln. Wer Informationen dieser Art
+ zurueckhaelt schadet anderen nur, hat selbst aber keinerlei Vorteile, da
+ es ja nix ist, was stirbt, wie eine C5 Nummer oder eine PBX ...
+
+
+ Passt auf euch auf ...
+
+                     van Hauser / THC (vh@campus.de)
+
+
+Type Bits/KeyID    Date       User ID
+pub  1024/3B188C7D 1995/10/10 van Hauser/THC of LORE BBS
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: 2.6.3i
+
+mQCNAzB6PNQAAAEEALx5p2jI/2rNF9tYandxctI6jP+ZJUcGPTs7QTFtF2c+zK9H
+ElFfvsC0QkaaUJjyTq7TyII18Na1IuGj2duIHTtG1DTDOnbnZzIRsXndfjCIz5p+
+Dt6UYhotbJhCQKkxuIT5F8EZpLTAL88WqaMZJ155uvSTb9uk58pv3AI7GIx9AAUT
+tBp2YW4gSGF1c2VyL1RIQyBvZiBMT1JFIEJCU4kAlQMFEDJ2gzNAf3b9d/IP1QEB
+5DwD+gJRh6m4h0fVgpQJkOiuQD68lV5w8C0F5R3jk/o6Pollaf7gtVhG8BGGo5/7
+/yiH40gujc82rJdmihwcKuZQtwt8X28VN8uy56SCpXD5wjjOZpq0t0qSXmhgunZ0
+m7xv7R4mWRzFclsgQCMwXNgp4sXgw64bVm8FhEdkrVSO8iTyiQCVAwUQMkMhCspv
+3AI7GIx9AQFstAP+Jrg7V06FGV/sTzegFNoaSyOItkvXjctzFsXuBfta2M7EzPX3
+UR3kM4/W4xE70H4XmMOJ9RmTzs+MuhSq8BtGQtYaJqGjxe/ldbvGOXRxR1rBJAKS
+yDQYu0VJ/Ae8yuJcMS312jqwg8OLgYnQaqEoaRM4HEiB+hgDRqnFKpDxkhSJAJUD
+BRAyQx8E5y7IvlL6xvEBAQ+bA/9baK7f3M9F5n4aASy04WHOreUNpGQ8DXgtMVq7
+KVdXMIWjURsboR+wt5eJTPeL00lHS5eqmZlNzGV9hWtzAr20qrKLmvE20Ke4VPB0
+a/tWXNUdvLnk4ENbTBFfMMdnlDo3hSThSMQ7yZ9UEYgighKu6l2fG5UG6D+kXFLy
+iIvvlA==
+=nX2w
+-----END PGP PUBLIC KEY BLOCK-----
+
+

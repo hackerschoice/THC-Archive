@@ -1,0 +1,12 @@
+
+Kryptographische Algorithmen
+
+Asymmetrische Kryptographie
+RSA und DSA
+
+Hash Algorithmen (Fingerabdruck)
+MD5 und SHA1
+
+Suche nach Fuzzy Fingerprints 
+= Bruteforce-Schlüsselgenerierung
+

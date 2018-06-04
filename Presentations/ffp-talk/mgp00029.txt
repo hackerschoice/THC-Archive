@@ -1,0 +1,12 @@
+
+Performanz der Implementierung
+
+Angriff gegen Schlüssel von kimble.org
+
+RSA Schlüssel mit 1024 Bit
+MD5 Fingerabdruck
+
+Aldi-PC (ca. 1GHz)
+100.000 Fingerabdrücke pro Sekunde
+14 Tage Laufzeit
+

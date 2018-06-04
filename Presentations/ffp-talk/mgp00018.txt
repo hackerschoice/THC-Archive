@@ -1,0 +1,10 @@
+
+Erweiterte Qualitätsberechnung
+
+Ziffern eines Fingerabdrucks sind sich unterschiedlich ähnlich
+6, 8, 9 haben eine ähnliche Gestalt
+0, 1 sind eher unähnlich
+
+Beispiel
+
+

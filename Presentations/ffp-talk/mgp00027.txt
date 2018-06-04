@@ -1,0 +1,14 @@
+
+RSA Schlüsselgenerierung
+
+RSA Schlüssel Komponenten
+p,q        Primzahlen
+n           Produkt n = pq
+m          m = (p-1)(q-1)
+e           öffentlicher Schlüssel mit ggt(e, m) = 1, relativ prim zu m
+
+Primzahlen werden einmalig gewählt
+Suche erfolgt über e
+Effiziente Berechnung von e schwierig
+ggt Berechnung
+

@@ -1,0 +1,13 @@
+
+Sloppy RSA Schlüsselgenerierung
+
+Primzahlen werden einmalig gewählt
+Suche erfolgt über e
+
+Bedingung
+e ist ungerade Zahl
+Beobachtung 
+e ist sehr oft relativ prim zu m
+
+Mehrere e vorhalten, falls bestes e nicht relativ prim
+

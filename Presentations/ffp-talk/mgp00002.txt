@@ -1,0 +1,15 @@
+
+Überblick
+
+Kryptographische Fingerabdrücke
+Hintergrund
+Sicherheit
+
+Fuzzy Fingerprints
+Motivation und Idee        
+Qualitätsberechnungen
+
+Beispiel-Implementierung
+SSH2 Schlüsselverifikation
+
+

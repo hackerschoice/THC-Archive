@@ -1,0 +1,51 @@
+
+SMART CARDS
+
+by Morcc/THC
+
+New applications for smart cards are being discovered on a daily basis,
+overriding former simple uses such as memory cards (telephone cards)
+which have been dominant to date. Today, with an expanding market for
+highly sophisticated applications, the time for the smart card has come.
+Examples of these "smarter" cards are SiM cards for the C and D nets of the
+mobile phone networks of German Telekom & Mannesman, banking cards, ID cards
+and access control cards. Smart cards are also synonymous with security.
+Smart cards are used for communication. The information they contain is
+requested by reader devices and then forwarded to further processing.
+Within then GSM network the card has the function of a key. As a SiM it
+allows access to the network. To ensure that smart cards and terminals
+communicate correctly and that data is exchanged smoothly and without
+error, some companies offer a SiM simulator which reproduces the behaviour
+of the card during the session with the terminal and creates a protocol log
+of the procedure. The SiM simulator is very interesting, it looks a little
+bit weird but that doesn't matter. One of these SiM simulators is called
+Test SiM and its main area of application is in spot checks during quality
+tests, i.e. during the development of mobile telephones. The SiM editor is
+the software which is used to r/w to the card's memory. One of these
+editors is called Dr. SiM, a very popular device, because every fool can
+operate it. Some smart card companies already developed cards for UNiX
+computer security. This is secured for workstations within a UNiX LAN.
+The system is called X-Secure. The user identifies himself with a personal
+ID number whichis on the card. A two-way dialogue then takes place between
+the card and the computer, involving high security checks. Once access has
+been granted, the user can use the system.
+In the future we will all use smart cards. As a electronic wallet, for
+medical purposes, electronic locking, systematic traffic control and
+electronic toll collection. Security will be better and better, but there
+are always ways around it. The best way to get good information is to call
+one of the smart card companies and tell them you're Mr. X from the X company
+and that you're interested in the smart card technology because you're planning
+to use smart cards in the company. If you have the right feeling how to talk
+with people on the phone you'll get the best informations.
+
+If you don't know numbers of such companies, here are some of them...
+
+Germany +49-5254-991-0
+UK      +44-1491-41-0997
+USA     +1-610-993-9810
+
+I hope that you know have a basic idea of smart cards and that you want to
+know more about it. Go ahead! Start with collecting more information.
+
+Bye,
+Morcc/THC

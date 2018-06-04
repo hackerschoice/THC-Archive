@@ -1,0 +1,362 @@
+
+|----------------------------- HACKERS GO CORPORATE  -------------------------|
+|-----------------------------------------------------------------------------|
+|------------------ van Hauser / THC <vh@reptile.rug.ac.be> ------------------|
+
+
+----|  Preface
+
+The following article has been discussed controversially in the rows of the
+THC members. Some of Van Hauser's statements reflect his personal opinion
+and are inconsistent with other THC members opinions. As the webmaster of
+the THC site, I would like to give *YOU* the chance to judge. 
+
+                                                              - Plasmoid
+
+
+
+----|  Introduction
+
+Young hackers usually dream about becoming a well-known security expert,
+whose job is about executing high profile penetration tests on fortune
+100 companies. Why? Cool and interesting projects, bleeding edge hard and
+software to work with, new areas to learn and gain knowledge, earning money,
+creating (another) high profile - this time with the real name -
+most hackers dream of that - few actually achieve that.
+
+This article is meant to change this.
+
+It is mostly about the pitfalls a hacker has to overcome, especially when
+a company doesn't like "evil" hackers for the job. Therefore a sound and
+seemingly logical explanation, where he did get this security knowledge is
+very important. Some people might say "hey, nice article, but it is not
+really about hacking" - well, I say it is. It is about hacking coporate
+minds. You want to achieve your goal - working for that fortune 10 bank as
+an IT security expert, but f*ck, they don't like hackers. Hackers are evil,
+criminals, they say. So you have to hack their brains to get what you want!
+
+First, it should be clear what a "security job" is about - or being
+a whitehead. The world, work and views are different. The section
+"Hacker World vs. Security World" is describing this.
+
+Then you might need additional knowledge to impress your hope-fully new
+employer - also the ways for that are pretty clear, you can find some hints
+at "Getting a Background".
+
+After you know what will await you, you actually have to apply for a job.
+There are some do's and some don'ts you should keep in mind for writing
+your application documents and when you've got your job interview. The
+sections "Truthful or not", "How to find a job", "Getting your CV right"
+and "The Job Interview" will keep you on the right track.
+
+And finally: "Things you should not do after getting the job". This might
+be more important than you think.
+
+Last thing you should keep in mind when reading this text: it is
+especially meant for people who have a hard time to get employed because
+the company they are interested in have got a "no-hacker" policy, or the
+country they are living in are seeing hackers not as an enrichment to the
+security business. If you are trying to get into a company which welcomes
+hackers with open arms - which is rarely the case - this text can still be
+important to you.
+
+About me: as a former hacker and phreaker, I'm working for 7 years in the
+security field now and had to struggle several times with this topic. I
+also helped several friends and peers to their security jobs so far. The
+contents here is my own vast ;-) experience - with input from friends and
+colleagues.
+
+Enjoy.
+
+
+
+----|  Hacker World vs. Security World
+
+What is the hacker's view of the world? Wardialing modems, attacking web
+servers, writing exploits, driving around in the city to find vulnerable
+wavelan networks, exploring bleeding edge hardware, programming a new tool
+for weeks until it is perfect, meeting with hacker friends for weekend
+sessions and drinking jolt - well and having a good time.
+Is a security job like that? Well, of course not - but what is it actually
+about?
+In the security field, there are different positions.
+ a) The Programmer - he deals with programming operating systems or
+    applications. The job might be just that of a programmer (e.g.
+    programmer for the Sun Solaris kernel), or a development of security
+    components (e.g. part of the development team of Checkpoint's
+    Firewall-1), or part of the security audit team of a software package
+    (e.g. AIX security team from IBM in Austin/Texas).
+ b) The Administrator - he is responsible for running special equipment or
+    whole infrastructures. An administrator can be responsible for
+    all servers of a special operating system (e.g. Windows admin), the
+    network (LAN/WAN admin), applications (SAP, Oracle, Lotus Notes, etc.),
+    firewalls, etc.
+    The smaller the company, the broader and more general is usually the
+    scope of work for an administrator.
+ c) The Operator - sitting in front of a monitor (or several) all days and
+    evaluating output of logs and system messages. Boring. But usually you
+    get a good overall salary through additional holiday, weekend bonus
+    etc. Hackers rarely do that - but it's an option.
+ d) The Security Officer - he is writing the security policies and
+    procedures for the company. If a security incident is happening, he
+    has to decide what to do. Usually, he is also part for defining
+    security and access roles for important. A very important job, but
+    that of a paper tiger - and attending many boring meetings and
+    eventually reviewing some audit files.
+ e) The IT Auditor - an independent organ within the organization which
+    ensures the adequateness of IT controls. A job where you not make many
+    friends, but usually can travel around the world, if you are working
+    for a big company. Most audit work is about organisational procedures
+    and if they are followed, interviews and reviewing logs. However in
+    some positions, you can also things like penetration tests - but also
+    if that's the case, it's just a small part of the job description.
+    An IT auditor usually can not build up deep knowledge, however get a
+    very broad knowledge and a very good overview of the company.
+ f) The Consultant - he works for a consultant company (whew!). From a
+    hacker's point of view, there are 3 types: general consultant
+    companies (e.g. McKinsey, KPMG, Ernst & Young), IT consultant
+    companies (e.g. IBM Consulting, Accenture) or IT security companies
+    (e.g. @stake, secunet, etc.). What is the difference? Well,
+    specialization of the company and size of the company.
+    It should be noted that most big audit companies (e.g. PWC, KPMG,
+    etc.) also have got IT security auditors, which do a mix of e) and f).
+ g) The "Hacker" - employed by the company to check the security of
+    networks, review source code, etc. In some companies, they are hired to
+    show to customers or press they employ cool people (hi to Ken William
+    ;-) This job type is actually very rare ...
+
+In some companies - especially security consultant companies who also
+develop software, some people can actually be programmer and consultant.
+This is the case for @stake, Razor, eEye, etc. - but of course also there
+just for some special guys.
+
+So that you have got a picture now what type of work there is to do, how
+is the work done? What is the view on the work?
+
+1) A hacker's "job" is actually very easy - viewed from a whiteheads side.
+   "They try to break into some company, and if they find a hole - great, if
+   not - well they try another company. They only have to find one hole,
+   that's enough." Also this is exaggerated, there is much truth in it, if
+   you see it as a game between "black" and "white".
+   A "whitehead" has to find all holes, and close them. That's a completely
+   different view - and many will say more challenging as well.
+2) When you changed the side - you also have to change your work habits.
+   You will normally get a description what is your scope of work - and
+   that's what your job is about. You can't to just what you think would
+   be fun to do. Doing a fast penetration test on your companies mail
+   server? Might bring you to jail if you were not authorized. 
+   Every job brings limits with them - and if you want to keep yours, you
+   have to follow them.
+3) Then you have to follow procedures (e.g. the company's security
+   policies, working hours, dress code). In some companies these are very
+   strict, in others it's very relaxed.
+4) You can not just work how you want to. If you are a database
+   administrator or you got a job in a security consultant company to do
+   penetration tests: you must either follow a methodology how you have to
+   do your work - to ensure the quality, or you have got to document
+   everything you did - if someone else has to pick-up your work later, he
+   knows what you did and why.
+5) A security job does not mean that you can implement all security you
+   want. Everything will be focused on business needs. Want to install new
+   firewalls, tighten down the filter lists in the firewall, install a new
+   reverse proxy for the eCommerce system? Your boss will ask you why this
+   is needed, what the cost will be, and the impact. The new firewall might
+   add security, but be too expensive. Or the tightened filter lists would
+   make administration, content updates etc. more difficult. Or the reverse
+   proxy might downgrade performance, which would frustrate customers. 
+6) Ever heard about the famous "soft skills"? Yeah, you might be
+   technically an expert, but within a company, you are not alone, and you
+   don't act and work alone. This is why good communication skills (being
+   friendly, helpful, open, respectful, truthfully etc. blabla) are very
+   important. In fact you should even consider this for your private life
+   anyway - it enhances your friendship with hackers (and girls as well!
+   ;-) ...
+
+So why going corporate anyway? It doesn't sound like fun. Well - it can be
+fun. It depends on the company's culture and how much freedom you get.
+And the work can be very rewarding from what you can learn, expand your
+knowledge, environments and companies you see and working professionally
+the first time in your life.
+
+So brighten up - it can be fun and rewarding. Just remember: corporate
+life is not a piece of cake and to take too easy. You'll have to adapt.
+
+
+
+----|  Getting a Background
+
+Now that you know what a corporate life is about, you can qualify yourself
+better if you've got security background - not hacker background - already.
+Helpful are e.g. Cisco configuration know-how, solaris/aix/win2k
+administrator know-how, knowledge about security policies, hands-on
+experience about firewall setups and server hardening, programming skills,
+etc.
+What skills are especially helpful for the job you would like to do?
+Take a look at the job descriptions from the previous paragraph and then
+imagine what kind of knowledge is needed.
+Then try to acquire somehow the knowledge. E.g. buy books, read online
+articles about the topics, buy some old and cheap cisco/sun/rs6000/etc.
+hardware and get some experience.
+www.securityfocus.com is a good starting point for finding related
+articles and books, ebay.com is a good place to find hardware, etc.
+
+However the best is to get an internship or part-time job at an ISP or
+security division of a big company.
+
+
+
+----|  Truthful or not?
+
+There are companies out there which have got a "no hacker" policy.
+There are countries where it is common thinking that hackers do "hacking"
+and therefore not adequate for "security" jobs - for ethical,
+philosophical or technical reasons.
+If you think that a company has got a "no hacker" policy - don't tell them.
+If you don't know if they have got such a policy - don't tell them either.
+You can still do that later if you get the strong feeling in the interview
+they think positively about hackers. Otherwise: don't.
+
+
+
+----|  How to find a job
+
+For some people it's easy: the job offers are made to them. For this you've
+got to become famous or well-known in the security/hacker community. Good
+examples for this are the l0pht team or ADM, or single individuals like
+rain forrest puppy and Fyodor.
+If the job doesn't come to you, you have to look for a job yourself. There
+are three ways:
+1) Go to security conferences (or hacker conferences) - Usenix
+   Security Symposium and Blackhat Briefings are usually very good for
+   this, hold a good presentation, talk to some people ... and there you
+   are.
+2) You search for security jobs on Internet job search engines (keywords
+   like "firewall", "security" even maybe "hacker" will bring you further),
+   additionally www.securityfocus.com has got the SecurityJobs mailing
+   list (and archive).
+3) You directly send your resume to the companies you want to work for.
+   This is actually very effective. Job ads on the Internet, computer
+   magazines or newspapers are expensive and usually don't bring much
+   results for the companies as the market for security specialists is
+   empty most of the time. So if you just send the IT security departments
+   your resume - you will get at least a job interview 90% of the time.
+
+Or if you know someone within a company, he might propose you as a new
+team member :-) that would be the easiest way ...
+
+
+
+----|  Getting your CV right
+
+CV stands for Curriculum Vitae and means resume or application documents.
+Before you start writing yours, get on the internet and read tips about
+writing one.
+Specifically for hackers going corporate, you should take of the following:
+1) Your CV should contain no holes. If you spent 3 month burping and
+   farting in your room, put in your CV:
+      "January 2000 - March 2000: private software development project on
+       secure web applications. I experimented with various blabla, and
+       developed blablabla which enhanced security blabla ..."
+   I guess you get the picture.
+2) Whatever you did - high school, internship, university, part-time jobs -
+   mention everything from a light what you did there in the security
+   field - and a bit more ... e.g. if you administrated a webserver for an
+   ISP as an part-time job, you write:
+      "I was responsible for the security of the webserver, had to review
+       the system and apache log files, review the source code of the CGIs,
+       blablabla"
+3) If you did internships, part-time jobs or security related courses at
+   high school or university (even about cryptography and system
+   management) try to get a internship certification, signed resume,
+   whatever. Try to influence the contents so it focuses on security.
+   In many companies you usually write them yourself and let them sign by
+   the boss - this is the easiest way of course.
+
+
+
+----|  The Job Interview
+
+Show that you are ethical - give them the feeling that you would never
+ever hack the company - without proper authorization by management. If
+they think you are a shady character, no way they will hire you. Even if
+they think positively about hackers.
+
+Don't tell them you are a hacker, unless you really get the feeling during
+the interview that this would help you!
+
+If the company has got a "no hacker" policy, you'll have to face questions
+like "Are you a hacker", "have you been a hacker before", "could you get
+into the system you once administrated?", etc.  Sometimes even challenging
+you like "Are you skilled enough to still get into the firewall at the
+university you built up?".
+If you don't want to lie (like me), you can answer them like: "What do you
+mean by 'if I am a hacker', if you mean 'someone who is vandalizing web
+pages' - no, never, if you mean 'someone curious about security and
+paranoid enough to tighten down everything and programming until 4 o'clock
+in the morning' - yes, then I'm a hacker".
+
+If you don't want to appear like a hacker - don't dress like one. Dress
+Like the company expects the proper person to be. This might be a business
+suit or casual. If in doubt: business suit, especially if it's a
+consultant/auditor job.
+
+And of course the usual tips for job interviews apply here as well. Buy a
+book about that or read them on the internet.
+
+
+
+----|  Things you should not do after getting the job
+
+Remember the following things:
+
+Do NOT hack the company you are working for! If you are working for an
+external audit or consultancy company, this includes your customers!
+Do NOT hack other companies from the company you are working for or it's
+customers!
+NEVER tell anyone from the hacker scene about the security (or insecurity)
+of your company (and customers)!
+NEVER tell your company (or your customers) secrets from the hacker scene -
+otherwise you'll not have got much friends anymore ...
+It might not be wise to tell people in the company, that you are (or have
+been) a hacker. People usually can't keep their mouths shut.
+It is wise not to do any illegal things after becoming corporate - if you
+are caught hacking into some systems - do you think your company will
+believe that you never hacked them .... ?! So better become a greyhat, and
+have fun researching and still do the same stuff like before. But either
+authorized or passive watching ...
+
+
+
+----|  Closing Remarks
+
+Several companies which fear hackers will think after reading this -
+"f*ck, we have to tighten the "new employee" process".
+But I will tell you something: Too late ... we are already everywhere.
+In all major consultant, audit and software development, banks and IT
+security companies are former hackers. And guess what?
+The world is not crumbling down in despair. Most hackers have ethics.
+You might not like their ethical code, but most of them have a code of
+honour, and would never hack the company they are working for.
+You might say - "but the others, not all are good" - yes, that's true,
+but so is the rest of the world - same is true about people who are not
+hackers. If you fight us you will loose - valuable team-members, with
+strong skills and experiences. Think about it.
+
+And to the hacker scene: having a cool security job and still doing
+greyhat stuff - this is the best thing which can happen to us. Having fun -
+and getting paid for it. r0qz!
+
+
+
+----|  Greets
+
+Greets to Doc Holiday, Mindmaniac, Tick, Stealth, Vax, SevenUp,
+Escher and Rookie who all went corporate successfully - and these are
+just some of the German guys. Ken Williams, Fyodor, L0pht, some of ADM
+and many, many, many more as well. Have fun and kick ass!
+
+Greets to my group THC (visit our 31337 HACKER QUIZ at
+http://www.thc.org/quiz), TESO, ADM, LAM3RZ and L0pht.
+
+2001, van Hauser / THC <vh@reptile.rug.ac.be>
+

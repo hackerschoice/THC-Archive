@@ -1,0 +1,12 @@
+
+Beispiel-Implementierung
+
+MITM Angriff gegen das SSH2 Protokoll
+Korrekte Verifikation des öffentlichen Schlüssels erschwert durch einen unscharfen Fingerabdruck
+
+Zielfingerabdruck
+von Alice's öffentlichem Schlüssel
+
+Fuzzy Fingerprint
+von MITM Schlüssel
+

@@ -1,0 +1,446 @@
+    % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+    %                                                                       %
+    %                             KREDiTKARTEN                              %
+    %                                                                       %
+    %                   GEHASST, VERDAMMT, VERGOETTERT ?!                   %
+    %                                                                       %
+    %           GEFAHREN, BETRUG, ANTi-FRAUD SYSTEME, VORURTEiLE            %
+    %                                                                       %
+    % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+    Hinweis : Kreditkartenbetrug ist eine strafbare Handlung, die Absicht
+              dieses Textes ist auf gar keinen Fall, den Leser zu unerlaubten
+              Handlungen aufzufordern. Der Text dient rein zum Zwecke der
+              Information.
+
+    Warnung : Der hier vorliegende Text ist urheberrechtlich geschuetzt.
+              Jeglicher Nachdruck (auch auszugsweise) ist nur mit
+              schriftlicher Genehmigung des Autors bzw. [THC]
+              und Quellenangabe gestattet.
+
+    Autor   : GemFire / [THC] The Hacker's Choice
+
+
+Dieser Text soll etwas anders werden, also die anderen tausend Texte, die
+bereits geschrieben wurden, manch einer findet ihn vielleicht nicht so
+informativ wie andere, aber das ist sowieso nicht der Punkt, das wird keine
+Anleitung, um eine Straftat zu begehen. Das sind meine Erfahrungen und meine
+Meinungen zu gewissen Themen, wer etwas besser weiss oder einen Kommentar
+dazu hat, kann mich das in neutraler Form wissen lassen, wer denkt er ist
+was Besseres, behaelt alles besser fuer sich.
+
+NOCH EIN WORT AN UNSERE FREUNDE UND HELFER VOM STAAT:
+Bloss weil ich ueber etwas schreibe heisst das noch lange nicht, dass ich es
+auch mache, also waere ich Euch sehr verbunden wenn Ihr es unterlassen wuerdet,
+mich zu belaestigen... Geilt es Euch auf mein Telefon abzuhoeren? Nur zu, mit
+meiner Freundin telefoniere ich meist abends. Wuehlt Ihr gerne in fremden
+Wohnungen rum? Bei mir gibt es nichts zu finden, Ihr koennt also gerne etwas
+rumstoebern, aber lasst bitte meine Kleidung nicht wieder rumliegen und raeumt
+nachher alles auf. Und wenn Euch CDs oder Buecher oder 2600er Magazine
+interessieren, dann kauft sie Euch selbst und beschlagnahmt es nicht gleich
+und lasst es dann verschwinden, ich hoffe wir verstehen uns. In diesem Sinne,
+viel Spass beim Lesen, vielleicht lernt ihr ja auch was.
+
+Viele interessiert wohl, wie kommt man an Kreditkartendaten ueberhaupt ran?
+Wer gibt einem schon seine Karte? Wozu gibt es Datenschutz? Wuerde sonst nicht
+jeder damit Unfug treiben? Nun, die Moeglichkeiten sind hier so zahlreich, sie
+reichen von einfachen Methoden, die jeder Vollidiot machen kann und eigentlich
+auch selbst draufkommen muesste bis zu besseren und komplizierteren Methoden.
+Zunaechst einmal gibt es "Trashing" eine uralte Methode, die aber immer noch
+sehr erfolgreich angewendet werden kann. Waere mir persoenlich zu anstrengend
+und zu dreckig, aber manche Leute werden sicher nicht abgeneigt sein, wenn es
+zum Erfolg fuehrt... Muelleimer an Tankstellen, kleinen Geschaeften, bei Banken
+und in Banken, man muss einfach mal selbst nachdenken, was es in seiner Gegend
+gibt und wo evtl. Kreditkartentransaktionen vorgenommen werden. Man kann auch
+in grosse Kaufhaeuser gehen und versuchen an nicht besetzten Kassen die
+Kreditkarten Quittungen zu finden. Oder koennt Ihr euch gut Zahlen merken?
+Einfach an der Kasse wenn jemand mit KK zahlt Nummer merken. Das fuehrt
+natuerlich nicht zum Erfolg wenn Ihr mit dieser Absicht losgeht ;) Man sollte
+einfach immer einen Block dabeihaben, Nummer merken und danach gleich notieren
+oder ein kleines Voice-Memo mit 20 Sek. Aufnahmezeit, alles praktisch um
+einfach, bei Gelegenheit an neue Karten ranzukommen. Nun, werden manche
+einwerfen, es gibt ja noch KK Generatoren, wie z.B. auch mein THC-CREDiT,
+nun ein sehr gutes Werkzeug, wenn man Bescheid weiss, ansonsten ist man meist
+auf dem Holzweg... Um gleich mal mit einem Vorurteil aufzuraeumen - die
+generierten Nummern sind natuerlich nicht alle gueltig, sondern berechnet.
+Wenn alle berechneten Nummer gueltig waeren, dann gibt es keine neuen Nummern
+mehr, um sie an neue Kunden auszugeben... Allerdings erhoehen diese Programme
+die Chancen eine gueltige Nummer zu finden und wenn man es richtig anstellt,
+kann jede zweite eine gueltige sein. Die Karten einfach mit normaler Methode
+zu berechnen ist besser als sich einfach eine Zahl auszudenken, aber wesentlich
+effektiver ist da die "Extrapolate" Funktion. Das bedeuted man besitzt eine
+gueltige Kartennummer (kann sogar die eigene sein) und berechnet aus dieser
+Karte andere, indem man die letzten 4 Ziffern veraendert. Das hat etwas mit dem
+Aufbau der Karte zu tun. Zumindest bei Eurocard/Mastercard und Visa ist das
+System das selbe und fuer diese beiden haeufigsten Karten erklaere ich das
+jetzt auch.
+
+z.B. eine Visa Karte 4000 0000 0000 0002
+
+                     4000 = Ist die Bank ID, grosse Banken haben eine eigene
+                            kleinere teilen sich eine mit anderen bzw. fuer
+                            deutsche Eurokarten gibt es nur eine, naemlich
+                            die 5232
+
+                          0000 0000 = Dieses Feld identifiziert eine Gruppe
+                                      von Kartenbesitzern, z.B. mit aehnlichem
+                                      oder gleichen Verfallsdatum und Kredit-
+                                      rahmen, allerdings ist diese Nummer
+                                      nur zugeordnet, dass heisst man kann
+                                      keine Rueckschluesse auf diese Daten
+                                      ziehen.
+
+                                    0002 = Dieses Feld wird nun einzelnen
+                                           Kartenbesitzern aus dieser Gruppe
+                                           zugeordnet.
+
+Wenn man eine Karte extrapoliert hat man also den Vorteil, das Bank ID und
+Gruppe auch zu 100% existieren, und bekannte Kombinationen sind voll mit
+gueltigen Nummern... Man berechnet eben moegliche letzte Ziffern der einzelnen
+Kartenbesitzer. Um die Methode auch effektiv zu nutzen und zu grossen Mengen
+an KK# zu kommen, sollte man moeglichst zusaetzlich ueber eine Online Pruef-
+moeglichkeit verfuegen, dies gehoert zu den zuvor genannten komplizierteren
+Methoden an Karten zu kommen. Ich erklaere nur eine, da die anderen wohl
+sowieso niemand ausfuehren kann, der sich nicht auch tiefer mit anderen Themen
+beschaeftigt, z.B. wie man bestimmte amerikanische Telefonnummer anrufen kann
+oder sich Zugang zu fremden Netzen und Computern verschaffen kann oder VMB
+Systeme durchforsten kann. Das ist auch sicher nicht meine Aufgabe diese
+Sicherheitsluecken zu schliessen, indem man alle Welt darauf aufmerksam macht
+und Tausende von Neulingen darauf loslaesst.
+Nun werde ich aber zumindest mal als Beispiel eine Moeglichkeit erklaeren.
+Beispielsweise ein Versand oder auch Kaufhaeuser bei denen das Terminal mal
+nicht funktioniert muessen ja eine Moeglichkeit haben KK zu ueberpruefen.
+Der Versand ist ja sowieso nicht im Besitz der Plastikkarte sondern hat nur
+die Nummer, das Verfallsdatum und den Namen etc. Aber er will natuerlich auch
+sein Geld, also fuellt er ein Formular aus und benoetigt dann sozusagen
+als Bestaetigung auch eine Genehmigungsnummer die er eintragen kann, mit
+der dann eben diese Transaktion abgehandelt wird, also ruft er bei der
+Kreditfirma, bei der er einen Vertrag hat an und ueberprueft die Kartennummer.
+
+Die kann z.B. so ablaufen:
+
+[VERSAND WAEHLT NUMMER 069 XXXXXXXX]
+
+EUROCARD : "Eurocard Genehmigungsdienst, wie kann ich Ihnen helfen?"
+VERSAND  : "Ich benoetige eine Genehmigunsnummer, meine Vertragsnummer lautet
+            15X XXX XXX, die Kartennummer ist 5XXX XXXX XXXX XXXX, gueltig
+            bis 12/98"
+EUROCARD : "Mit welchem Betrag wird die Karte belastet?"
+VERSAND  : "120 DM"
+EUROCARD : "Einen Moment bitte... alles in Ordnung, die Genehmigungsnummer
+            lautet 057638"
+VERSAND  : "Danke, auf Wiederhoeren!"
+
+Gibt es keine Genehmigungsnummer, dann ist die Karte entweder ungueltig,
+gestohlen oder ueberzogen bzw. hat kein ausreichendes Kreditlimit. Der Betrag
+wird virtuell vom Kartenkonto abgezogen (hat den Sinn, dass wenn jemand ein
+Limit von 1000 Mark hat und z.B. im 5 Minuten Abstand andauernd fuer 1000 DM
+Sachen bestellt, dass ihm da ein Strich durch die Rechnung gezogen wird.)
+Wie gsagt, es wird also virtuell schonmal abgezogen, geht dann das Formular
+mit Genehmigungsnummer usw. nicht innerhalb einer bestimmten Zeit ein, wird es
+als Fehler abgetan und der Betrag wird wieder zurueckgebucht. Nun, ich hoere
+schon wieder die Fragen... Wo bekommt man die Telefonnummer? Wo bekomm ich
+die Vertragsnummer? Das ist wirklich einfach, im Kaufhaus steht fuer den Fall
+eines Terminalausfalls oder fuer moegliche Rueckfragen bei der KK Gesellschaft
+immer eine Tel. Nummer und die Vertragsnummer meistens auf einem Aufkleber am
+Telefon oder daneben oder an der Rueckwand des Kassenhaeuschens, schaut einfach
+mal, ich bin mir sicher ihr habt gleich beim ersten mal Erfolg, wenn ihr in
+ein Kaufhaus geht. Nun, da fragen einige gleich wieder, wenn man die Karte
+extrapoliert hat, dann hat man ja kein Gueltigkeitsdatum, nun das ist auch
+nicht noetig, das ist nur der Form wegen, es geht jedes Datum > heutiger Tag.
+Das Datum wechselt ja eh oefters, wenn eine neue Karten ausgegeben wird und
+ausserdem sind das Unmengen von Daten auf die zugegriffen werden muss, bei
+diese Ueberpruefungen sind eben nur die Nummern wichtig, die Datensaetze mit
+Namen und anderen Sachen, waeren unvorstellbar gross. So ist das auch in den
+meisten Faellen wo KK verlangt werden z.B. im Internet. Allerdings gibt es
+gerade im Internet einige bei denen das Gueltigkeitsdatum (Expiration Date)
+mitgeprueft wird, das ist eine Auflage der KK Firmen... In diesem Fall hat
+man entweder eine Karte mit Datum zur Hand, die man z.B. auf einer Quittung
+im Muell gefunden hat oder man nimmt bei "Extrapolate" das selbe Datum, wie
+das der Karte aus der man extrapoliert hat, z.B. eben man extrapoliert von
+seiner eigenen Karte und nimmt dann auch das gleiche Gueltigkeitsdatum, was
+meistens auch funktioniert. Nun moechte ich mal generell noch etwas zum Auf-
+bau der Karten und ihrer Formate sagen.
+
+Diese Formate sind ab Version 1.9 auch in THC-CREDiT vollstaendig
+integriert. Im Moment sind Bedingungen wie die zweite Ziffer von Eurocard
+noch nicht integiert, da sie mir auch erst seit kurzem in der Form bekannt
+sind. Das bedeutet noch hoehere Trefferquoten bei THC-CREDiT, da andere
+Programme meistens nur die 1. Ziffer beachten.
+
+EUROCARD /  MASTERCARD / ACCESS CARD
+
+5AXX XXXX XXXX XXXX
+
+A = Ziffer zwischen 1 und 5 (einschliesslich)
+
+Bedingungen in Kuerze:
+
+- Gueltig nach MOD-10 Algorithmus (wie ihn z.B. THC-CREDiT benuetzt)
+- Immer 16 Stellen
+- 1. Ziffer immer eine 5
+- 2. Ziffer zwischen 1 und 5 (einschliesslich)
+
+
+ViSA CARD
+
+4XXX XXXX XXXX XXXX oder 4XXX XXX XXX XXX
+
+Bedingungen in Kuerze:
+
+- Gueltig nach MOD-10 Algorithmus (wie ihn z.B. THC-CREDiT benuetzt)
+- 16 Stellen oder bei aelteren Karten 13 Stellen (gibt es kaum mehr)
+- 1. Ziffer immer eine 4
+
+
+AMERiCAN EXPRESS
+
+3AXX XXXXXXX 100X oder 3AXX XXXXXXX 101X
+
+A = 4 or 7
+
+Bedingungen in Kuerze:
+
+- Gueltig nach MOD-10 Algorithmus (wie ihn z.B. THC-CREDiT benuetzt)
+- Immer 15 Stellen
+- 1. Ziffer immer eine 3
+- 2. Ziffer entweder 4 oder 7
+- Ziffern 12, 13 und 14 entweder 100 oder 101
+
+
+DiNERS CLUB / CARTE BLANCHE
+
+3AXX XXXXXX XXXX
+
+A = 0, 6, or 8
+
+Bedingungen in Kuerze:
+
+- Gueltig nach MOD-10 Algorithmus (wie ihn z.B. THC-CREDiT benuetzt)
+- Immer 14 Stellen
+- 1. Ziffer immer eine 3
+- 2. Ziffer entweder 0, 6 oder 8
+
+
+DiSCOVER CARD
+
+6011 XXXX XXXX XXXX
+
+Bedingungen in Kuerze:
+
+- Gueltig nach MOD-10 Algorithmus (wie ihn z.B. THC-CREDiT benuetzt)
+- Immer 16 Stellen
+- Ersten 4 Ziffern immer 6011
+
+JCB CARD
+
+AAAA XXXX XXXX XXXX
+
+AAAA = 3088, 3096, 3112, 3158, 3337 oder 3528
+
+Bedingungen in Kuerze:
+
+- Gueltig nach MOD-10 Algorithmus (wie ihn z.B. THC-CREDiT benuetzt)
+- Immer 16 Stellen
+- Ersten 4 Ziffern nur aus dem oben genannten Nummernpool
+
+Wie Kreditkartenbetrug funktioniert moechte ich hier nur kurz anreissen,
+es gibt ja wirklich genug (mehr oder weniger sinnvolle) Texte zu diesem
+Thema, generell unterscheiden wir hier das Classic Carding, bei dem bei
+einem Versand mit KK bestellt wird und das ganze an eine Dropsite geliefert
+wird, z.B. ein verlassenen Haus oder ein Haus dessen Besitzer im Urlaub sind.
+Der schwierige Teil ist es hier, sein Paket an der Dropsite zu bekommen, was
+aber bei etwas Einfallsreichtum kein Problem sein sollte. Dann haben wir
+seit laengerem nun auch das Bezahlen mit KK im Internet, da wisst ihr wohl
+selbst was man machen kann, obwohl ich es bis heute nicht verstehen kann,
+warum ein Vollidiot KK# im Internet hernimmt um Pornobildchen zu ziehen, aber
+naja jeder so (dumm) wie er will. Dann gibt es das Carding fuer den Profi
+mit Plastikkarten und allem drum und dran, ueber das wie moechte ich hier
+kein weiteres Wort verlieren... Was man damit anfangen kann ist klar, ueber
+all wo Karten genommen werden kann man auch damit zahlen, auch an evtl.
+Automaten (aber keine Bankautomaten - hier wird wie bei jeder Bankkarte auch
+eine PiN verlangt). Automaten koennen z.B. fuer Zugtickets usw. bereitstehen,
+auch hier moechte ich keine naeheren Anregungen geben, findet selber raus was
+geht und wo man Karten reinstecken kann, ist wohl auch nicht so schwer.
+Dann gibt es noch einige spezielle Anwendungsmoeglichkeiten wie z.B. sich
+ueber AT&T oder aehnlichen Telefongesellschaften ueber ihre 0130 Nummer
+weiterverbinden laesst und per KK zahlt. (in Deutschland allerdings NICHT mehr
+in der Form moeglich!) Generell geht alles wo man mit KK zahlen kann. Wie
+gesagt, hier soll niemand zu Straftaten angeregt werden, deshalb wurde das nur
+kurz angesprochen. Ist das ganze gefaehrlich? JAAAAAAAA also lasst die Finger
+davon! Vor allem wenn Ihr blutige Anfaenger seit, aber druecken wir es so aus
+fuer Leute die Bescheid wissen, besteht (fast) keine Gefahr, wenn sie gewisse
+Regeln beachten. Nun warum tun die KK Firmen nichts gegen Missbrauch?
+Generell sind die KK Firmen an Stillschweigen interessiert, Missbrauch zahlt
+die Versicherung ohne Murren und es wird kein grosser Aufstand gemacht.
+Manchmal, wenn irgendein Drecks-Boulevard-Magazin das Thema KK Betrug mal
+aufgreift, dann jammern sie ueber ihre Verluste... mit einem anderen Atemzug
+heisst es "Die Verluste sind Kleinigkeiten im Verhaeltnis zu Massnahmen gegen
+Missbrauch". Verstaendlich, sie muessten das gesamte System aendern... Kleinere
+Gegenmassnahmen sind oft nur ein Werbegag. Um nur mal ein Beispiel zu nennen,
+die Visa FOTOCARD bringt zwar vielleicht was wenn der Besitzer seine Karte
+verliert. Obwohl, Tests beweisen, auf dem Foto kann ein Japaner drauf sein und
+niemand fraegt einen Deutschen was er mit der Karte macht, also Nutzen gleich
+Null. Ausserdem, ein Kreditkartenbetrueger kann ja a) die Kartenummer benutzen
+beim Versand im Internet usw. und b) Wenn er Missbrauch mit einer echten Karte
+betreibt und damit einkaufen geht, ist da nicht zwangslaeufig ein Foto drauf,
+sehr wohl jedoch die richtigen Daten des Besitzers...
+Ueber ein neues Anti-Missbrauchs-System wollen wir doch mal kurz reden.
+FALCON - Ein toller Name...
+An dieser Stelle ein Dank an Walker/THC fuer das Zusammentragen und Schreiben
+von Informationen zu diesem Thema... Es gibt von ihm auch ein extra Textpaket
+zu dem Thema FALCON, also versucht es zu bekommen, wenn Ihr Euch fuer alle
+Einzelheiten interessiert.
+Nun FALCON gibt es seit Januar 1995, es analysiert und speichert die
+Transaktionen eines Kartenbesitzers. Es erstellt ein Benutzerprofil und
+erkennt verdaechtige Transaktionen, was zur Folge hat, das man sich z.B. an
+der Kasse ausweisen muss wenn das System Alarm schlaegt. Das ganze klingt
+in der Theorie hervorragend. Man sollte sich nur Fragen:
+
+WARUM ZU HOELLE ERSTELLEN DIE SAECKE EIN BENUTZERPROFIL UEBER MICH ?
+
+Nun, das ist auch ein grosser Grund fuer mich KEINE Kreditkarte anzuschaffen.
+Wer weiss, was mit meinen Daten passiert? Man geht in den Sexshop, kauft eine
+Peitsche ;) und am naechsten Tag ist der Briefkasten voll mit Domina Magazinen
+und Werbung ?! Kundenspezifische Werbung! Nein danke... und die KK Firmen
+kassieren noch mehr Geld?! Wahrscheinlich ist das der einzige Sinn von FALCON,
+nicht den Missbrauch zu verhindern sondern nur die Verluste durch neue Geld-
+quellen auszubuegeln... Das ist natuerlich nur Spekulation und ich moechte
+die KK Firmen nicht verdaechtigen, dass sie alle geldgeile Vollidioten sind,
+nichts liegt mir ferner. Nur eins: Von der Wirksamkeit von FALCON konnte man
+bisher nicht viel bemerken. Wieder mal sollen wohl hauptsaechlich die Kunden
+beruhigt werden.
+
+Nun, bekam ich am 20. Februar diesen Jahres eine E-Mail, dass das nieder-
+laendische Fernsehen eine Reportage ueber Kreditkartenmissbrauch machen will.
+Dazu wollten sie mich interviewen, weil sie ja auch mein Programm haben.
+Nun, generell bin ich gegen diesen Pressedreck. Wenn ein gewisser K.S. wieder
+durch RTL und PRO7 Sendungen geistern und Muell ablaesst und kleine Tricks
+vorfuehrt wie ein Zauberer auf dem Kindergeburtstag, aber nun hatten sie ja
+sowieso mein Programm und ich wollte etwas gegen Vorurteile wirken, indem
+ich ihnen einfach auf ihre Fragen antworte, denn die Presse arbeitet ja
+frei nach dem Motto: Was ich nicht weiss - erfinde ich einfach. So, nunja
+zwar hatten sie etwas Schwierigkeiten zu begreifen, dass mein Name GemFire
+und nicht SysGod ist, aber naja, wie sie ueberhaupt drauf gekommen sind?
+Nun in einer Board Werbung von mir stand unter der Telefonnummer meines H/P
+Board "Sysgod: GemFire" was ja eigentlich nichts anderes bedeutet, als dass
+der Systemoperator GemFire heisst, aber naja, obwohl ich es ihnen klar gemacht
+hab, haben sie dann irgendwie beide Namen genannt in ihrer Reportage...
+Wie auch immer, ich sollte eben ueber iRC interviewt werden und einen Abend
+danach wurde es gesendet, ein Uni Professor hat auch noch etwas gegen die KK
+Firmen gewettert und ich hoffe sie standen wenigstens am Ende als die Boesen
+da, ich versteh ja nun leider kein hollaendisch... Wie auch immer, Geld
+wollte ich fuer den Muell keins, ich bin ja kein geldgeiler Sack, ich wollte
+nur eine Videokopie des Beitrags, ist wohl ein fairer Deal... Wenn sich jetzt
+wieder jemand aufregt, dass welche aus der H/P Szene im Fernsehen auftreten,
+dann denkt daran was ich geschrieben hab, wer weiss was die sonst aus dem
+Beitrag gemacht haetten, allein schon der Satz den ihr ja nachher auch noch
+lesen koennt: "Was sagen Sie dazu, dass sie mit ihrem Programm Millionen-
+schaeden verursachen?" Nunja, ich meine mit solchen Meinungen muss man doch
+aufraeumen, inzwischen bin ich noch mit dem Reporter in Kontakt und er seit
+er sich etwas damit beschaeftigt, sieht er den Hauptschuldigen und Feind der
+Menschheit in den KK Firmen, woran man mal wieder sieht, dass es auch gute
+Reporter gibt, man darf Bild und RTL Reporter eben nicht als Mass fuer den
+ganzen Beruf nehmen. Nun werde ich einige Auszuege aus dem IRC Capture
+herausziehen und frei uebersetzen... Wenn sich jemand wirklich fuer das ganze
+Capture interessiert soll er sich eben bei mir melden.
+Der Freund des Reporters, der das Interview letztendlich durchgefuehrt hatte,
+nannte sich im IRC "Inter" soviel im vorraus zur Erklaerung.
+
+[...]
+
+<inter>   Naechste Frage, warum benuetzt Du einen Decknamen und nicht
+          Deinen echten Namen? Warum Namen wie GemFire?
+
+<GemFire> Aus Sicherheitsgruenden, Ich mache nichts illegales, aber vielleicht
+          wissen das einige nicht. Ich hab keine Lust, dass die Polizei mein
+          Haus durchwuehlt.
+
+<inter>   Ok, das ist ein guter Grund  ;-)
+
+[...]
+
+<inter>   Was ist das Hauptziel von Programmen wie THC-CREDiT ?
+
+<GemFire> Fuer mich ist es ein Hobby, ich weiss was moeglich ist, ich weiss
+          mehr als normale Leute. Vielleicht benutzen es manche Leute fuer
+          illegale Zwecke, aber THC-CREDiT allein begeht kein Verbrechen!
+
+<inter>   Aber weisst Du nicht, wieviel Schaden Du mit diesem Programm
+          anrichtest?
+
+<GemFire> Weisst DU wieviel Schaden ich damit anrichte? Wie gesagt, das
+          Programm richtet keinen Schaden an, nur der es fuer illegale
+          Zwecke missbraucht. Es gibt genug Programme wie dieses, meins
+          ist vielleicht eines der besten, aber bei weitem nicht das
+          Einzige. In der Anleitung wird darauf hingewiesen, dass KK
+          Betrug strafbar ist und der Zweck des Programmes nicht darin
+          liegt.
+
+<inter>   Ja, aber es ist hilfreich, wenn man damit Geld machen will...
+
+[...]
+
+<inter>   z.B. ViSA verliert 1,2 Milliarden pro Jahr, sagt Dir das etwas?
+
+(Anmerkung: Hier hab ich im Prinzip das gleiche geantwortet wie weiter oben
+ in diesem Text, dass sie ja selbst nicht mehr Sicherheit wollen, weil sie
+ das System lieber moeglichst einfach lassen wollen, weil es sonst den Kunden
+ zu kompliziert wird.)
+
+[...]
+
+<inter>   Visa sagt, es wird Hacker wie Dich eliminieren.
+
+(Anmerkung: Nun, das ist nun wieder ein lustiges Statement von VISA, hehe.)
+
+Naja, es ging dann noch eine Weile um Anti-Fraud Systeme, im Prinzip nichts
+anderes als ich sowieso schon geschrieben hab, also will ich niemanden damit
+langweilen. Abschliessend moechte ich noch sagen, dass diese Stellen die ich
+rausgegriffen hab nicht stellvertretend fuer das Gespraech waren, er hat am
+Ende schon kapiert, wer recht hat, naja und diese Statements hab ich eben
+genommen, weil sie besonders krass waren... Wollte ich nur fairerweise sagen
+denn dieser Reporter war kein Arschloch und wenn ich nur Teile rausgreife,
+dann stell ich das auch so dar... Nicht wie z.B. andere Reporter, die etwas
+auszugsweise bringen und damit den ganzen Sinn veraendern...
+
+Nun noch zum letzten Thema, wie erreicht man mich...
+
+E-MAiL: gemfire@drmland.muc.de      
+
+VMB   : Ja, ich hab noch eine VMB, aber da ich will, dass es sie noch laenger
+        gibt sag ich nur, die Leute die sie kennen, koennen mir eine Nachricht
+        hinterlassen.
+
+BOARD : TERMiNAL MADNESS, die Daten findet Ihr im THC.NFO
+
+iNET  : http://credit.home.ml.org
+
+Nun, da faellt mir noch was ein, am 01.06. kommt voraussichtlich
+THC-CREDiT v1.9 mit vollem CARD READER/WRiTER SUPPORT!!! Das darf der
+interessierte Carder nicht verpassen...
+
+Und noch etwas zum Schluss, ich hab einen neuen PGP-Key, da der alte bei einem
+kleinen Crash verlorengegangen ist.
+
+beachtet bitte, dass die genannte email adresse im PGP key noch nicht
+existiert, es jdeoch hoffentlich in diesem Jahr noch wird. Bitte
+benutzt die obige email adresse : gemfire@drmland.muc.de
+
+Type Bits/KeyID    Date       User ID
+pub  1024/AF4154C5 1996/12/02 GemFire/THC <gemfire@insecurity.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: 2.6.3ia
+
+mQCNAzKiRGkAAAEEAOjPt6acZdELdaLdJJo9Hh5gXZTP0VQvEeFFJmSRlLHLyHNR
+wquxbmM5F0JqpauC8+Xa3Xd8ZmmeOjYQ2jatSKef2cJVOaxfIJzNu60tWUS3HNC2
+d2tUwhIzT8Yf2OpUVXRoLB+BRgsvVCGu7PhxCj7L30cnN8iY45u1TfivQVTFAAUR
+tCRHZW1GaXJlL1RIQyA8Z2VtZmlyZUBpbnNlY3VyaXR5Lm9yZz6JAJUDBRAyokRp
+m7VN+K9BVMUBAavxBADQCiCAT4Zg5XphMR15cGP+bQUMNZKRypptHL1j7kcyDjj8
+40NYBpjCZoJmTeEUJQXRHxBAem3Paan/K2dq/6y0Rec0S5x4pR1f4GQtF3DTEYFs
+d2nmnume2qaAKWhVRTiDBHpJL/9Q3x6/FXabfTBwx/6bZoddWTDzJX0ZlF3pew==
+=b5Nn
+-----END PGP PUBLIC KEY BLOCK-----
+

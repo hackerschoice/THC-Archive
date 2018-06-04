@@ -1,0 +1,708 @@
+÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷
+÷                                                                             ÷
+÷                        PBX HACKING IN DEUTSCHLAND                           ÷
+÷                  von gorfus / cpi\thc fr thc-mag vol. #4                   ÷
+÷                                                                             ÷
+÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷
+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+sorry, this text is only in german! there exist really a lot english texts
+about this theme so check one of these! if you need informations provided in
+this text, so try to find someone who is able to translate.. may not be that
+easy regarding to my german textstyle... well... good luck!
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+Dieser Text dient nur zur Aufkl„rung und Information. Er soll Sicherheitslcken
+offenlegen und Firmen vor derlei Betrug beschtzen. Beschriebene Handlungen
+sind illegal und sollten auf keinen Fall nachgeahmt werden. Der Autor bernimmt
+deshalb keine Haftung fr Sch„den die durch diese Informationen entstehen. Wer
+sich trotzdem nicht zusammenreiáen kann, muá auch die Konzequensen akzeptieren
+k”nnen. Wenn ihr also Probleme bekommt ist das ganz allein eure Schuld!!
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Hallo!
+   Willkommen zu PBX-Hacking in Deutschland. Dieser Text vermittelt
+   Grundlagen und Praktiken zum Scannen und Benutzen von PBX-Systemen.
+   Viele Dinge sind dem einen oder anderen vielleicht schon bekannt, es
+   soll aber immernoch Leute geben, die nicht einmal die Grundlagen kennen.
+   Der Text richtet sich an solche nicht so mit PBX'en erfahrene Leute. Aber
+   auch schon erfahrene Leute k”nnen unter Umst„nden etwas neues erfahren.
+   Alles in allem ist dieser Text fr alle die sich irgentwie fr dieses Thema
+   interessieren.
+
+Inhalt: - Warum?
+        - Begriffe und was sie bedeuten.
+        - Wie funktioniert das ganze?
+        - Verschiedene Systeme/Service Promts.
+        - Tools&Texte, die viel Arbeit erleichtern.
+        - Nachspann
+
+
+--------
+ Warum?
+--------
+
+   Die wichtigste Frage ist wie immer dieselbe: Warum sich soviel Arbeit
+   machen? Warum das Risiko eingehen? Nun, zum einen kann man seinen
+   Wissensdurst befriedigen und ohne Risiko w„r das Leben schlieálich nur halb
+   so sch”n. Zum anderen beglckt uns die Telekom monatlich mit ihrer viel zu
+   teuren Rechnung. Diese gilt es zu drcken, da man durch gezieltes Sparen
+   sehr, sehr reich werden kann. Und wer will schlieálich nicht reich werden??
+   Nun, um auf den Punkt zu kommen: Man kann durch PBX-Systeme in den Genuá
+   kommen, kostenlos Serviceleistungen in Anspruch zu nehmen, da die Systeme
+   als 0130-nummer gratis erreicht werden k”nnen. Zu diesen Dienstleistungen
+   geh”rt natrlich auch die M”glichkeit des kostenlosen Telefonierens.
+
+
+--------------------------------
+ Begriffe und was sie bedeuten.
+--------------------------------
+
+   - PBX -
+        = "Private Branch eXchange"
+        Das ist der haupts„chliche Name fr eine ganze Reihe von verschiedenen
+        Systemen. Diese Gleichsetzung ist haupts„chlich die Folge daraus, das
+        man alle auf mehr oder weniger „hnlichen Wegen zum kostenlosen Telefon-
+        iren (ab)nutzen kann. Diese sind im eigentlichen Sinne Firmenupdials.
+        Man kann dann die jeweilige Nummer w„hlen, um den W„hlton der Firma
+        (bzw. des firmeneigenen Telefonsystems (die PBX)) zu erreichen. Von da
+        aus kann man dann interne Nummern w„hlen oder eine herausfhrende
+        Leitung erhalten. Um dies zu erreichen muá man eine bestimmte Ziffer
+        vorher w„hlen. Am h„ufigsten ist dies '9', aber '0', '1', '#' und '*'
+        werden auch manchmal benutzt.
+
+   - PABX -
+        = "Private Automated Branch eXchange"
+        Dies ist genau dasselbe wie eine PBX nur mit dem Zusatz 'automatisch'.
+        Damit ist aber gemeint, daá es bei pbx'en keine (bzw. selten) Operator
+        gibt. Es bernimmt also ein Computer die Verwaltung. Mit anderen Worten
+        ist also PBX eine wesentlich gebr„uchlichere Abkrzung von PABX.
+        Deshalb wird von den Herstellerfirmen mittlerweile die Bezeichnug
+        P(A)BX verwendet.
+
+   - CBX -
+        = "Computerized Branch eXchange"
+        Dies ist, wie der Name schon sagt, ein PBX-System welches durch einen
+        Computer kontrolliert wird. Man kann darin ganze Netzwerke von LAN's
+        viele interne Telefone, Voicemail und viele weitere interessante Dinge
+        einbinden. Diese haben auch Funktionen um bei Problemen, Hackversuchen
+        und anderen Unregelm„áigkeinten sofort eine Benachrichtigung zu
+        verschicken. Auáerdem k”nnen Telefonate bzw. alle Leitungen bei einigen
+        in Echtzeit verfolgt (monitored) werden. Viele PBX Systeme basieren auf
+        diesem Prinzip und deshalb wird PBX Hacking auch immer gef„hrlicher.
+        Eine andere interessante Funktion sind Remote Carriers zum System
+        einstellen, falls dies einmal n”tig sein sollte. Einmal in ein solches
+        System eingedrungen kann man dort wirklich alles „ndern z.B. accounts,
+        logfiles etc. Sehr bekannte (und verbreitete) Systeme sind zum Beispiel
+        die Definity Serien von LUCENT/AT&T (mit System 75 & 85) und die ROLM
+        CBX von Siemens Rolm Communications Inc. Weitere Informationen zu
+        diesen Systemen findet Ihr im entsprechenden Kapitel weiter am Ende
+        dieses Textes.
+
+   - EXT -
+        = "EXTender"
+        Ein Extender wird meist mit einer PBX gleichgesetzt, da sie sehr
+        „hnlich in Funktion, Arbeitsweise und Aufbau sind. Diese sind entweder
+        wie PBX'en direkte Firmendialups, sondern werden manchmal auch von
+        gr”áeren Firmen(z.B. Telekommunikationsfirmen) zum Netzausbau,
+        Mitarbeiteruntersttzung und zum fhren billigerer Ferngespr„che
+        benutzt. Der gravierensde Unterschied ist, das Extender in den USA
+        immer auf echten kostenlosen Nummern liegen, was aber nicht weiter
+        interessant ist, da fr die meisten Einwohner der USA Ortsgespr„che
+        sowieso kostenlos sind, und PBX'en deutscher Firmen (JA, auf
+        KOSTENPFLICHTIGEN Nummern) fr uns zu teuer (und direkt angerufen auch
+        zu gef„hrlich) sind. Einen Umweg bieten Outdials (oder sonstwas wie z.B.
+        Callingcards) im Ausland, da der Vorteil bei deutschen Outdials darin
+        liegt, 0190 Nummern anrufen zu k”nnen. (Was man damit anf„ngt sollte
+        jeder fr sich entscheiden k”nnen...)
+
+   Fazit: PBX, PABX & CBX sind dasselbe, der Unterschied zu Extender ist
+   erstens nicht sehr groá und zweitens fr uns in Deutschland uninteressant.
+
+
+-----------------------------
+ Wie funktioniert das Ganze?
+-----------------------------
+
+   Nun, diese Systeme wurden alle installiert damit die Angestellten nicht fr
+   Gesch„ftstelefonate bezahlen mssen, da dies nicht fair w„re und Herr XYZ
+   ja nicht auch noch gesch„digt werden sollte, wenn er zu Hause arbeiten muá
+   w„hrend sein Boss mit der Sekret„rin rummacht. Wenn jener Arbeitnehmer dann
+   von zu Hause z.B. ein Transportunternehmen beautragen muá, benutzt er fr
+   den Anruf die PBX seiner Firma. Er w„hlt dazu die Nummer des Dialups
+   (0130-894614) gibt seinen pers”hnlichen Code ein (62542626789) und ruft
+   dann UPS (oder was auch immer) an.
+
+   Was man als nur machen muá ist die Nummer des Dialups zu finden und einen
+   Code zu scannen. Dies gestaltet sich aber, wie alles im Leben, nicht ganz
+   so einfach wie es sich anh”rt...
+
+   1. Problem: Wie bekomme ich die Dialup-Nummer?
+        Dies ist der einfachste Teil.. Man scannt einfach einen bestimmten
+        0130-Bereich (z.b. 0130-822-XXX) mit einem Telefon oder einem Scanner
+        (THC-Scan oder Toneloc). Falls einigen nicht ganz klar ist, wie sie
+        dies anstellen sollen muá man sagen, daá man dabei vorm Computer
+        sitzt und sich alles anh”rt.. Dabei h”rt man (hoffentlich) Nummern die
+        einen neuen W„hlton von sich geben. Dies sind meist die besten PBX
+        Nummern. Aber auch automatische Prompts die eine Ansage wie z. B.
+        "Please enter your Personnel Id Number (PIN)" k”nnen Outdials besitzen.
+        Meistens sind dies aber nur Service-Provider. Man kann allerdings auch
+        so wichtige Dinge wie B”rsenkurse, Wetteransage oder ganz toll: neue
+        VMB's oder Kartenpromts dabei entdecken.
+        Nach jenen mit einem neuen DialTone kann man auch automatisch scannen.
+        Dazu stellt man seinen Scanner so ein, daá ein dialstring wie dieser
+        herauskommt:    ATDT0130-XXXXXXW;
+        Damit w„hlt das Modem dann die Nummer und wartet auf den W„hlton. Wenn
+        dieser NICHT gefunden wird reagiert es allergisch und h„ngt mit einem
+        wtenden 'NO DIALTONE' auf. Falls es aber einen W„hlton findet geht er
+        im String weiter und kehrt durch das Semikolon wieder in den Kommando-
+        modus zurck. Dies wird durch ein 'OK' vom Modem kommentiert und man
+        hat seinen Success-String.
+        Einstellen kann man dies bei THC-Scan und Toneloc in der Option
+        'Scan For' indem man es auf Tones bzw. PBX setzt. Genaueste Angaben
+        k”nnt ihr aus den jeweiligen Programmdokumentationen entnehmen. Es gibt
+        zudem auch (wenige) PBX-Systeme die sich nur mit Stille melden.. Diese
+        kann man nach dem selben Prinzip, nur mit ATDT0130-XXXXXX@;, scannen.
+
+   2. Problem: Wunderbar, ich hab ne Nummer... Was nun?
+        Zuerst sollte man herausfinden in welchem Land sich die PBX befindet.
+        Meist reicht die Kenntnis der ungef„hren Region aus. 'Wozu muá ich das
+        wissen?' werden sich sicherlich einige Fragen... Nun, zum einen sollte
+        man sicher sicher gehen, daá sich das Zielsystem nicht in Deutschland
+        befindet, denn diese haben in 99% aller F„lle eine Fangschaltung
+        zum Schutz installiert. Wenn die dann merken was vor sich geht, rufen
+        sie die Bullen und dann kommen bei euch die netten Jungs von LKA zum
+        Kaffeetrinken vorbei. Von den Sicherheitsproblemen mal abgesehen ist
+        die Kenntnis des Landes/Region zum weiteren Analysieren von Bedeutung.
+        Um n„mlich herauszufinden wie der Aufbau der PBX ist, ben”tigt man die
+        L„nge der m”glichen anrufbaren Nummern und deren Prefix.
+        Erkennen kann man das Land am Klingelzeichen, am Vorhanden/Nicht-
+        vorhandensein von C5-Beepz, am Knacken der Schmitt-Trigger beim
+        Verbindungsaufbau. Vergleicht einfach den Dialup mit Nummern von denen
+        ihr wisst wo sie sind. z.B. mit Nummern von PhoneCompanies:
+                0130-0222 (Telekom)
+                0130-0010 (AT&T   - USA)
+                0130-0012 (MCI    - USA)
+                0130-0013 (SPRINT - USA)
+                0130-800XXX (HCD des Landes des CountrieCodes statt XXX)
+
+        Nehmen wir nun an ihr habt ein System in den USA und wollt den Aufbau
+        wissen. Ihr probiert einfach verschiedene Eingabem”glichkeiten aus.
+        Als erstes versucht man nach wievielen T”nen die PBX reagiert. Dazu
+        w„hlt man einfach irgentetwas (mit verschiedenen Nummern am Anfang)
+        und h”rt ob es eine Reaktion gibt. Meistens gibt es bei falschen
+        Eingaben eine Art Alarmton, der etwas an Polizei/Krankenwagen Sirenen
+        errinnert. Wenn also solch ein Signal immer nach 3 eingegebenen Ziffern
+        ert”nt, will die PBX zuerst einen 3 stelligen Code. Anderenfalls, wenn
+        nach 10 Ziffern (oder '1' + 10 Ziffern) ein neuer Ton ert”nt und immer
+        nach 3 weiteren Ziffern der beschriebene Alarmton erklingt, will die
+        PBX zuerst die Nummer, dann den Code. Die meisten allerding wollen
+        zuerst den Code, und erst nach Eingabe des Codes einen neuen W„hlton
+        von sich geben..  Oder, Code+Nummer (oder andersrum) und erst
+        nach beidem den Alarmton oder eine Ansage von sich geben..
+        Deshalb hier ein paar Beispiele:
+
+        1. Beispiel:
+          0130-XXXXXX
+          W„hlton [TUUUT]
+          XXXX (falscher Code)
+          Alarmton
+         Diese will also (angenommen) CODE + Nummer...
+         Ein Scanerfolg s„he dann also so aus:
+          0130-XXXXXX
+          W„hlton [TUUUT]
+          YYYY (richtiger Code)
+          W„hlton [TUUUT]
+         An diesem Punkt kann man jetzt entweder direkt w„hlen (mit oder ohne
+         die '1' (falls die PBX in den USA ist)) oder erst eine '9' bzw. eine
+         andere Taste (wie schon gesagt, wenn '9' nicht geht, mal mit '0','1',
+         '#' oder '*' probieren) drcken. Dann kommt entweder ein neuer W„hlton
+         (Was noch einer? ;) oder man kann direkt weiter w„hlen.. Dies alles
+         fordert halt ein wenig Ausprobieren.. (Puhh, was frne Arbeit! ;)
+
+        2. Beispiel:
+          0130-XXXXXX
+          W„hlton [TUUUT]
+          1XXXXXXXXXX
+          W„hlton [TUUUT]
+          XXXX
+          Alarmton
+         Wie Ihr euch bestimmt schon denken k”nnt, verlangt diese PBX
+         Nummer + CODE..
+         Bei diesen sollte man m”glichst immer eine andere Zielnummer eingeben,
+         da sonst euer Scannen sehr sehr schnell bemerkt werden kann...
+         Falls nach 10 bzw. 11 Stellen der Alarmton kommt, ihr aber denkt das
+         es trotzdem ZUERST die Nummer will, solltet ihr versuchen bestimmte
+         Vorwahlen (Areacodes) zu testen. Am besten eigenen sich dazu (1)-800
+         und (1)-888, weil dies die Vorwahlen kostenfreier Nummern sind. Ebenso
+         kann die Nummer nur 7 stellig sein, falls die PBX nur lokale Nummern
+         untersttzt (diese Nummern kosten die Firma n„mlich nichts (mal
+         abgesehen von den Gebhren an die Telekom) und das reicht ja auch aus,
+         daá Herr Mitchel mal eben seine Frau anrufen kann (so zur Kontrolle ;).
+
+        3. Beispiel:
+          0130-XXXXXX
+          W„hlton [TUUUT]
+          XXXXXXXXXXXXXXX
+          Ansage: 'Sorry! Invalid destination Number or bad passcode!'
+         Diese hier will anscheinend Nummer und CODE in einer bestimmten
+         Reihenfolge ohne Unterbrechung haben. Was nun? Versucht halt dies:
+          0130-XXXXXX
+          W„hlton [TUUUT]
+          18123391811XXXX
+          Ansage: 'Sorry! You're not allowed to dial this number!'
+         Aha, also fr Gespr„che innerhalb der USA zuerst die Nummer (mit der
+         '1' am Anfang), danach den CODE. Bei solchen kann man auch mal
+         versuchen international zu w„hlen:
+          0130-XXXXXX
+          W„hlton [TUUUT]
+          01149894620013311XXXX
+         Falls dann wieder eine solche Ansage kommt, kann sie auch internat.
+         w„hlen (cool, nicht wahr?), falls nicht, kommt entweder irgentwelche
+         Fehlermeldungen oder Ihr k”nnt erst garnicht mehr als 15 Stellen
+         w„hlen.
+
+        Falls einige (wegen Mama und Papa) noch nie im Ausland angerufen haben
+        und sich mit internationalen Vorwahlen nicht so auskennen kommen hier
+        einige CountryCodes zur Anwahl des gewnschten Landes und/oder zum
+        šberprfen mit den HCD's oder zu was auch immer...
+
+        CountryCode                             Land
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                +49                           - Deutschland
+                 +1                           - USA
+                +31                           - Niederlande
+                +27                           - Sdafrika
+                +45                           - D„nemark
+                +46                           - Schweden
+
+        Und zur Erg„nzung noch einige Vorwahlziffern fr Inlands- bzw.
+        Auslandsanrufe.
+
+        Vorwahl (national/international)        Land
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                0/00                          - Deutschland
+                1/011                         - USA / Canada
+                0/009                         - Schweden
+
+        Das W„hlen von internationalen Nummern gestaltet sich dann also
+        wie folgt:
+        Man w„hlt die internationale Vorwahl, dann den CountryCode und dann
+        die Nummer ohne nationale Vorwahlziffer ...
+
+        Um also von Schweden aus Mrs. Dorothy Mitchel anzurufen um ihr zu
+        erkl„ren, was ihr geliebter Burt auf der Arbeit so treibt w„hlt man
+        ganz einfach:
+                        009-1-206-363-7818
+ int.Vorwahl in Schweden^^^ | ||| ^^^~^^^^Nummer der netten Mrs. Mitchel
+         CountryCode der USA^ ^^^AreaCode von Seattle, Washington
+                                 (dort wohnt sie, die rmste)
+
+   3. Problem: Gut ich kenne den Aufbau.
+               Wie kann ich das jetzt am Besten scannen?
+        Nun, das Scannen ist weniger schwer. Es ist nur wichtig wie man sie
+        scannt. Am sichersten ist es immernoch per Hand mit einem handels-
+        blichen Telefon zu scannen. Auf Dauer ist dies jedoch sehr anstrengend
+        und ermdent. Deshalb steigt man nach dem Herausfinden des Codes besser
+        auf einen automatischen Scanner zurck. Dieser sollte einige wichtige
+        Features besitzen.
+        Diese sind:     - dial delayer
+                        - dictionary support
+                        - m”glichst viel Zuf„lligkeit
+        Aus diesen Grnden machen sich Scripts (z.B. mit TeleMate), die zum
+        VMB Scannen brauchbar sein k”nnen, zum PBX Scannen sehr schlecht,
+        da ben”tigte Features nur schwer erreicht werden k”nnen. Einige Gute
+        Programme findet ihr im entspechenden Kapitel dieses Documents.
+        Wichtig sind diese Funktionen aus dem Grund, das viele PBX'en
+        Systeme zur Erkennung von Hackern benutzen. Diese Anti-Fraud-Devices
+        suchen meist gleichm„áigen Pattern um Scannen zu erkennen.
+        Die Such-Pattern triggern meist:
+                a) - zu viele Calls in einer bestimmten Zeitspanne
+                b) - gleiche Abst„nde zwischen Calls mit falschem Code
+                c) - gleiche Zielrufnummer mit falschem Code
+                d) - zu schnelles Tippen bzw. exakt gleiche Zeitspannen zw. den
+                     Tasten und gleiche L„nge der TouchTonez
+                e) - zu viele falsche Versuche
+                f) - Such-Pattern bei Codez gefunden (meist gleiche Abst„nde
+                     zwischen den falschen Codez oder andere hnlichkeiten)
+        Viele dieser Pattern kann man berlisten:
+         zu:    a) - mehrere PBX'en scannen / m”glichst zuf„llige Reihenfolge
+                b) - zuf„llige Wartezeit zwischen den Calls
+                c) - eine Textdatei mit GUTEN Zielrufnummern benutzen
+                     -> in m”glichst zuf„lliger Reihenfolge
+                d) - dial delayer benutzen -> zuf„llige L„nge der TouchTonez
+                     und zuf„llige Zeitspanne zwischen den einzelnen Tasten
+                e) - wenn man mehrere PBX'en scannt (a) dann bekommen die auch
+                     nicht besonders viele Versuche in einer best. Zeitspanne
+                f) - nach M”glichkeit immer vermeiden sequentiell zu scannen,
+                     dictionary in zuf„lliger Reihenfolge abscannen
+        So, nun h„tten wir die technische Seite des Scannens betrachtet. Diese
+        ganzen Tricks kann man mit den richtigen Programmen mehr oder weniger
+        gut erreichen. Kommen wir nun zur psychischen Seite der ganzen Ange-
+        legenheit. Da die Angestellten der Firma und die Operatoren des Systems
+        unf„hig sind sich einen zuf„lligen Code zu merken w„hlen sie meistens
+        einen sehr primitiven Code aus.
+        Zum Beispiel:   1234 / 2378 / 1111 / 9876 / 0101 / 7272 ...
+        Deshalb ist es sehr ratsam mit einem Dictionary, das m”glichst viele
+        Lamer Codez enth„lt, zu scannen. Wenn dann ungef„hr 100-300 solcher
+        Codez nichts bringen, kann man dann auf zuf„lliges Scannen zurck-
+        greifen. Dabei sollte man die schon (durchs dictionary) gew„hlten
+        Nummern als bereits gew„hlt kennzeichnen um sich das erneute W„hlen
+        dieser zu ersparen (bei 40 Sekunden/Anruf, machen 250 Anrufe 10000
+        Sekunden, also ca. 2,8 Stunden.. bei Benutzung von bestimmten Sicher-
+        heitsvorkehrungen (z. B. dial-delayer) verbraucht man pro Anruf noch
+        mehr Zeit..).
+
+   4. Problem: Wie erkenne ich das mein Scannen erfolgreich war?
+        Nun, wenn man Glck hat legt das System nach der Ansage
+        (z.B. "Sorry! You're PIN is invalid") auf. Dann braucht man nur darauf
+        zu warten, daá das Modem ein NO CARRIER zurckliefert, mit anderen
+        Worten kein Besetztzeichen erkennt. Diesesbekommt man n„mlich meist
+        (bei einer digitalen VST) ca. 10 sek. nachdem die PBX aufgelegt hat.
+        Bei anderen kann es auch sein das man keine Ansage sondern eine Art
+        Alarmton erh„lt. Falls dieser von eurem Modem als BUSY erkannt wird
+        kann das selbe Vorgehen zum Ziel fhren. Falls nicht kann dieses
+        Alarmsignal meist als neuer W„hlton erkannt werden.
+        Beispiele:
+                1) BUSY / NO CARRIER - Methode
+                   falscher Code:
+                        ATDT01300999,,543
+                        BUSY            ; nach z.B. 19 sek.
+                   richtiger Code:
+                        ATDT01300999,,123
+                        NO CARRIER      ; nach 30 sek.
+                2) DIALTONE - Methode
+                   falscher Code:
+                        ATDT01300889,,635W;
+                        OK              ; nach ca. 20 sek
+                   richtiger Code:
+                        ATDT01300889,,321W;
+                        NO DIALTONE     ; nach ca. 20 sek.
+                   ... hier kann es aber auch andersherum sein, dass der
+                   richtige Code ein OK zurueckgibt.
+
+        Fazit: Immer erst austesten wie eine PBX reagiert und wie das euer
+               Modem auffasst. Danach ueberlegen wie man das am
+               geschicktesten in Angriff nimmt ;-)
+
+        Falls keine genaue Erkennung dieser Zust„nde m”glich ist (wenn bei
+        falschem Code verschiedene Ansagen kommen und man mal BUSY und mal
+        NO CARRIER erh„lt) und eine Zielrufnummer verlangt wird (z.B. vor
+        dem Code [sind meist die Besten]) dann kann man dies ausnutzen. Man
+        w„hlt einfach eine Zielrufnummer aus, die einen bestimmten String
+        zurckliefert. Dazu eignen sich am besten Carriers und (wenn das Modem
+        sie erkennen kann) Faxe. Meist sind Carrier aber vorzuziehen da Faxe
+        meist nur eine Leitung haben und deshalb sehr leicht besetzt sein
+        k”nnen. Man kann dann auf eine Liste (am besten Inlandnummern des
+        Landes in dem sich die PBX befindet) mit Multiline-Systemen
+        zurckgreifen. Das sind z.B. Internet Provider (AOL, CompuServe, MSN,
+        MetroNet, Nacamar, kleinere Mailboxen mit Internetzugang), Universit„ts
+        bzw. andere Server (z.B.Tymnet) oder normale Mailboxen mit mehreren
+        Linez auf derselben Nummer (Ringdown). Man sollte beim Scannen eine
+        Liste dieser benutzen und den Scanner zuf„llig eine daraus ausw„hlen
+        lassen. Dazu das Beispiel:
+                3) CONNECT / FAX - Methode
+                   falscher Code:
+                        ATDT0130817777,,15186147712,,672
+                        NO CARRIER
+                   richtiger Code:
+                        ATDT0130817777,,17081825919,,999
+                        CONNECT 56700/V42BIS/X2
+                                - oder -
+                        ATDT0130817777,,15237567435,,999
+                        FAX
+                        NO CARRIER
+
+        Da es (wie schon beschrieben) viele PBX'en gibt, die nach dem Code
+        einen Alarmton -ODER- (bei Erfolg) einen neuen W„hlton bringen, erz„hl
+        ich jetzt wie man sowas scannt: Das Problem bei dieser Sache ist im
+        Prinzip, das Modems meist den Alarmton als W„hlton erkennen.. Dies kann
+        man aber ziemlich einfach austricksen und zwar so:
+                4) WHLTONE / ALARMTONE - Methode:
+                   falscher Code:
+                        ATDT0130822222,,1234W1W;
+                        OK
+                   richtiger Code:
+                        ATDT0130822222,,4321W1W;
+                        NO DIALTONE
+        Falls jemand das nicht verstanden haben sollte, hier die Erkl„rung:
+        In beiden F„llen (W„hlton oder Alarmton) wird beim ersten 'W' ein
+        W„hlton erkannt und danach eine '1' gew„hlt. Falls nun (immernoch)
+        der Alarmton zu h”ren ist, erkennt das Modem WIEDER einen W„hlton
+        und geht durch das Semikolon (';') mit einem fr”hlichen 'OK' zurck
+        zur Kommandoebene. Falls aber der 'echte' W„hlton kam wird wieder
+        eine '1' gew„hlt und der W„hlton verstummt bekanntlich nach der ersten
+        gew„hlten Ziffer. Dannach kann das Modem keinen W„hlton mehr erkennen
+        (dieser ist ja verstummt!) und das Modem bricht mit 'NO DIALTONE' ab.
+
+   Dies sollte das Prinzip und die Funktionsweise ausreichend erkl„ren...
+   Ein Wort noch an all Diejenigen, die meinen das sie ihren PC auch noch
+   zu anderen Dingen ben”tigen als zum Scannen: In Zeiten von rechenstarken
+   Prozessoren und billiger Hardware stellt es doch wohl kein Problem dar,
+   den Scanner unter einem MultiTasker (DESQview(/X), Linux, OS/2, WinNT/95)
+   laufen zu lassen, oder?
+
+
+-------------------------------------
+ Verschiedene Systeme/Service Promts
+-------------------------------------
+
+   In diesem Teil sind erstens ein paar weit verbreitete PBX Systeme
+   beschrieben und als kleiner Bonus noch ein paar Worte zu VoiceCom und
+   h„ufig auftretenden Promts.
+
+*=> Siemens Rolm CBX
+        Die ROLM CBX wird bekanntlich von Siemens Rolm Communications Inc.
+   vertrieben. Sie ist sehr flexibel und man kann sehr viele Dinge integrieren.
+   Sie untersttzt bis zu 20000 angeschlossene Telefone, man kann damit auch
+   interne LAN Netzwerke aufbauen und VoiceMail einbinden. Als VoiceMail System
+   wird ebenfalls von Siemens Rolm das PhoneMail System angeboten. Dieses hat
+   in den USA durch ANI (automated number identification) auch die M”glichkeit
+   in den Nachrichtenheader die Telefonnummer des Anrufers einzufgen. šber-
+   haupt wird bei Siemens Rolm stark auf Sicherheit gesetzt da das System in
+   der Lage ist automatisch ein Service Center zu informieren falls es Fehl-
+   funktionen gibt. Dazu geh”ren so gut wie alle Unregelm„áigkeiten, also wird
+   das Scannen (auch wenn *NIEMAND* da ist) sehr schnell bemerkt. Es gibt fr
+   die ROLM CBX auch eine monitoring station mit 12 video lines wodurch man das
+   gesamte System berwachen kann. Das System bietet zudem noch
+   "Call Transfering", also auch nach auáen zu Telefonieren. Ein anderes, sehr
+   interessantes Feature ist auch "Remote Diagnostics", wodurch man das gesamte
+   System von auáen berprfen und ver„ndern kann (das ist ein Carrier).
+   Weitere Features sind noch: ISDN Untersttzung, komplett digitale
+   Kommunikation (digitale Telefone) und T1 Connects ber Sateliten.
+   Siemens Rolm Communications Inc. arbeitet zudem noch mit IBM, DEC, Intel,
+   Microsoft, Tandem und PictureTel zusammen und bietet Kunden viel Support.
+   Weitere Information auf der SRCI Homepage: http://siemensrolm.com
+   und falls ihr mal an so einem PhoneMail System rumspielen wollt: 0130-810276
+
+*=> LUCENT/AT&T Definity Series
+        LUCENT/AT&T bietet mit dieser Serie komplexe Kommunikationshardware an,
+   wie zum Beispiel CBX/PBX Systeme, Telefone, VoiceMail und anderes. Das
+   CBX/PBX System basiert auf dem System 75 bzw. System 85 und als VoiceMail
+   Addons wird einerseits DEFINITY-AUDiX angeboten, welches auch als(nur) AUDiX
+   in andere PBX Systeme integriert werden kann. Zum anderen wird auch noch das
+   INTUITY AUDiX System angeboten, welches aber keine besonders interessanten
+   Features aufweiát. Alles in allem kann auch das System 75 (bzw. die weiteren
+   neu entwickelten Versionen) einen Carrier besitzen um das System von auáen
+   zu verwalten. Weitere Features (mit AUDiX) sind automatische Hilfe,
+   Heraustelefonieren (z. B. auch zur Benachrichtigung bei eingegangenen
+   Nachrichten), den INTUITY MESSAGE-MANAGER (eine art LAN) und verschiedene
+   andere Funktionen. Dies f„llt aber mehr in den Bereich des VMB Hackings..
+
+*=> LUCENT/AT&T SDN
+        Dieses System dient weitestgehend nur zum Anrufen bestimmter Nummern.
+   Man kann es relativ leicht an charakteristischen Ansagen erkennen.
+   Diese sind:  "Please enter the Number you're calling."
+                "The Code you've entered is not valid."
+   Der Prompt wo der Code eingeben werden soll, besteht aus einem kurzen, sich
+   wiederholenden Pieptones. Auáderdem existiert dieses Systen in beiden
+   Varianten, also einmal Nummer+CODE und einmal CODE+Nummer. Durch die Ansagen
+   kann man das Format allerdings sehr einfach herausfinden.
+
+
+                      ---------------------------------
+                                --- BONUS ---
+                      ---------------------------------
+
+   Hier nun noch zus„tzlich ein paar Worte zu einem speziellen Tonprompt, den
+   man beim Scannen recht h„ufig findet. Man erh„lt bei der Anwahl (eine
+   Beispielnummer w„re: 0130-825552, mit den Codes 0101, 0202, 0303, bei den
+   Codes geht nach einer Weile ein Carrier ran..) einen Ton und nach Eingabe
+   eines falschen Codes (meist 4 oder 6 stellig) erh„lt man die Ansage:
+   "The autorisation code or ID code you have dialed is invalid..."
+   Nach dieser Ansage gibt dieses System noch den Areacode aus dem man anruft
+   von sich, welcher von Deutschland aus meist '2BM' ist.
+   Ein Bekannter hat einmal eine 4 stellige dieser Bauart durchgescannt und nur
+   nutzloses Zeug & irgentwelche Servicesachen gefunden. Falls ihr dennoch so
+   etwas scannen wollt, empfehle ich ein dictionary zu verwenden, da hier meist
+   (wie ihr sehen k”nnt) sehr einfache Codes verwendet werden.
+   Falls jemand genauere Informationen hierzu haben sollte, so w„re ich diesen
+   nicht abgeneigt (meine e-Mail steht am Ende dieses Textes).
+
+                      ---------------------------------
+
+  "enter your cardnumber (and pin)" oder „hnliches:
+        Cardprompts sind immer wieder sch”n, da man hier, wenn man Glck hat,
+   einfach den Operator tot nerven kann, um alles ber diese Cards zu erfahren.
+   Dann kann man sich da unter Umst„nden solche CallingCards "kaufen" (getreu
+   Danny DeVito mit 'dem Geld anderer Leute' ;) und bis zum jngsten Gericht
+   (ok, ok, das ist ein wenig bertrieben) mit seiner Oma telefonieren...
+
+                      ---------------------------------
+
+
+-------------------------------------------
+ Tools&Texte, die viel Arbeit erleichtern.
+-------------------------------------------
+
+   Hier folgt eine Liste brauchbarer Tools und derer Beschreibungen...
+   Ich gehe hier ausschlieálich auf PC Scanner (unter DOS) ein..
+   Wenn Ihr also einen Dialer fr euren Amiga oder C64 braucht, wendet euch
+   einfach an einen eurer Freunde oder schaut mal im n„chsten h/p Board rein!
+
+*=> T-diAL v2.o1                        - von mir selbst (hehe ;)
+
+        T-diAL ist ein relativ neues Programm mit dem es m”glich ist so gut wie
+   alle Prompts, die sich ber TouchTones bedienen lassen, zu scannen. Dies
+   wird durch ein komplett freies Setup m”glich. Allerdings kommen durch die
+   groáe Einstellfreiheit fr HardCore PBX-Scanner einige Features etwas kurz..
+   Ich werde aber versuchen diese in Zukunft zu verbessern.
+
+   Vorteile:    - frei konfigurierbar
+                - dial-delayer
+                - einigermaáen gutes alarm!system
+                - scanning durch andere (touchtone) outdials
+                - theoretisch unbegrenzte (nicht berprfte) Stellen
+                  (4 werden berprft)
+                - dictionary Untersttzung
+
+   Nachteile:   - keine zuf„lligen Zielrufnummern (aus ner Textdatei)
+                - ein paar bugz.. aber keine gravierenden.
+                  (es funktioniert jetzt auch mit Modems von USRobotics)
+
+*=> PBX-HACK                            - by van Hauser / THC
+
+        PBX-Hack ist, wie der Name schon sagt und im Gegensatz zu T-diAL,
+   nur fr PBX-Systeme geschrieben.. Alle enthaltenen Features sind komplett
+   zuf„llig, was durchaus brauchbar ist. Einziges Problem dabei ist, mehrere
+   PBX'en zu finden die V™LLIG gleich sind, um die zuf„llige Anwahl der Systeme
+   zu nutzen. Die Multi-Version ist ja (leider) nicht der ™ffentlichkeit
+   zug„nglich. Der verbreiteten Version liegt auáerdem eine Kopie von einen
+   englische Text ber PBX und Extender Hacking bei. Dieser ist einer der
+   wenigen wirklich guten PBX-Texte. Es handelt sich dabei zwar gr”átenteils
+   um die Praxis in den USA, was aber nicht so wichtig ist da man sowieso
+   meist Systeme in den USA scannt und darber Bescheid wissen sollte.
+
+   Vorteile:    - alles zuf„llig (z.B. dial-delayer)
+                - mehrere Systeme gleichzeitig (bzw. abwechselnd) scan-bar
+                - 6(!) berprfte Stellen (zuf„llig)
+                - scanning durch andere outdials m”glich
+                - Bonus: PBX & Extender Hacking Guide by Madrox/SIC
+
+   Nachteile:   - Zielrufnummern etwas umstaendlich zu handhaben
+                - keine dictionary Untersttzung
+
+*=> THC-Scan                            - auch by van Hauser / THC
+
+   Kommen wir nun zum allseits bekannten THC-Scan. Es l„át sich ziemlich
+   kurz beschreiben: _DER_ Tollfree (0130/00800) Scanner.
+   Aber Tollfree Scanning ist nicht Inhalt dieses Dokuments obwohl diese Art
+   Aktivit„t stark von N”ten ist um an die DialUp-Nummern zu kommen....
+   Jetzt aber (endlich, lechz...) zum eigentlichen Punkt. Man kann mit diesem
+   Tool auch PBX Systeme scannen. Dazu bergibt man einfach das Scanpattern
+   als DialMask und schaut nach dem Scannen ganz einfach in die entsprechenden
+   Logfiles. Man kann auch im Config den SuccessBeepString so ver„ndern das
+   man akustisch informiert wird. Manche werden auch wollen das nach dem ersten
+   Erfolg automatisch aufgeh”rt wird weiter zu scannen. Dazu legt man einen
+   execute-Befehl auf die entsprechende Response, der eine Batch(oder irgentwas
+   anderes) ausfhrt die mit (in diesem Fall) einem 'pause'-Befehl auf einen
+   Tastendruck wartet. Man kann auf diese Weise PBX'en bis 4 Stellen (bei den
+   Codez) zuf„llig und sonst mehrere Stellen nur ber Textfile (dictionary)
+   Scanning erledigen. Was nicht (oder nur schwer) m”glich ist, ist PBX'en zu
+   scannen die eine Zielrufnummern _VOR_ dem Code wollen, da der Scanstring
+   dafr einfach zu kurz ist.
+
+   Vorteile:    - gut konfigurierbar
+                - dictionary support
+
+   Nachteile:   - max. 4 Stellen zuf„llig
+                - zu kurzer Dialstring bzw. muss ueber Dialmask benutzt werden
+
+*=> Smart PBX Scanner                   - by plasmoid / deep/thc
+
+   Dieser Scanner basiert v”llig auf dictionary scanning und besonders billigen
+   Codez. Leider ist er noch nicht fertig und nur steht nur als kleine,
+   unvollendete beta-version zur Verfhgung. In der fertigen Version werden
+   dann auch spezielle mathematische Features zur Generation einfacher Codez
+   bereit stehen.
+
+   Vorteile:    - gut konfigurierbar
+                - dictionary support mit Platzhaltern!
+                - dial delayer
+
+   Nachteile:   - keine zufaelligen Nummern
+
+---[beta note]---
+   Weitere Informationen stehen zu diesem Zeitpunkt leider nicht zur Verfgung
+   und deshalb ist an dieser Stelle nur bisher in der beta implementiertes
+   zu finden.
+---[beta note]---
+
+*=> The Hacker's Compagnion             - by substance & / 9x
+
+   The Hacker's Compagnion ist kein PBX Hacker im eigentlichen Sinn, sondern
+   ein fr Hacker geschriebener Kommunikationsscriptinterpreter. Damit kann
+   man im Prinzip fr jede verschiedene PBX ein Script schreiben. Auch lassen
+   sich viele Dinge, wie ein dial-delayer, random Zielrufnummern und
+   dictionary code scanning sehr leicht realisieren. Einziges Problem daran
+   ist das der Interpreter unter bestimmten Vorrausetzungen ziemlich unstabil
+   sein kann, was aber bei PBX'en keine groáe Rolle spielt sondern eher mehr
+   bei Carrier Hacking ins Gewicht fallen kann. Hoffen wir mal das dieses Tool
+   in den n„chsten Versionen richtig stabil und damit sehr ntzlich wird.
+
+   Vorteile:    - sehr leistungf„hige Scriptsprache um viele Features
+                  selbst programmieren zu k”nnen
+
+   Nachteile:   - keine šberprfung der Zufallszahlen
+                  (l„sst sich aber durch eine eigene neue Zufallsroutine
+                   berbrcken..)
+                - relativ unstabil unter verschiedenen Vorraussetzungen
+                  (je nach OS, Modem, ...)
+
+-------------------------------------------------------------------------------
+
+   Mit guten Texten sieht es dabei etwas mager aus.. Es gibt zwar sehr viele
+   englische Texte ber dieses Thema aber nur wenige mit wirklich guten und
+   brauchbaren Informationen.. Zu den Guten geh”rt der PBX/EXTENDER Hacking
+   Text von Madrox/SIC der van Hauser's PBX-Hacker beiliegt. Dann gibt es
+   noch die Texte ber ROLM PhoneMail und andere von 9x. Diese basieren aber
+   mehr auf VMB's und haben weniger mit PBX-Systemen zu tun. Die Documentation
+   von plasmoid's SPS wird wahrscheinlich auch recht ausfhrlich. Ansonsten
+   kann man dann (nur?) noch auf Internet Suchmaschienen (z.B.Yahoo!, Lycos,
+   AltaVista... und was es da noch so gibt) zurckgreifen und sich auf die
+   Suche nach den gewnschten Informationen machen. Wenn man allerdings ein
+   paar Erfahrungen gesammelt hat und lange genug am Zielsystem "herumspielt"
+   braucht man eh keine dummen Texte mehr, sondern meist nur die Programme,
+   die unserer grenzenlosen Faulheit zu Leibe rcken. ;)
+
+
+-----------
+ Nachspann
+-----------
+
+   So das wars. Ich hoffe euch hat dieser Text etwas neues gelehrt und das
+   Lesen war einigermaáen vergnglich bzw. ertr„glich. Wenn ihr mir unbedingt
+   sagen wollt wie lame ich bin, dann kontaktiert mich auf einer der folgenden
+   M”glichkeiten.
+
+   eMAIL:       gorfus@hotmail.com
+   BBS:         hacker's inn - to gorfus
+                terminal madness - to gorfus
+
+   Wenn ihr Glck habt, k”nnt ihr mich auch im IRC (meist in #hack oder
+   #thc mit /server irc.stealth.net) finden..
+
+enyej,
+        gorfus / cpi\thc
+
+÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷
+Type Bits/KeyID    Date       User ID
+pub  1374/9CAFA255 1997/04/30 GoRfUS / cPI\tHC
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: 2.6.3i
+
+mQC5AzNnr8EAAAEFXjSFYmoKZ7bbfSff7LOxHmtGz6z4gBlDTWWmGwoC+JZ+L+MS
+iflet2m9rbeG6FT0J5D6edLk3JnF/uDK/oiucV2FfrP7UPB3pdlZj8GNY3jzq6dP
++idIeL3G+Yi7+nW7gftNHHA3VfrTYKczt+e0PIvsuM5Dk7vG1JD/Y8GRqwJolEa3
+C4XZX1AOHW8dOjXTXjlo661Re9GaQsyJal9BtWkEZznlP792gZyvolUABRG0EEdv
+UmZVUyAvIGNQSVx0SEOJAMEDBRAzZ6/DP792gZyvolUBAZh6BV4t1ydbcCrtqN1A
+ga7Ei8F+5K0XjNCJY10bWL2bgW7sNjhkFLDtIr5fAAM3IX459hl9b3bZ8ZHyW5qN
+PuBu0XZUOoFx4LcpdVBuQbXY8hvNFMPyU7XWUlOOzmL+PhLY/SIW0e8GId+3YWsv
+hZvC/E+TY9HufWNF4i/NR4GPise9bzph8A0B1IpOjYQ3hw+jVVhhBdnLr9RlKhxj
+3XvgNqG8EQsZALdysHb94YwC
+=x6M7
+-----END PGP PUBLIC KEY BLOCK-----
+÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷
+

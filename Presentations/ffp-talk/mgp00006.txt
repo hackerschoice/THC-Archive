@@ -1,0 +1,14 @@
+
+Anforderungen an Fingerabdrücke
+
+Einwegfunktionen
+ leicht zu berechnen
+ schwer zu berechnen
+
+Avalanche
+Die Änderung eines Inputbits soll 50% der Outputbits ändern.
+
+Nichtlinearität
+Kein Outputbit hängt linear von einem Inputbit ab
+
+

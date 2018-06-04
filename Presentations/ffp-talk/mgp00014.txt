@@ -1,0 +1,11 @@
+
+Qualitätsberechnung
+
+Qualität eines Fingerabdrucks ist seine Ähnlichkeit zu einem Zielfingerabdruck
+
+q(f)=1, wenn vollständig identisch 
+
+q(f)=0, wenn vollständig verschieden
+
+q(f) berechnet sich aus den Über- einstimmungen und deren Positionen 
+

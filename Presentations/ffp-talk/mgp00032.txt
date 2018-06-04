@@ -1,0 +1,13 @@
+
+Ausblick
+
+Verteilte Generierung
+Kein klassisches Konzept möglich
+Werteraum zu gross
+Server verteilt keine Aufgaben
+
+Server verwaltet Liste von Zielfingerabdrücken
+
+Client prüft Qualität gegen mehrere Zielfingerabdrücke
+
+

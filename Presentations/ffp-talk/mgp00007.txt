@@ -1,0 +1,11 @@
+
+Angriffe gegen Fingerabdrücke
+
+Kollision von Fingerabdrücken
+Wahl von Daten, so dass der entstehende Fingerabdruck einem Zielfingerabdruck entspricht
+
+Einwegfunktion, Avalanche, Nichtlinearität verhindern gezielten Angriff
+
+Nur Bruteforce-Angriff
+                          mögliche Werte         
+

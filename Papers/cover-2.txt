@@ -1,0 +1,219 @@
+ ------------------------------------------------------------------------------
+
+
+
+               ################################################
+               #                                              #
+               #           HOW TO COVER YOUR TRACKS           #
+               #                                              #
+               ################################################
+
+
+
+
+                            PART TWO : PRACTICE
+
+
+
+
+
+
+
+
+
+
+
+   I. THE FIRST COMMAND
+
+   The first command you should enter after logging in with a hacked account
+   is a shell different from the one you are currently running as login shell.
+   The purpose is to disable history saving of the commands you'll type in
+   while hacking. A history check by the real user or sysadmin reveils your
+   presence and what you did!!
+   If you are running a CSH then execute a SH and vice versa.
+
+$   <- this is a SH prompt
+%   <- this is a CSH prompt
+
+   If it does not look like the standard prompts above then execute SH.
+   If the prompt stays the same, type "exit" and execute the CSH ...
+   The reason for using these two shells and not bash, ksh, zsh etc. is
+   that these two are simple with no extra options enabled by default
+   (like history saving).
+
+
+   II. LASTLOG WORKAROUND
+
+   If you saw a text like "Last successful login from alpha.master.mil"
+   when you logged on with the hacked account and you can't hack root or
+   don't want to disrupt the system logs with deleting data then execute
+   the following : "rlogin <the_host_you_are_on>" and provide again the
+   password of the hacked account if necessary. After seeing the shell
+   prompt type exit to be back again. This will change the header
+   "Last login from ..." etc. to the <current host> or "localhost" 
+   which is much more unsuspicious than "site.real.user.never.saw.com"
+   Of course you only need to do this if your origin host might attract
+   attention to user and/or sysadmin.
+
+
+   III. WHO WORKAROUND
+
+   After completing step 1 + 2 type "w" ... you'll see all currently
+   online users ... with the adress they logged on from. Once again
+   something like your origin host in the netherlands will be very
+   suspicious to users and/or root if the site is in the usa.
+   If you can't hack root or once again don't want to tamper with the
+   log files you can try a bug which works still for many up2date
+   unix distributions: just execute "login" with the same login+password.
+   Type "w" again and if it worked, your origin will be changed to
+   something like "tty05".
+   Of course you only need to do this if your origin host might attract
+   attention by other users and/or sysadmin.
+   
+
+   V. EXECUTING PROGRAMS
+
+   Don't execute programs with suspicous names ... ISS and YPX are for
+   example very suspicous, and a skilled admin knows what's going on if
+   he sees a user running "loadmodule SandraBullok" on his Sun ... ;-)
+   Either you copy & rename the commands or you use those sources around
+   which exchanges the command name in the process list.
+   Btw. the process list can be checked by "ps -ef" or "ps -auxwww" and
+   the current command every user is executing with "w" and the most CPU
+   consuming processes with "top" ... so it's really easy to monitor 
+   the programs the user(s) are running.
+
+
+   VI. EXECUTING TELNET
+
+   There are only two things which should be said about about using telnet
+   for hacking purpose (e.g. doing a telnet to the next target).
+   First NEVER just type "telnet target.host.com". Type "telnet" and then
+   "open target.host.com" which will not show up as parameter in the process
+   list. The seconds is that some telnet clients do export enviroment
+   variables. And if your hack is detected and they could trace the
+   connection back to your origin host they could also have got the account
+   you used on the origin host. So redefine (to anything you want) the
+   following environement variables before starting telnet, rlogin or similar: 
+   USER, LOGNAME, UID, HOME, MAIL - maybe you should do a "cd /tmp" too
+   to change the PWD variable too ...
+   To change those variables ->
+      SH : <variable>=<new_value>;export <variable>
+           example : USER=nobody;export USER
+      CSH: setenv <variable> <new_value>
+           example : setenv USER nobody
+ 
+   and don't forget to reset the variables after your telnet if you want to
+   do something with the account before you log out.
+
+
+   VII. REMOVE YOUR FILES
+
+   When you tried exploits - successful or not - delete them immedeantely
+   after trying them - especially if you try them in /tmp !
+   Nothing is more interesting than snooping in the /tmp directory to see
+   what other users are doing ... If you really need to work in the temp
+   directory (because suid is squashed in your home dir) then create a
+   usual directory like ".X11", and give it 711 permissions.
+   Remember, if someone snoops in the directories while you are hacking or
+   your loose connection and can't relogin or you forget about them you
+   are in deep trouble.
+
+
+   -->  !  The following 2 points are only possible with root access !  <--
+
+
+   VI. MODIFYING THE LOGS
+
+   The important log files are LASTLOG, WTMP and UTMP.
+   If you were successful in hacking root then you should modify them.
+   They can usually be found in /etc, /var/adm or /var/log ... it differs,
+   just check the man pages.
+   Which tools should you use? ZAP (or ZAP2) is nice, but it does NOT delete
+   you from the logs but overwrite the entries with zeros. CERT already
+   published tools which easily check the logs for those overwritten entries.
+   And nothing shouts more "Hey there's a hacker on the system with root
+   access!" into the sysadmin's face than that.
+   Important for ZAP : Check the paths defined in the sources for the logs!
+   Try CLOAK2 which can change the data of the important data fields ;) But
+   it doesn't compile on all unix OS types.
+   You can also try CLEAR, included in this magazine, which REALLY deletes
+   the entries ... ;)
+
+   
+   VII. SYSLOG & LASTCOMM
+
+   You should also check the syslog messages logfile if maybe entries with
+   your hacked account or your origin host are in it. It's usually located
+   in /var/adm or /var/log ... most time it's called "messages" but again
+   can differ - and also check other logfiles there which are generated by
+   auth.* and authpriv.* messages (and of course xferlog etc.).
+   Check the file /etc/syslog.conf to see the correct file and check out what
+   is logged to which file/program/mail/user.
+   If you see something like "@loghost" and you find your origin host in
+   the messages file than you've got a problem. It's also logged at another
+   site which is most time not accessible from remote. But try to install
+   a sniffer, (see section VIII. !) and check if a root does a successful
+   login to the loghost - and then you've got also the password for that
+   host and are in to handle the problem ;)
+   To remove f.e. your hostname from the "messages" logfile execute :
+   "grep -v evil.host.com messages > /tmp/tmpfile; mv /tmp/tmpfile messages"
+
+   LASTCOMM (from accton etc.) is a tool to log all executed commands, with
+   a flag if the file executed had the SUID flag set and if a command was
+   executed by root. You can find this logfile in the same directory as the
+   syslog file. That's a really evil tool against hackers but - luck! -
+   most times it is not installed. But now you don't have to fear that
+   anymore :) Get Zhart's excellent ACCT Cleaner and feel the freedom ;-)
+
+   
+   VIII. INSTALLING TROJANS
+
+   When you install a sniffer, remember that anyone can execute "ifconfig -a"
+   to check if the card is in promiscious mode. Get a rootkit for your unix
+   OS and replace it. Run fixer.c on it for the correct checksum and date/time
+   but check the root account first if maybe tripwire or other binary checker
+   are installed! Remember this for every binary you replace. If the binary
+   is in a directory which is NFS mounted and can't be remounted in write mode
+   then you must first hack the NFS host - life isn't easy sometimes ;)
+
+
+
+   X. THE END
+
+   I hope you had fun and learned alot from these two textfiles, the
+   theory/background and the practice one.
+   For updates, tips, tricks etc. just email me at  ->  mc@thc.net
+   Remember : Never get lazy. Every work must be done 100% -
+              or face the consequences!
+
+
+                         van Hauser
+
+
+
+Type Bits/KeyID    Date       User ID
+pub  1024/3B188C7D 1995/10/10 van Hauser/THC of LORE BBS
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: 2.6.3i
+
+mQCNAzB6PNQAAAEEALx5p2jI/2rNF9tYandxctI6jP+ZJUcGPTs7QTFtF2c+zK9H
+ElFfvsC0QkaaUJjyTq7TyII18Na1IuGj2duIHTtG1DTDOnbnZzIRsXndfjCIz5p+
+Dt6UYhotbJhCQKkxuIT5F8EZpLTAL88WqaMZJ155uvSTb9uk58pv3AI7GIx9AAUT
+tBp2YW4gSGF1c2VyL1RIQyBvZiBMT1JFIEJCU4kAlQMFEDJ2gzNAf3b9d/IP1QEB
+5DwD+gJRh6m4h0fVgpQJkOiuQD68lV5w8C0F5R3jk/o6Pollaf7gtVhG8BGGo5/7
+/yiH40gujc82rJdmihwcKuZQtwt8X28VN8uy56SCpXD5wjjOZpq0t0qSXmhgunZ0
+m7xv7R4mWRzFclsgQCMwXNgp4sXgw64bVm8FhEdkrVSO8iTyiQCVAwUQMkMhCspv
+3AI7GIx9AQFstAP+Jrg7V06FGV/sTzegFNoaSyOItkvXjctzFsXuBfta2M7EzPX3
+UR3kM4/W4xE70H4XmMOJ9RmTzs+MuhSq8BtGQtYaJqGjxe/ldbvGOXRxR1rBJAKS
+yDQYu0VJ/Ae8yuJcMS312jqwg8OLgYnQaqEoaRM4HEiB+hgDRqnFKpDxkhSJAJUD
+BRAyQx8E5y7IvlL6xvEBAQ+bA/9baK7f3M9F5n4aASy04WHOreUNpGQ8DXgtMVq7
+KVdXMIWjURsboR+wt5eJTPeL00lHS5eqmZlNzGV9hWtzAr20qrKLmvE20Ke4VPB0
+a/tWXNUdvLnk4ENbTBFfMMdnlDo3hSThSMQ7yZ9UEYgighKu6l2fG5UG6D+kXFLy
+iIvvlA==
+=nX2w
+-----END PGP PUBLIC KEY BLOCK-----
+
+ ------------------------------------------------------------------------------
+

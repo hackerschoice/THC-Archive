@@ -1,0 +1,103 @@
+
+ A SELECTIVE SWITCH FOR GETTING MORE COMFORTABLE SCANNING
+                                                          written by Dr. Fraud
+
+ HI PHREAKS,
+
+ In thiz short article, I will show you an easy possibility to get a more com-
+ fortable way to make BB-calls and scannings. Most of you use one of the fol-
+ lowing ways to call:
+
+   1.) U pick up the handset of the phone; you get a dialtone. Then, you dial
+       the number you wish to call. If BOXING fails, you hang up and try it
+       again...
+   2.) U send a "HIGH" to yout LPT port. This causes a little circuit to open
+       the line. You get a dial tone...and you dial....
+
+ Of course, both of these methods are pretty nice...but here`s a better way to
+ get control over your line status:
+ Its possible to control the line with a little switch that always "listens"
+ to your soundcard`s output; if that switch recieves a tone of a certain fre-
+ quency (and you can tell the circuit what frequency this should be), it pro-
+ duces a "HIGH". This can be used to open/close a relais.
+
+ NOTE: There's a blueprint picturefile with this article, called BB-PLAN.GIF !
+
+
+ Question: Why do I need that circuit ?
+ Answer  : Simple. Cause it`s comfortable and easy to use. Okay... before I
+           tell you more of that question/answer rubbish, you should take a
+           look on that phunny plan in that tiny GIF-picture. (BB-PLAN.GIF)
+           First, here are the materials you need to build up the switch:
+
+           C1= 2,2 uF
+           C2= 47  nF
+           C3= 100 nF
+           C4= 10  nF
+           P = 20  K
+           D = common diod, as e.g. 1N 914
+           IC= 567 (LM 567, NE 567 etc.)  ...costs `bout 1$/piece...
+
+ You can build this thing any way you want... there are no critical values
+ you must pay attention for. Here are some electrical data:
+
+    - supply range:              4,75V to 9V
+    - supply current typ:        7 mA
+    - Input resistance:          20K
+    - smallest detectable input: 20mV (!)
+    - highest centre frequency:  500 KHz (!)
+
+ As you can see, the electrical data allow an universal use of that switch.
+ The resonance-frequency is defined as follows: Fo=1/(P*C4)
+ The band-width is the following: B= sqr(Ue/Fo*C4)  ! NOTE: Depends on Ue !
+ It`s adjustable from 1% up to more than 10%. This means, that, if you adjust
+ it to 1%, a 1000 Hz tone will only be recognized from 990 Hz up to 1010 Hz.
+ If you use 10%, you will be able to send 900 Hz up to 1100 Hz to get a
+ response from the switch.
+
+ Question: How Do I use that phunny switch ?
+ Answer  : Simple. Just connect it via a relais (ca. 5V) to your phone line.
+           The output voltage (pin 4+8) should be used to control the "prima-
+           ry" side.
+ Question: And then ?
+ Answer  : Then you only have to move the trimmer until the relays "clicks"
+           when you send the frequency you want. Some dialers (e.g., the
+           latest SCAVENGER dialer) support that. If you wanna get off-hook
+           and on-hook again in an easy way, just connect that device to your
+           soundcard/phone line (Ue) and you will have a great utility to get
+           a phree line within about 2 seconds just by pressing a stupid little
+           key. The relais will stay open as long as that tone is recieved.
+          
+
+ Note for practical use: If you decide to use that system, you should pay at-
+ tention to the following advices:
+
+ 1.) The value of P depends on the frequency you wanna use. It`s useful to use
+     (haha...nice english) a frequency that is above the "normal" signalling
+     frequency (e.g. 3900 Hz.) 
+ 2.) Depending on that value, the value of the poti can vary... just look for 
+     a good frequency, get the correct value and use the correct resistor for
+     the poti. Sometimes, it`s more than 20K.
+ 3.) Avoid interferences. If you don`t, (e.g. you send a 3000/3001 Hz signal),
+     the behavior of the switch will get unstable. In fact, this can be also
+     quite useful (Analyst, u know...), but normally, it`s senseless.
+ 4.) Block your output. Sometimes, you connect your soundcard`s output with
+     any devices without checking whether they are potential-free. This means,
+     that if you connect your soundcard to the phone-line _and_ to that switch,
+     you may get a problem `cause your signal is not potential-free. Avoid that
+     while using a simple transformator. It costs about 2$ and really prevents
+     your computer from getting unexpected noise/voltage/damage.
+
+Okay... if you still don`t know the use of my tiny switch, then you are:
+
+    1.) stupid
+    2.) lame
+    4.) stupid & lame
+
+Hmm...check it out... if you`ve got any problems, just contact me at L.O.R.E.
+BBS at any time !
+
+Greetz,
+        Dr. Fraud
+
+
