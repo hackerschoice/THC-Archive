@@ -2,6 +2,8 @@
 
 All releases of the security research group (a.k.a. hackers) The Hacker's Choice
 
+Follow us on Twitter: [https://twitter.com/hackerschoice](https://twitter.com/hackerschoice)
+
 
 ## Why?
 
