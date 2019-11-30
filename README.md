@@ -12,10 +12,12 @@ because we do not have time to operate a full web server anymore and on the othe
 
 ## Active projects
 
-there are two active THC projects with their own github repository:
+there are other active THC projects with their own github repository:
 
  * thc-hydra: [https://github.com/vanhauser-thc/thc-hydra](https://github.com/vanhauser-thc/thc-hydra)
  * thc-ipv6: [https://github.com/vanhauser-thc/thc-ipv6](https://github.com/vanhauser-thc/thc-ipv6)
+ * thc-tesla-powerwall2-hack: [https://github.com/hackerschoice/thc-tesla-powerwall2-hack](https://github.com/hackerschoice/thc-tesla-powerwall2-hack)
+ * thc-btc-rng-bruteforce: [https://github.com/hackerschoice/thc-btc-rng-bruteforce](https://github.com/hackerschoice/thc-btc-rng-bruteforce)
 
 
 ## So?
