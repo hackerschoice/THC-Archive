@@ -19,6 +19,7 @@ there are other active THC projects with their own github repository:
  * thc-ipv6: [https://github.com/vanhauser-thc/thc-ipv6](https://github.com/vanhauser-thc/thc-ipv6)
  * thc-tesla-powerwall2-hack: [https://github.com/hackerschoice/thc-tesla-powerwall2-hack](https://github.com/hackerschoice/thc-tesla-powerwall2-hack)
  * thc-btc-rng-bruteforce: [https://github.com/hackerschoice/thc-btc-rng-bruteforce](https://github.com/hackerschoice/thc-btc-rng-bruteforce)
+ * thc-tips-tricks-hacks-cheat-sheet: [https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet)
 
 
 ## So?
